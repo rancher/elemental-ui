@@ -1,2 +1,2 @@
 # elemental-ui
-Rancher Extension for Elemental
+Rancher Extension for Elemental UI
