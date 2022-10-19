@@ -9,6 +9,7 @@ import AdvancedSection from '@shell/components/AdvancedSection.vue';
 import { Banner } from '@components/Banner';
 import UnitInput from '@shell/components/form/UnitInput.vue';
 import { randomStr } from '@shell/utils/string';
+import { ELEMENTAL_CLUSTER_PROVIDER } from '../../config/elemental-types';
 
 export default {
 
@@ -109,6 +110,10 @@ export default {
 
   computed: {
     configComponent() {
+      if (this.provider === ELEMENTAL_CLUSTER_PROVIDER) {
+        return () => import(/* webpackChunkName: "machine-config" */ `../../machine-config/machineinventoryselectortemplate`);
+      }
+
       const haveProviders = this.$store.getters['plugins/machineDrivers'];
 
       if ( haveProviders.includes(this.provider) ) {

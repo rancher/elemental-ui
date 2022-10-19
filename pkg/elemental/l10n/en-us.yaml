@@ -1,6 +1,10 @@
 product:
   elemental: OS Management
 
+cluster:
+  provider:
+    machineinventoryselectortemplate: Elemental
+
 typeLabel:
   elemental:  |-
     {count, plural,

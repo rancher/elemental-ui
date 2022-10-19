@@ -1,11 +1,10 @@
-import RouteConfig from 'vue-router';
 import { ELEMENTAL_PRODUCT_NAME } from '../config/elemental-types';
 import Dashboard from '../pages/index.vue';
 import ListElementalResource from '../pages/resource/index.vue';
 import CreateElementalResource from '../pages/resource/create.vue';
 import ElementalResourceDetails from '../pages/resource/_id.vue';
 
-const routes: RouteConfig[] = [
+const routes = [
   {
     name:      `${ ELEMENTAL_PRODUCT_NAME }-c-cluster`,
     path:      `/:product/c/:cluster`,

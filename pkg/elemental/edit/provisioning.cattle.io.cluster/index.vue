@@ -18,9 +18,9 @@ import { CAPI, MANAGEMENT, DEFAULT_WORKSPACE } from '@shell/config/types';
 import { mapFeature, RKE2 as RKE2_FEATURE } from '@shell/store/features';
 import { allHash } from '@shell/utils/promise';
 import { BLANK_CLUSTER } from '@shell/store';
-import Rke2Config from '@shell/edit/provisioning.cattle.io.cluster/rke2';
 import Import from '@shell/edit/provisioning.cattle.io.cluster/import';
 import { ELEMENTAL_PRODUCT_NAME, ELEMENTAL_CLUSTER_PROVIDER } from '../../config/elemental-types';
+import Rke2Config from './rke2';
 
 const SORT_GROUPS = {
   template:  1,
