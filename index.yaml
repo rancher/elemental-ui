@@ -1,0 +1,23 @@
+apiVersion: v1
+entries:
+  elemental:
+  - annotations:
+      catalog.cattle.io/certified: rancher
+      catalog.cattle.io/kube-version: '>= 1.16.0-0 < 1.25.0-0'
+      catalog.cattle.io/namespace: cattle-ui-plugin-system
+      catalog.cattle.io/os: linux
+      catalog.cattle.io/permits-os: linux, windows
+      catalog.cattle.io/rancher-version: '>= 2.7.0-0 < 2.8.0-0'
+      catalog.cattle.io/scope: management
+      catalog.cattle.io/ui-component: plugins
+    apiVersion: v2
+    appVersion: 0.1.0
+    created: "2022-10-20T10:54:14.149307+01:00"
+    description: OS Management plugin
+    digest: a4f3ad75b197a4a4154add820bb7230951f30f9dc1d77a55e77d8473008f0cf5
+    name: elemental
+    type: application
+    urls:
+    - assets/elemental/elemental-0.1.0.tgz
+    version: 0.1.0
+generated: "2022-10-20T10:54:14.148708+01:00"
