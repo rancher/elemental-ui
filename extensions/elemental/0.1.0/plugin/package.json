@@ -4,6 +4,7 @@
   "version": "0.1.0",
   "private": false,
   "rancher": true,
+  "icon": "https://raw.githubusercontent.com/rancher/elemental-ui/main/pkg/elemental/icon.svg",
   "engines": {
     "node": ">=12"
   },

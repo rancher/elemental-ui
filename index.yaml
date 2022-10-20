@@ -12,12 +12,13 @@ entries:
       catalog.cattle.io/ui-component: plugins
     apiVersion: v2
     appVersion: 0.1.0
-    created: "2022-10-20T10:54:14.149307+01:00"
+    created: "2022-10-20T11:13:32.126229+01:00"
     description: OS Management plugin
-    digest: a4f3ad75b197a4a4154add820bb7230951f30f9dc1d77a55e77d8473008f0cf5
+    digest: ab09b6248ef668cd808a324e0f16886c1007d3765444ad467169929ed68b8a56
+    icon: https://raw.githubusercontent.com/rancher/elemental-ui/main/pkg/elemental/icon.svg
     name: elemental
     type: application
     urls:
     - assets/elemental/elemental-0.1.0.tgz
     version: 0.1.0
-generated: "2022-10-20T10:54:14.148708+01:00"
+generated: "2022-10-20T11:13:32.125443+01:00"
