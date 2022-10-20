@@ -1,0 +1,117 @@
+product:
+  elemental: OS Management
+
+cluster:
+  provider:
+    machineinventoryselectortemplate: Elemental
+
+typeLabel:
+  elemental:  |-
+    {count, plural,
+      one {Elemental Cluster}
+      other {Elemental Clusters}
+    }
+  elemental.cattle.io.machineinventoryselectortemplate: |-
+    {count, plural,
+      one {Mach. Inv. Selec. Template}
+      other {Mach. Inv. Selec. Templates}
+    }
+  elemental.cattle.io.machineinventoryselector: |-
+    {count, plural,
+      one {Mach. Inv. Selector}
+      other {Mach. Inv. Selectors}
+    }
+  elemental.cattle.io.machineinventory: |-
+    {count, plural,
+      one {Machine Inventory}
+      other {Machine Inventories}
+    }
+  elemental.cattle.io.machineregistration: |-
+    {count, plural,
+      one {Machine Registration}
+      other {Machine Registrations}
+    }
+  elemental.cattle.io.managedosimage: |-
+    {count, plural,
+      one {OS Image Upgrade}
+      other {OS Image Upgrades}
+    }
+  elemental.cattle.io.managedosversionchannel: |-
+    {count, plural,
+      one {Managed OS Version Channel}
+      other {Managed OS Version Channels}
+    }
+  elemental.cattle.io.managedosversion: |-
+    {count, plural,
+      one {Managed OS Version}
+      other {Managed OS Versions}
+    }
+  elementalClusters: Clusters
+description:
+  elemental.cattle.io.machineregistration: Endpoints to connect Machines
+  elemental.cattle.io.machineinventory: Machine connected to Elemental
+  elemental.cattle.io.managedosimage: Containerized OS Images for Machines
+  elementalClusters: Clusters managed by Elemental
+elemental:
+  menuLabels:
+    dashboard: Dashboard
+    operations: Operations
+    machineInventories: Machine Inventories
+  dashboard:
+    title: Elemental
+    btnLabel:
+      create: 
+        elemental.cattle.io.machineregistration: Create Machine Registration
+        elemental.cattle.io.machineinventory: Create Machine Inventory
+        elemental.cattle.io.managedosimage: Create Managed OS Image
+        elementalClusters: Create Elemental Cluster
+      manage: 
+        elemental.cattle.io.machineregistration: Manage Machine Registrations
+        elemental.cattle.io.machineinventory: Manage Machine Inventories
+        elemental.cattle.io.managedosimage: Manage Managed OS Images
+        elementalClusters: Manage Elemental Clusters
+  osimage:
+    create:
+      configuration: Configuration
+      spec: Spec
+      name:
+        label: Name
+        placeholder: Enter a name
+      targetCluster:
+        label: Target Cluster
+        placeholder: Enter a target cluster name
+      osImage:
+        label: OS Image
+        placeholder: Enter an OS image name
+  machineRegistration:
+    edit:
+      imageSetup: Setting up an OS image
+      downloadMachineRegistrationFile: 'Download the machine registration file and follow the set of instructions on how to prepare your ISO image <a target="_blank" rel="noopener noreferrer nofollow" style="text-decoration: underline" href="https://rancher.github.io/elemental/quickstart/#preparing-the-iso">here</a>.'
+    create:
+      registrationToken: Registration Token
+      registrationURL: 
+        title: Registration URL (ends with registration token)
+        label: Registration URL
+      configuration: Configuration
+      cloudConfiguration: Cloud Configuration
+      labelsAndAnnotations: Labels And Annotations
+      readFromFile: Read from File
+      name:
+        label: Name
+        placeholder: Enter a name
+      machineReg: Machine Registration
+      machineInv: Machine Inventories
+  clusterGroup:
+    selector:
+      label: Machine Inventory Selector Template
+      matchesAll: Matches all {total, number} existing Machine Inventories
+      matchesNone: Matches no existing Machine Inventories
+      matchesSome: |-
+        {matched, plural,
+          =1 {Matches 1 of {total, number} existing Machine Inventories: "{sample}"}
+          other {Matches {matched, number} of {total, number} existing Machine Inventories, including "{sample}"}
+        }
+  machineInventory:
+    createCluster: Create Elemental Cluster
+    import: YAML import
+    updateForCreateClusterError: Error updating machine inventories with label for creating a cluster
