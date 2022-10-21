@@ -177,10 +177,8 @@ export default {
     >
       <div class="col span-12">
         <h3>{{ t('elemental.machineRegistration.edit.imageSetup') }}</h3>
-        <p>
-          <span v-html="t('elemental.machineRegistration.edit.downloadMachineRegistrationFile', {}, true)"></span>
-          <AsyncButton class="ml-10" mode="download" @click="download" />
-        </p>
+        <p v-html="t('elemental.machineRegistration.edit.downloadMachineRegistrationFile', {}, true)" />
+        <AsyncButton class="mt-10" mode="download" @click="download" />
       </div>
     </div>
     <div
@@ -189,7 +187,7 @@ export default {
     >
       <div class="col span-12">
         <h3>{{ t('elemental.machineRegistration.create.configuration') }}</h3>
-        <NameNsDescription v-model="value" :mode="mode" :description-hidden="true" />
+        <NameNsDescription v-model="value" :mode="mode" :description-hidden="true" :namespaced="false" />
       </div>
     </div>
     <div class="row mb-20">
@@ -221,61 +219,55 @@ export default {
         </h3>
         <Tabbed>
           <Tab label-key="elemental.machineRegistration.create.machineInv" name="machine-inventory" :weight="3">
-            <div class="row">
-              <div class="col span-6">
-                <KeyValue
-                  key="labels"
-                  :value="value.machineInventoryLabels"
-                  :add-label="t('labels.addLabel')"
-                  :mode="mode"
-                  :title="t('labels.labels.title')"
-                  :read-allowed="false"
-                  :value-can-be-empty="true"
-                  @input="value.setLabels($event, 'machineInventoryLabels', true)"
-                />
-              </div>
-              <div class="spacer"></div>
-              <div class="col span-6">
-                <KeyValue
-                  key="annotations"
-                  :value="value.machineInventoryAnnotations"
-                  :add-label="t('labels.addAnnotation')"
-                  :mode="mode"
-                  :title="t('labels.annotations.title')"
-                  :read-allowed="false"
-                  :value-can-be-empty="true"
-                  @input="value.setAnnotations($event, 'machineInventoryAnnotations', true)"
-                />
-              </div>
+            <div class="row mb-30">
+              <KeyValue
+                key="labels"
+                :value="value.machineInventoryLabels"
+                :add-label="t('labels.addLabel')"
+                :mode="mode"
+                :title="t('labels.labels.title')"
+                :read-allowed="false"
+                :value-can-be-empty="true"
+                @input="value.setLabels($event, 'machineInventoryLabels', true)"
+              />
+            </div>
+            <div class="row mb-10">
+              <KeyValue
+                key="annotations"
+                :value="value.machineInventoryAnnotations"
+                :add-label="t('labels.addAnnotation')"
+                :mode="mode"
+                :title="t('labels.annotations.title')"
+                :read-allowed="false"
+                :value-can-be-empty="true"
+                @input="value.setAnnotations($event, 'machineInventoryAnnotations', true)"
+              />
             </div>
           </Tab>
           <Tab label-key="elemental.machineRegistration.create.machineReg" name="machine-reg" :weight="2">
-            <div class="row">
-              <div class="col span-6">
-                <KeyValue
-                  key="labels"
-                  :value="value.labels"
-                  :add-label="t('labels.addLabel')"
-                  :mode="mode"
-                  :title="t('labels.labels.title')"
-                  :read-allowed="false"
-                  :value-can-be-empty="true"
-                  @input="value.setLabels($event)"
-                />
-              </div>
-              <div class="spacer"></div>
-              <div class="col span-6">
-                <KeyValue
-                  key="annotations"
-                  :value="value.annotations"
-                  :add-label="t('labels.addAnnotation')"
-                  :mode="mode"
-                  :title="t('labels.annotations.title')"
-                  :read-allowed="false"
-                  :value-can-be-empty="true"
-                  @input="value.setAnnotations($event)"
-                />
-              </div>
+            <div class="row mb-30">
+              <KeyValue
+                key="labels"
+                :value="value.labels"
+                :add-label="t('labels.addLabel')"
+                :mode="mode"
+                :title="t('labels.labels.title')"
+                :read-allowed="false"
+                :value-can-be-empty="true"
+                @input="value.setLabels($event)"
+              />
+            </div>
+            <div class="row mb-10">
+              <KeyValue
+                key="annotations"
+                :value="value.annotations"
+                :add-label="t('labels.addAnnotation')"
+                :mode="mode"
+                :title="t('labels.annotations.title')"
+                :read-allowed="false"
+                :value-can-be-empty="true"
+                @input="value.setAnnotations($event)"
+              />
             </div>
           </Tab>
         </Tabbed>

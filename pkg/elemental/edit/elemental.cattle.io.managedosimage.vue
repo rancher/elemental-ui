@@ -89,7 +89,7 @@ export default {
     <div class="row mt-40 mb-20">
       <div class="col span-12 mb-20">
         <h3>{{ t('elemental.osimage.create.configuration') }}</h3>
-        <NameNsDescription v-model="value" :mode="mode" :description-hidden="true" />
+        <NameNsDescription v-model="value" :mode="mode" :description-hidden="true" :namespaced="false" />
       </div>
     </div>
     <div v-if="value.spec" class="row mb-20">
