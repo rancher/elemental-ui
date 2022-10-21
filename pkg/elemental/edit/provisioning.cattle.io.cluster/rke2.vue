@@ -1182,7 +1182,7 @@ export default {
     done() {
       let routeName = 'c-cluster-product-resource';
 
-      if ( this.mode === _CREATE && (this.provider === 'import' || this.provider === 'custom' || this.isElementalCluster) ) {
+      if ( this.mode === _CREATE && (this.provider === 'import' || this.provider === 'custom') ) {
         // Go show the registration command
         routeName = 'c-cluster-product-resource-namespace-id';
       }
