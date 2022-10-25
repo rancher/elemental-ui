@@ -9,7 +9,7 @@ import ElementalResource from './elemental-resource';
 
 const DEFAULT_CREATION_YAML = `cloud-config:
   users:
-    name: root
+  - name: root
     passwd: root
 elemental:
   install:
