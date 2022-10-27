@@ -4,6 +4,7 @@ import { ANNOTATIONS_TO_IGNORE_REGEX, LABELS_TO_IGNORE_REGEX } from '@shell/conf
 import pickBy from 'lodash/pickBy';
 import omitBy from 'lodash/omitBy';
 import { matchesSomeRegex } from '@shell/utils/string';
+import { downloadFile } from '@shell/utils/download';
 import { ELEMENTAL_DEFAULT_NAMESPACE } from '../types';
 import ElementalResource from './elemental-resource';
 
@@ -89,5 +90,36 @@ export default class MachineRegistration extends ElementalResource {
     return omitBy(all, (value, key) => {
       return matchesSomeRegex(key, ANNOTATIONS_TO_IGNORE_REGEX);
     });
+  }
+
+  get truncatedToken() {
+    return `${ this.status?.registrationToken.slice(0, 10) }...`;
+  }
+
+  async getMachineRegistrationData() {
+    const url = `${ window.location.origin }/elemental/registration/${ this.status.registrationToken }`;
+
+    try {
+      const inStore = this.$rootGetters['currentStore']();
+      const res = await this.$dispatch(`${ inStore }/request`, { url, responseType: 'blob' }, { root: true });
+      const machineRegFileName = `${ this.metadata.name }_registrationURL.yaml`;
+
+      return {
+        data:     res.data,
+        fileName: machineRegFileName
+      };
+    } catch (e) {
+      return { error: e };
+    }
+  }
+
+  async downloadMachineRegistration() {
+    const machineReg = await this.getMachineRegistrationData();
+
+    try {
+      downloadFile(machineReg.fileName, machineReg.data, 'text/markdown; charset=UTF-8');
+    } catch (e) {
+      return { error: e };
+    }
   }
 }

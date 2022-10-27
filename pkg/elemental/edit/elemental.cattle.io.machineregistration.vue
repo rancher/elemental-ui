@@ -14,7 +14,6 @@ import jsyaml from 'js-yaml';
 import { saferDump } from '@shell/utils/create-yaml';
 import { _CREATE, _EDIT } from '@shell/config/query-params';
 import { exceptionToErrorsArray } from '@shell/utils/error';
-import { downloadFile } from '@shell/utils/download';
 
 import Tabbed from '@shell/components/Tabbed/index.vue';
 import Tab from '@shell/components/Tabbed/Tab.vue';
@@ -111,33 +110,11 @@ export default {
         component.updateValue(value);
       }
     },
-    async getMachineRegistrationData() {
-      const url = `${ window.location.origin }/elemental/registration/${ this.value.status.registrationToken }`;
-
-      try {
-        const inStore = this.$store.getters['currentStore']();
-        const res = await this.$store.dispatch(`${ inStore }/request`, { url, responseType: 'blob' });
-        const machineRegFileName = `${ this.value.metadata.name }_registrationURL.yaml`;
-
-        return {
-          data:     res.data,
-          fileName: machineRegFileName
-        };
-      } catch (e) {
-        return { error: e };
-      }
-    },
     async download(btnCb) {
-      const machineReg = await this.getMachineRegistrationData();
-
-      if (machineReg.data) {
-        try {
-          downloadFile(machineReg.fileName, machineReg.data, 'text/markdown; charset=UTF-8');
-          btnCb(true);
-        } catch (error) {
-          btnCb(false);
-        }
-      } else {
+      try {
+        await this.value.downloadMachineRegistration();
+        btnCb(true);
+      } catch (error) {
         btnCb(false);
       }
     }

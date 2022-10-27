@@ -15,6 +15,13 @@ API=https://your-rancher yarn mem-dev
 # Goto https://localhost:8005
 ```
 
+## Updating @shell package
+This is about updating the @shell package which is the base from rancher/dashboard
+```bash
+# Update
+yarn create @rancher/update
+```
+
 ## Building the extension for production
 Bump the app version on `package.json` file, then run:
 ```bash

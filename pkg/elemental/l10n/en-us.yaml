@@ -5,6 +5,12 @@ cluster:
   provider:
     machineinventoryselectortemplate: Elemental
 
+tableHeaders:
+  osImage: OS Image
+  token: Token
+  downloadTableDashboard: ''
+  download: 'Download'
+
 typeLabel:
   elemental:  |-
     {count, plural,
@@ -55,21 +61,23 @@ description:
 elemental:
   menuLabels:
     dashboard: Dashboard
+    titleDashboard: OS Management Dashboard
     operations: Operations
     machineInventories: Machine Inventories
   dashboard:
     title: Elemental
+    manageReg: Manage Machine Registrations
+    manageOsImageUpgrade: Manage OS Image Upgrades
+    noMachineReg: There are currently no Machine Registrations available
+    noMachineRegAction: Create a Machine Registration
+    noManageOs: There are currently no OS Image Upgrades available
+    noManageOsAction: Create an OS Image Upgrade
     btnLabel:
       create: 
         elemental.cattle.io.machineregistration: Create Machine Registration
         elemental.cattle.io.machineinventory: Create Machine Inventory
         elemental.cattle.io.managedosimage: Create Managed OS Image
         elementalClusters: Create Elemental Cluster
-      manage: 
-        elemental.cattle.io.machineregistration: Manage Machine Registrations
-        elemental.cattle.io.machineinventory: Manage Machine Inventories
-        elemental.cattle.io.managedosimage: Manage Managed OS Images
-        elementalClusters: Manage Elemental Clusters
   osimage:
     create:
       configuration: Configuration
