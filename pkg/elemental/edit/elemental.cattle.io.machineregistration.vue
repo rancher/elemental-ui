@@ -47,7 +47,7 @@ export default {
   },
   data() {
     return {
-      cloudConfig:  typeof this.value.spec.config === 'string' ? this.value.spec.config : saferDump(this.value.spec.config),
+      cloudConfig:  typeof this.value.spec === 'string' ? this.value.spec : saferDump(this.value.spec),
       yamlErrors:   null
     };
   },
@@ -57,7 +57,7 @@ export default {
         try {
           const parsed = jsyaml.load(neu);
 
-          this.value.spec.config = parsed;
+          this.value.spec = parsed;
           this.yamlErrors = null;
         } catch (e) {
           this.yamlErrors = exceptionToErrorsArray(e);
