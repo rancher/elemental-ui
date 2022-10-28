@@ -1,7 +1,7 @@
 
 import { STATE, NAME as NAME_COL, AGE, NAMESPACE as NAMESPACE_COL } from '@shell/config/table-headers';
 import { ELEMENTAL_SCHEMA_IDS } from './config/elemental-types';
-import { ELEMENTAL_PRODUCT_GROUP, ELEMENTAL_TYPES } from './types';
+import { ELEMENTAL_TYPES } from './types';
 import { createElementalRoute, rootElementalRoute } from './utils/custom-routing';
 
 export function init($plugin, store) {
@@ -11,7 +11,6 @@ export function init($plugin, store) {
 
   // app in sidebar
   product({
-    ifHaveGroup:         ELEMENTAL_PRODUCT_GROUP,
     icon:                'os-management',
     inStore:             'management',
     removable:           false,

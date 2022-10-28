@@ -1,10 +1,11 @@
 <script>
 import { allHash } from '@shell/utils/promise';
 import Loading from '@shell/components/Loading';
-import { CAPI } from '@shell/config/types';
+import { CAPI, CATALOG } from '@shell/config/types';
 import { NAME } from '@shell/config/table-headers';
 import ResourceTable from '@shell/components/ResourceTable';
 import PercentageBar from '@shell/components/PercentageBar';
+import { Banner } from '@components/Banner';
 import { ELEMENTAL_SCHEMA_IDS, ELEMENTAL_CLUSTER_PROVIDER } from '../config/elemental-types';
 import { createElementalRoute } from '../utils/custom-routing';
 import { filterForElementalClusters } from '../utils/elemental-utils';
@@ -14,10 +15,10 @@ const MAX_ITEMS_PER_TABLE = 6;
 export default {
   name:       'Dashboard',
   components: {
-    Loading, PercentageBar, ResourceTable
+    Loading, Banner, PercentageBar, ResourceTable
   },
   async fetch() {
-    const allDispatches = await allHash({
+    const requests = {
       // needed for table
       machineRegistrations: this.$store.dispatch('management/findAll', { type: ELEMENTAL_SCHEMA_IDS.MACHINE_REGISTRATIONS }),
       // needed for resource gauge
@@ -26,8 +27,16 @@ export default {
       // needed for table
       managedOsImages:      this.$store.dispatch('management/findAll', { type: ELEMENTAL_SCHEMA_IDS.MANAGED_OS_IMAGES }),
       // needed to populate cluster name col on machine inventories list
-      machineInvSelector:   this.$store.dispatch(`management/findAll`, { type: ELEMENTAL_SCHEMA_IDS.MACHINE_INV_SELECTOR })
-    });
+      machineInvSelector:   this.$store.dispatch(`management/findAll`, { type: ELEMENTAL_SCHEMA_IDS.MACHINE_INV_SELECTOR }),
+      elementalSchema:      this.$store.getters['management/schemaFor'](ELEMENTAL_SCHEMA_IDS.MACHINE_INVENTORIES)
+    };
+
+    // needed to check if operator is installed
+    if (this.$store.getters['cluster/canList'](CATALOG.APP)) {
+      requests.installedApps = this.$store.dispatch('cluster/findAll', { type: CATALOG.APP });
+    }
+
+    const allDispatches = await allHash(requests);
 
     this.resourcesData = {};
 
@@ -36,18 +45,29 @@ export default {
     this.resourcesData[this.ELEMENTAL_CLUSTERS] = filterForElementalClusters(allDispatches.rancherClusters);
     this.resourcesData[ELEMENTAL_SCHEMA_IDS.MANAGED_OS_IMAGES] = allDispatches.managedOsImages;
     this.resourcesData[ELEMENTAL_SCHEMA_IDS.MACHINE_INV_SELECTOR] = allDispatches.machineInvSelector;
+
+    // check if operator is installed
+    if (!allDispatches.elementalSchema || (allDispatches.installedApps && !allDispatches.installedApps.find(item => item.id.includes('elemental')))) {
+      this.isElementalOpInstalled = false;
+    }
+    // check if CRD is there but operator isn't
+    if (allDispatches.elementalSchema && (allDispatches.installedApps && !allDispatches.installedApps.find(item => item.id.includes('elemental')))) {
+      this.isElementalOpNotInstalledAndHasSchema = true;
+    }
   },
   data() {
     return {
-      ELEMENTAL_CLUSTERS:       'elementalClusters',
-      machineInvCrd:            ELEMENTAL_SCHEMA_IDS.MACHINE_INVENTORIES,
-      machineRegTitle:          this.t(`typeLabel."${ ELEMENTAL_SCHEMA_IDS.MACHINE_REGISTRATIONS }"`, { count: 2 }),
-      managedOsTitle:           this.t(`typeLabel."${ ELEMENTAL_SCHEMA_IDS.MANAGED_OS_IMAGES }"`, { count: 2 }),
-      machineRegListLocation:   createElementalRoute('resource', { resource: ELEMENTAL_SCHEMA_IDS.MACHINE_REGISTRATIONS }),
-      machineRegCreateLocation: createElementalRoute('resource-create', { resource: ELEMENTAL_SCHEMA_IDS.MACHINE_REGISTRATIONS }),
-      managedOsListLocation:    createElementalRoute('resource', { resource: ELEMENTAL_SCHEMA_IDS.MANAGED_OS_IMAGES }),
-      managedOsCreateLocation:  createElementalRoute('resource-create', { resource: ELEMENTAL_SCHEMA_IDS.MANAGED_OS_IMAGES }),
-      machineRegHeaders:        [
+      isElementalOpInstalled:                false,
+      isElementalOpNotInstalledAndHasSchema: true,
+      ELEMENTAL_CLUSTERS:                    'elementalClusters',
+      machineInvCrd:                         ELEMENTAL_SCHEMA_IDS.MACHINE_INVENTORIES,
+      machineRegTitle:                       this.t(`typeLabel."${ ELEMENTAL_SCHEMA_IDS.MACHINE_REGISTRATIONS }"`, { count: 2 }),
+      managedOsTitle:                        this.t(`typeLabel."${ ELEMENTAL_SCHEMA_IDS.MANAGED_OS_IMAGES }"`, { count: 2 }),
+      machineRegListLocation:                createElementalRoute('resource', { resource: ELEMENTAL_SCHEMA_IDS.MACHINE_REGISTRATIONS }),
+      machineRegCreateLocation:              createElementalRoute('resource-create', { resource: ELEMENTAL_SCHEMA_IDS.MACHINE_REGISTRATIONS }),
+      managedOsListLocation:                 createElementalRoute('resource', { resource: ELEMENTAL_SCHEMA_IDS.MANAGED_OS_IMAGES }),
+      managedOsCreateLocation:               createElementalRoute('resource-create', { resource: ELEMENTAL_SCHEMA_IDS.MANAGED_OS_IMAGES }),
+      machineRegHeaders:                     [
         NAME,
         {
           name:     'token',
@@ -166,7 +186,37 @@ export default {
 <template>
   <div>
     <Loading v-if="$fetchState.pending" />
+    <!-- Elemental Operator not installed -->
+    <div
+      v-else-if="!isElementalOpInstalled"
+      class="not-installed p-10"
+    >
+      <div class="logo mt-20 mb-10">
+        <img
+          src="../icon.svg"
+          height="64"
+        />
+      </div>
+      <h1 class="mb-20">
+        {{ t("product.elemental") }}
+      </h1>
+      <p
+        class="description"
+        v-html="t('product.description', {}, true)"
+      />
+      <Banner
+        class="mt-40"
+        color="warning"
+        v-html="t('product.notInstalled', {}, true)"
+      />
+    </div>
     <div v-else>
+      <Banner
+        v-if="isElementalOpNotInstalledAndHasSchema"
+        class="mb-20"
+        color="warning"
+        v-html="t('product.notInstalled', {}, true)"
+      />
       <h1 class="title">
         {{ t('elemental.menuLabels.titleDashboard') }}
       </h1>
@@ -278,6 +328,20 @@ export default {
 </template>
 
 <style lang="scss" scoped>
+.not-installed {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  margin: 100px 0;
+
+  .description {
+    line-height: 20px;
+  }
+}
+
 .title {
   padding-bottom: 10px;
   border-bottom: 1px solid var(--border);

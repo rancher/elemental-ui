@@ -1,5 +1,7 @@
 product:
   elemental: OS Management
+  description: "Elemental is a software stack enabling a centralized, full cloud-native OS management with Kubernetes. <br><br> Cluster Node OSes are built and maintained via container images through the Elemental Toolkit and installed on new hosts using the Elemental CLI. <br><br> The Elemental Operator and the Rancher System Agent enable Rancher Manager to fully control Elemental clusters, from the installation and management of the OS on the Nodes to the provisioning of new K3s or RKE2 clusters in a centralized way."
+  notInstalled: It appears that the Elemental Operator is not installed. To install Elemental Operator please follow the instructions on the official <a target="blank" href="https://rancher.github.io/elemental/elementaloperatorchart-reference/" target="_blank" rel="noopener nofollow">documentation</a>.
 
 cluster:
   provider:
@@ -65,7 +67,6 @@ elemental:
     operations: Operations
     machineInventories: Machine Inventories
   dashboard:
-    title: Elemental
     manageReg: Manage Machine Registrations
     manageOsImageUpgrade: Manage OS Image Upgrades
     noMachineReg: There are currently no Machine Registrations available
