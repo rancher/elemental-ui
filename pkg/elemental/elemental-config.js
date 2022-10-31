@@ -72,7 +72,7 @@ export function init($plugin, store) {
     AGE
   ]);
 
-  weightType(ELEMENTAL_SCHEMA_IDS.MANAGED_OS_IMAGES, 7, true);
+  weightType(ELEMENTAL_SCHEMA_IDS.MANAGED_OS_IMAGES, 11, true);
   configureType(ELEMENTAL_SCHEMA_IDS.MANAGED_OS_IMAGES, {
     isCreatable: true,
     isEditable:  true,
