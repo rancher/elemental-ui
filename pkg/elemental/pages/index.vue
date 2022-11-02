@@ -32,8 +32,8 @@ export default {
     };
 
     // needed to check if operator is installed
-    if (this.$store.getters['cluster/canList'](CATALOG.APP)) {
-      requests.installedApps = this.$store.dispatch('cluster/findAll', { type: CATALOG.APP });
+    if (this.$store.getters['management/canList'](CATALOG.APP)) {
+      requests.installedApps = this.$store.dispatch('management/findAll', { type: CATALOG.APP });
     }
 
     const allDispatches = await allHash(requests);
@@ -57,8 +57,8 @@ export default {
   },
   data() {
     return {
-      isElementalOpInstalled:                false,
-      isElementalOpNotInstalledAndHasSchema: true,
+      isElementalOpInstalled:                true,
+      isElementalOpNotInstalledAndHasSchema: false,
       ELEMENTAL_CLUSTERS:                    'elementalClusters',
       machineInvCrd:                         ELEMENTAL_SCHEMA_IDS.MACHINE_INVENTORIES,
       machineRegTitle:                       this.t(`typeLabel."${ ELEMENTAL_SCHEMA_IDS.MACHINE_REGISTRATIONS }"`, { count: 2 }),
