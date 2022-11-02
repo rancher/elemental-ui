@@ -18,41 +18,46 @@ export default {
     Loading, Banner, PercentageBar, ResourceTable
   },
   async fetch() {
-    const requests = {
-      // needed for table
-      machineRegistrations: this.$store.dispatch('management/findAll', { type: ELEMENTAL_SCHEMA_IDS.MACHINE_REGISTRATIONS }),
-      // needed for resource gauge
-      machineInventories:   this.$store.dispatch('management/findAll', { type: ELEMENTAL_SCHEMA_IDS.MACHINE_INVENTORIES }),
-      rancherClusters:      this.$store.dispatch('management/findAll', { type: CAPI.RANCHER_CLUSTER }),
-      // needed for table
-      managedOsImages:      this.$store.dispatch('management/findAll', { type: ELEMENTAL_SCHEMA_IDS.MANAGED_OS_IMAGES }),
-      // needed to populate cluster name col on machine inventories list
-      machineInvSelector:   this.$store.dispatch(`management/findAll`, { type: ELEMENTAL_SCHEMA_IDS.MACHINE_INV_SELECTOR }),
-      elementalSchema:      this.$store.getters['management/schemaFor'](ELEMENTAL_SCHEMA_IDS.MACHINE_INVENTORIES)
-    };
+    // this covers scenario where Elemental Operator is deleted from Apps and we lose the Elemental Admin role for Standard Users...
+    if (this.$store.getters['management/canList'](ELEMENTAL_SCHEMA_IDS.MACHINE_REGISTRATIONS)) {
+      const requests = {
+        // needed for table
+        machineRegistrations: this.$store.dispatch('management/findAll', { type: ELEMENTAL_SCHEMA_IDS.MACHINE_REGISTRATIONS }),
+        // needed for resource gauge
+        machineInventories:   this.$store.dispatch('management/findAll', { type: ELEMENTAL_SCHEMA_IDS.MACHINE_INVENTORIES }),
+        rancherClusters:      this.$store.dispatch('management/findAll', { type: CAPI.RANCHER_CLUSTER }),
+        // needed for table
+        managedOsImages:      this.$store.dispatch('management/findAll', { type: ELEMENTAL_SCHEMA_IDS.MANAGED_OS_IMAGES }),
+        // needed to populate cluster name col on machine inventories list
+        machineInvSelector:   this.$store.dispatch(`management/findAll`, { type: ELEMENTAL_SCHEMA_IDS.MACHINE_INV_SELECTOR }),
+        elementalSchema:      this.$store.getters['management/schemaFor'](ELEMENTAL_SCHEMA_IDS.MACHINE_INVENTORIES)
+      };
 
-    // needed to check if operator is installed
-    if (this.$store.getters['management/canList'](CATALOG.APP)) {
-      requests.installedApps = this.$store.dispatch('management/findAll', { type: CATALOG.APP });
-    }
+      // needed to check if operator is installed
+      if (this.$store.getters['management/canList'](CATALOG.APP)) {
+        requests.installedApps = this.$store.dispatch('management/findAll', { type: CATALOG.APP });
+      }
 
-    const allDispatches = await allHash(requests);
+      const allDispatches = await allHash(requests);
 
-    this.resourcesData = {};
+      this.resourcesData = {};
 
-    this.resourcesData[ELEMENTAL_SCHEMA_IDS.MACHINE_REGISTRATIONS] = allDispatches.machineRegistrations;
-    this.resourcesData[ELEMENTAL_SCHEMA_IDS.MACHINE_INVENTORIES] = allDispatches.machineInventories;
-    this.resourcesData[this.ELEMENTAL_CLUSTERS] = filterForElementalClusters(allDispatches.rancherClusters);
-    this.resourcesData[ELEMENTAL_SCHEMA_IDS.MANAGED_OS_IMAGES] = allDispatches.managedOsImages;
-    this.resourcesData[ELEMENTAL_SCHEMA_IDS.MACHINE_INV_SELECTOR] = allDispatches.machineInvSelector;
+      this.resourcesData[ELEMENTAL_SCHEMA_IDS.MACHINE_REGISTRATIONS] = allDispatches.machineRegistrations;
+      this.resourcesData[ELEMENTAL_SCHEMA_IDS.MACHINE_INVENTORIES] = allDispatches.machineInventories;
+      this.resourcesData[this.ELEMENTAL_CLUSTERS] = filterForElementalClusters(allDispatches.rancherClusters);
+      this.resourcesData[ELEMENTAL_SCHEMA_IDS.MANAGED_OS_IMAGES] = allDispatches.managedOsImages;
+      this.resourcesData[ELEMENTAL_SCHEMA_IDS.MACHINE_INV_SELECTOR] = allDispatches.machineInvSelector;
 
-    // check if operator is installed
-    if (!allDispatches.elementalSchema || (allDispatches.installedApps && !allDispatches.installedApps.find(item => item.id.includes('elemental')))) {
+      // check if operator is installed
+      if (!allDispatches.elementalSchema || (allDispatches.installedApps && !allDispatches.installedApps.find(item => item.id.includes('elemental')))) {
+        this.isElementalOpInstalled = false;
+      }
+      // check if CRD is there but operator isn't
+      if (allDispatches.elementalSchema && (allDispatches.installedApps && !allDispatches.installedApps.find(item => item.id.includes('elemental')))) {
+        this.isElementalOpNotInstalledAndHasSchema = true;
+      }
+    } else {
       this.isElementalOpInstalled = false;
-    }
-    // check if CRD is there but operator isn't
-    if (allDispatches.elementalSchema && (allDispatches.installedApps && !allDispatches.installedApps.find(item => item.id.includes('elemental')))) {
-      this.isElementalOpNotInstalledAndHasSchema = true;
     }
   },
   data() {
@@ -257,8 +262,8 @@ export default {
         </div>
       </div>
       <!-- Tables -->
-      <div class="row mt-40 mb-40">
-        <div class="col span-6">
+      <div class="main-tables-container mb-40 mt-40">
+        <div class="table-list">
           <div class="table-title-block">
             <h3 class="mb-20">
               {{ machineRegTitle }}
@@ -294,7 +299,7 @@ export default {
             </template>
           </ResourceTable>
         </div>
-        <div class="col span-6">
+        <div class="table-list">
           <div class="table-title-block">
             <h3 class="mb-20">
               {{ managedOsTitle }}
@@ -358,7 +363,7 @@ export default {
     flex-direction: column;
     flex-grow: 1;
     border: 1px solid var(--border);
-    margin: 0 10px;
+    margin: 0 10px 20px 10px;
     padding: 20px;
     height: 141px;
 
@@ -398,10 +403,6 @@ export default {
       display: flex;
       justify-content: space-between;
 
-      p {
-        // font-size: 12px;
-      }
-
       span {
         font-size: 12px;
         padding-left: 10px;
@@ -429,8 +430,52 @@ export default {
   }
 }
 
-.table-title-block {
+.main-tables-container {
   display: flex;
-  justify-content: space-between;
+  .table-list {
+    width: 50%;
+
+    &:first-child {
+      margin-right: 10px;
+    }
+    &:last-child {
+      margin-left: 10px;
+    }
+
+    .table-title-block {
+      display: flex;
+      justify-content: space-between;
+    }
+  }
+}
+
+@media screen and (max-width: 1080px) {
+  .main-tables-container {
+    flex-direction: column;
+
+    .table-list {
+      width: 100%;
+      margin: 0 0 20px 0 !important;
+    }
+  }
+
+  .main-card-container .card {
+    &:nth-child(2) {
+      margin: 0 0 20px 10px;
+    }
+    &:last-child {
+      width: 100%;
+      margin: 0 0 20px 0;
+    }
+  }
+}
+
+@media screen and (max-width: 800px) {
+  .main-card-container .card {
+    &:first-child, &:nth-child(2) {
+      width: 100%;
+      margin: 0 0 20px 0;
+    }
+  }
 }
 </style>
