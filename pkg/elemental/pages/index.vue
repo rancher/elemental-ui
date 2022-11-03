@@ -99,7 +99,7 @@ export default {
         }
       ],
       colorStops: {
-        0: '--success', 30: '--warning', 70: '--error'
+        0: '--error', 20: '--warning', 75: '--info', 95: '--success'
       }
     };
   },
