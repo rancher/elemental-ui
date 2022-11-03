@@ -92,10 +92,6 @@ export default class MachineRegistration extends ElementalResource {
     });
   }
 
-  get truncatedToken() {
-    return `${ this.status?.registrationToken.slice(0, 10) }...`;
-  }
-
   async getMachineRegistrationData() {
     const url = `${ window.location.origin }/elemental/registration/${ this.status.registrationToken }`;
 
@@ -109,17 +105,23 @@ export default class MachineRegistration extends ElementalResource {
         fileName: machineRegFileName
       };
     } catch (e) {
-      return { error: e };
+      return Promise.reject(e);
     }
   }
 
   async downloadMachineRegistration() {
-    const machineReg = await this.getMachineRegistrationData();
+    let machineReg;
+
+    try {
+      machineReg = await this.getMachineRegistrationData();
+    } catch (e) {
+      return Promise.reject(e);
+    }
 
     try {
       downloadFile(machineReg.fileName, machineReg.data, 'text/markdown; charset=UTF-8');
     } catch (e) {
-      return { error: e };
+      return Promise.reject(e);
     }
   }
 }

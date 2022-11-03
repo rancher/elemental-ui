@@ -6,6 +6,7 @@ import { NAME } from '@shell/config/table-headers';
 import ResourceTable from '@shell/components/ResourceTable';
 import PercentageBar from '@shell/components/PercentageBar';
 import { Banner } from '@components/Banner';
+import AsyncButton from '@shell/components/AsyncButton';
 import { ELEMENTAL_SCHEMA_IDS, ELEMENTAL_CLUSTER_PROVIDER } from '../config/elemental-types';
 import { createElementalRoute } from '../utils/custom-routing';
 import { filterForElementalClusters } from '../utils/elemental-utils';
@@ -15,7 +16,7 @@ const MAX_ITEMS_PER_TABLE = 6;
 export default {
   name:       'Dashboard',
   components: {
-    Loading, Banner, PercentageBar, ResourceTable
+    Loading, Banner, PercentageBar, ResourceTable, AsyncButton
   },
   async fetch() {
     // this covers scenario where Elemental Operator is deleted from Apps and we lose the Elemental Admin role for Standard Users...
@@ -77,9 +78,9 @@ export default {
         {
           name:     'token',
           labelKey: 'tableHeaders.token',
-          value:    'truncatedToken',
-          getValue: row => row.truncatedToken,
-          sort:     'truncatedToken'
+          value:    'status.registrationToken',
+          getValue: row => row.status?.registrationToken,
+          sort:     'status.registrationToken'
         },
         {
           name:          'download',
@@ -181,8 +182,13 @@ export default {
         this.$router.replace(card.btnRoute);
       }
     },
-    async downloadMachineReg(item) {
-      await item.downloadMachineRegistration();
+    async downloadMachineReg(item, btnCb) {
+      try {
+        await item.downloadMachineRegistration();
+        btnCb(true);
+      } catch (e) {
+        btnCb(false);
+      }
     }
   },
 };
@@ -250,8 +256,8 @@ export default {
             class="used-percentage-container mt-10"
           >
             <div>
-              <p>Used<span>{{ used }}</span></p>
-              <p>Free<span>{{ free }}</span></p>
+              <p>{{ t('elemental.dashboard.used') }}<span>{{ used }}</span></p>
+              <p>{{ t('elemental.dashboard.free') }}<span>{{ free }}</span></p>
             </div>
             <PercentageBar
               class="mt-10"
@@ -290,11 +296,18 @@ export default {
             :row-actions="true"
             key-field="key"
           >
-            <template #col:download="{col, row}">
+            <template #col:token="{row}">
+              <td class="token-truncate">
+                {{ row.status.registrationToken }}
+              </td>
+            </template>
+            <template #col:download="{row}">
               <td>
-                <a class="link" @click="downloadMachineReg(row)">
-                  {{ col.value }}
-                </a>
+                <AsyncButton
+                  action-color="role-multi-action"
+                  mode="download"
+                  @click="downloadMachineReg(row, $event)"
+                />
               </td>
             </template>
           </ResourceTable>
@@ -445,6 +458,14 @@ export default {
     .table-title-block {
       display: flex;
       justify-content: space-between;
+    }
+
+    .token-truncate {
+      max-width: 180px;
+      width: 60%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
   }
 }
