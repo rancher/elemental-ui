@@ -50,11 +50,11 @@ export default {
       this.resourcesData[ELEMENTAL_SCHEMA_IDS.MACHINE_INV_SELECTOR] = allDispatches.machineInvSelector;
 
       // check if operator is installed
-      if (!allDispatches.elementalSchema || (allDispatches.installedApps && !allDispatches.installedApps.find(item => item.id.includes('elemental')))) {
+      if (!allDispatches.elementalSchema || (allDispatches.installedApps && !allDispatches.installedApps.find(item => item.id.includes('elemental-operator')))) {
         this.isElementalOpInstalled = false;
       }
       // check if CRD is there but operator isn't
-      if (allDispatches.elementalSchema && (allDispatches.installedApps && !allDispatches.installedApps.find(item => item.id.includes('elemental')))) {
+      if (allDispatches.elementalSchema && (allDispatches.installedApps && !allDispatches.installedApps.find(item => item.id.includes('elemental-operator')))) {
         this.isElementalOpNotInstalledAndHasSchema = true;
       }
     } else {
