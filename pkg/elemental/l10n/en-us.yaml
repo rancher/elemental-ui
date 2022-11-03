@@ -1,9 +1,17 @@
 product:
   elemental: OS Management
+  description: "Elemental is a software stack enabling a centralized, full cloud-native OS management with Kubernetes. <br><br> Cluster Node OSes are built and maintained via container images through the Elemental Toolkit and installed on new hosts using the Elemental CLI. <br><br> The Elemental Operator and the Rancher System Agent enable Rancher Manager to fully control Elemental clusters, from the installation and management of the OS on the Nodes to the provisioning of new K3s or RKE2 clusters in a centralized way."
+  notInstalled: The Elemental Operator is required to run the OS Management extension. To install it please follow the instructions on the official <a target="blank" href="https://rancher.github.io/elemental/elementaloperatorchart-reference/" target="_blank" rel="noopener nofollow">documentation</a>.
 
 cluster:
   provider:
     machineinventoryselectortemplate: Elemental
+
+tableHeaders:
+  osImage: OS Image
+  token: Token
+  downloadTableDashboard: ''
+  download: 'Download'
 
 typeLabel:
   elemental:  |-
@@ -47,29 +55,40 @@ typeLabel:
       other {Managed OS Versions}
     }
   elementalClusters: Clusters
+
+asyncButton:
+  downloadMachineReg:
+    action: Download
+    waiting: Preparing..
+    success: Download
+
 description:
   elemental.cattle.io.machineregistration: Endpoints to connect Machines
   elemental.cattle.io.machineinventory: Machine connected to Elemental
   elemental.cattle.io.managedosimage: Containerized OS Images for Machines
   elementalClusters: Clusters managed by Elemental
+
 elemental:
   menuLabels:
     dashboard: Dashboard
+    titleDashboard: OS Management Dashboard
     operations: Operations
     machineInventories: Machine Inventories
   dashboard:
-    title: Elemental
+    manageReg: Manage Machine Registrations
+    manageOsImageUpgrade: Manage OS Image Upgrades
+    noMachineReg: There are currently no Machine Registrations available
+    noMachineRegAction: Create a Machine Registration
+    noManageOs: There are currently no OS Image Upgrades available
+    noManageOsAction: Create an OS Image Upgrade
+    used: Used
+    free: Free
     btnLabel:
       create: 
         elemental.cattle.io.machineregistration: Create Machine Registration
         elemental.cattle.io.machineinventory: Create Machine Inventory
         elemental.cattle.io.managedosimage: Create Managed OS Image
         elementalClusters: Create Elemental Cluster
-      manage: 
-        elemental.cattle.io.machineregistration: Manage Machine Registrations
-        elemental.cattle.io.machineinventory: Manage Machine Inventories
-        elemental.cattle.io.managedosimage: Manage Managed OS Images
-        elementalClusters: Manage Elemental Clusters
   osimage:
     create:
       configuration: Configuration
