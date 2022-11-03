@@ -55,11 +55,19 @@ typeLabel:
       other {Managed OS Versions}
     }
   elementalClusters: Clusters
+
+asyncButton:
+  downloadMachineReg:
+    action: Download
+    waiting: Preparing..
+    success: Download
+
 description:
   elemental.cattle.io.machineregistration: Endpoints to connect Machines
   elemental.cattle.io.machineinventory: Machine connected to Elemental
   elemental.cattle.io.managedosimage: Containerized OS Images for Machines
   elementalClusters: Clusters managed by Elemental
+
 elemental:
   menuLabels:
     dashboard: Dashboard

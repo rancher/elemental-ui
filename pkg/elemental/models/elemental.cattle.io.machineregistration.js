@@ -110,16 +110,10 @@ export default class MachineRegistration extends ElementalResource {
   }
 
   async downloadMachineRegistration() {
-    let machineReg;
-
     try {
-      machineReg = await this.getMachineRegistrationData();
-    } catch (e) {
-      return Promise.reject(e);
-    }
+      const machineReg = await this.getMachineRegistrationData();
 
-    try {
-      downloadFile(machineReg.fileName, machineReg.data, 'text/markdown; charset=UTF-8');
+      return downloadFile(machineReg.fileName, machineReg.data, 'text/markdown; charset=UTF-8');
     } catch (e) {
       return Promise.reject(e);
     }

@@ -187,6 +187,8 @@ export default {
         await item.downloadMachineRegistration();
         btnCb(true);
       } catch (e) {
+        console.error('Failed to download file', e); // eslint-disable-line no-console
+
         btnCb(false);
       }
     }
@@ -302,10 +304,10 @@ export default {
               </td>
             </template>
             <template #col:download="{row}">
-              <td>
+              <td class="download-machine-reg">
                 <AsyncButton
                   action-color="role-multi-action"
-                  mode="download"
+                  mode="downloadMachineReg"
                   @click="downloadMachineReg(row, $event)"
                 />
               </td>
@@ -466,6 +468,19 @@ export default {
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
+    }
+  }
+}
+
+::v-deep .main-tables-container {
+ .download-machine-reg {
+    display: flex;
+    justify-content: center;
+    height: 59px;
+    min-width: 130px;
+
+    .icon.icon-lg {
+      display: none;
     }
   }
 }
