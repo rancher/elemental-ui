@@ -6,8 +6,6 @@ import { Banner } from '@components/Banner';
 import YamlEditor, { EDITOR_MODES } from '@shell/components/YamlEditor';
 import FileSelector from '@shell/components/form/FileSelector';
 import KeyValue from '@shell/components/form/KeyValue';
-import DetailText from '@shell/components/DetailText';
-import AsyncButton from '@shell/components/AsyncButton';
 import NameNsDescription from '@shell/components/form/NameNsDescription';
 
 import jsyaml from 'js-yaml';
@@ -27,8 +25,6 @@ export default {
     KeyValue,
     Banner,
     FileSelector,
-    DetailText,
-    AsyncButton,
     NameNsDescription,
     Tabbed,
     Tab
@@ -66,9 +62,6 @@ export default {
     }
   },
   computed: {
-    registrationUrl() {
-      return this.value?.status?.registrationURL || '';
-    },
     isCreate() {
       return this.mode === _CREATE;
     },
@@ -110,14 +103,6 @@ export default {
         component.updateValue(value);
       }
     },
-    async download(btnCb) {
-      try {
-        await this.value.downloadMachineRegistration();
-        btnCb(true);
-      } catch (error) {
-        btnCb(false);
-      }
-    }
   },
 };
 </script>
@@ -135,29 +120,6 @@ export default {
     @finish="save"
     @cancel="done"
   >
-    <div
-      v-if="hasBeenCreated"
-      class="row mt-40 mb-40"
-    >
-      <div class="col span-8">
-        <h3>{{ t('elemental.machineRegistration.create.registrationURL.title') }}</h3>
-        <DetailText
-          v-show="registrationUrl"
-          :value="registrationUrl"
-          :label="t('elemental.machineRegistration.create.registrationURL.label')"
-        />
-      </div>
-    </div>
-    <div
-      v-if="hasBeenCreated"
-      class="row mb-40"
-    >
-      <div class="col span-12">
-        <h3>{{ t('elemental.machineRegistration.edit.imageSetup') }}</h3>
-        <p v-html="t('elemental.machineRegistration.edit.downloadMachineRegistrationFile', {}, true)" />
-        <AsyncButton class="mt-10" mode="download" @click="download" />
-      </div>
-    </div>
     <div
       class="row mb-40"
       :class="{'mt-40': !hasBeenCreated }"
