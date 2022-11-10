@@ -12,7 +12,7 @@ import { _CREATE, _EDIT } from '@shell/config/query-params';
 import { exceptionToErrorsArray } from '@shell/utils/error';
 
 export default {
-  name:       'MachineRegistrationEditView',
+  name:       'MachineRegistrationDetailView',
   components: {
     Loading,
     CruResource,
@@ -68,9 +68,6 @@ export default {
       }
 
       return EDITOR_MODES.VIEW_CODE;
-    },
-    hasBeenCreated() {
-      return !!this.value.id;
     }
   },
   methods: {
