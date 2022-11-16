@@ -117,6 +117,8 @@ elemental:
       configuration: Configuration
       cloudConfiguration: Cloud Configuration
       labelsAndAnnotations: Labels And Annotations
+      labelsAndAnnotationsMachInvBanner: 'Labels and annotations to be added to the <b>MachineInventory</b> when a new machine is registered. These can be used to select the correct MachineInventory when creating clusters and also can be used as templates using SMBIOS data. <br> For reference on SMBIOS data check the official <a target="_blank" rel="noopener noreferrer nofollow" style="text-decoration: underline" href="https://rancher.github.io/elemental/smbios">documentation</a>.'
+      labelsAndAnnotationsMachRegBanner: 'Labels and annotations for the <b>MachineRegistration</b> item about to be created/edited.'
       readFromFile: Read from File
       name:
         label: Name

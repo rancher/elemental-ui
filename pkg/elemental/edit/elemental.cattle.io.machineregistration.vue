@@ -126,7 +126,12 @@ export default {
     >
       <div class="col span-12">
         <h3>{{ t('elemental.machineRegistration.create.configuration') }}</h3>
-        <NameNsDescription v-model="value" :mode="mode" :description-hidden="true" :namespaced="false" />
+        <NameNsDescription
+          v-model="value"
+          :mode="mode"
+          :description-hidden="true"
+          :namespaced="false"
+        />
       </div>
     </div>
     <div class="row mb-20">
@@ -148,7 +153,12 @@ export default {
             @selected="onFileSelected"
           />
         </div>
-        <Banner v-for="(err, i) in yamlErrors" :key="i" color="error" :label="err" />
+        <Banner
+          v-for="(err, i) in yamlErrors"
+          :key="i"
+          color="error"
+          :label="err"
+        />
       </div>
     </div>
     <div class="row mb-40">
@@ -157,7 +167,16 @@ export default {
           {{ t('elemental.machineRegistration.create.labelsAndAnnotations') }}
         </h3>
         <Tabbed>
-          <Tab label-key="elemental.machineRegistration.create.machineInv" name="machine-inventory" :weight="3">
+          <Tab
+            label-key="elemental.machineRegistration.create.machineInv"
+            name="machine-inventory"
+            :weight="3"
+          >
+            <Banner
+              class="mb-40"
+              color="info"
+              v-html="t('elemental.machineRegistration.create.labelsAndAnnotationsMachInvBanner', {}, true)"
+            />
             <div class="row mb-30">
               <KeyValue
                 key="labels"
@@ -183,7 +202,16 @@ export default {
               />
             </div>
           </Tab>
-          <Tab label-key="elemental.machineRegistration.create.machineReg" name="machine-reg" :weight="2">
+          <Tab
+            label-key="elemental.machineRegistration.create.machineReg"
+            name="machine-reg"
+            :weight="2"
+          >
+            <Banner
+              class="mb-40"
+              color="info"
+              v-html="t('elemental.machineRegistration.create.labelsAndAnnotationsMachRegBanner', {}, true)"
+            />
             <div class="row mb-30">
               <KeyValue
                 key="labels"
