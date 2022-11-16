@@ -91,6 +91,7 @@ elemental:
         elemental.cattle.io.managedosimage: Create Managed OS Image
         elementalClusters: Create Elemental Cluster
       manage: 
+        elemental.cattle.io.machineregistration: Manage Machine Registrations
         elementalClusters: Manage Elemental Clusters
   osimage:
     create:

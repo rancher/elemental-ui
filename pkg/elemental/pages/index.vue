@@ -134,16 +134,15 @@ export default {
           type,
           count:       this.resourcesData[type]?.length || 0,
           title:       this.t(`typeLabel."${ type }"`, { count: 2 }),
-          btnLabel:    this.t(`elemental.dashboard.btnLabel.create."${ type }"`),
-          btnRoute:    createElementalRoute(`resource-create`, { resource: type }),
+          btnLabel:    this.t(`elemental.dashboard.btnLabel.${ this.resourcesData[type]?.length ? 'manage' : 'create' }."${ type }"`),
+          btnRoute:    createElementalRoute(`resource${ !this.resourcesData[type]?.length ? '-create' : '' }`, { resource: type }),
           btnDisabled: false,
           btnVisible:  true
         };
 
         if (type === this.ELEMENTAL_CLUSTERS && obj.count > 0) {
           obj.btnRoute = clusterManageRoute;
-          obj.btnLabel = this.t(`elemental.dashboard.btnLabel.manage."${ type }"`);
-        } else {
+        } else if (type === this.ELEMENTAL_CLUSTERS) {
           obj.btnRoute = clusterCreateRoute;
         }
 
