@@ -22,38 +22,38 @@ typeLabel:
     }
   elemental.cattle.io.machineinventoryselectortemplate: |-
     {count, plural,
-      one {Mach. Inv. Selec. Template}
-      other {Mach. Inv. Selec. Templates}
+      one {Inv. of Mach. Selec. Template}
+      other {Inv. of Mach. Selec. Templates}
     }
   elemental.cattle.io.machineinventoryselector: |-
     {count, plural,
-      one {Mach. Inv. Selector}
-      other {Mach. Inv. Selectors}
+      one {Inv. of Mach. Selector}
+      other {Inv. of Mach. Selectors}
     }
   elemental.cattle.io.machineinventory: |-
     {count, plural,
-      one {Machine Inventory}
-      other {Machine Inventories}
+      one {Inventory of Machines}
+      other {Inventory of Machines}
     }
   elemental.cattle.io.machineregistration: |-
     {count, plural,
-      one {Machine Registration}
-      other {Machine Registrations}
+      one {Registration Endpoint}
+      other {Registration Endpoints}
     }
   elemental.cattle.io.managedosimage: |-
     {count, plural,
-      one {OS Image Upgrade}
-      other {OS Image Upgrades}
+      one {Update Group}
+      other {Update Groups}
     }
   elemental.cattle.io.managedosversionchannel: |-
     {count, plural,
-      one {Managed OS Version Channel}
-      other {Managed OS Version Channels}
+      one {OS Version Channel}
+      other {OS Version Channels}
     }
   elemental.cattle.io.managedosversion: |-
     {count, plural,
-      one {Managed OS Version}
-      other {Managed OS Versions}
+      one {OS Version}
+      other {OS Versions}
     }
   elementalClusters: Clusters
 
@@ -74,24 +74,24 @@ elemental:
     dashboard: Dashboard
     titleDashboard: OS Management Dashboard
     operations: Operations
-    machineInventories: Machine Inventories
+    machineInventories: Inventory of Machines
   dashboard:
-    manageReg: Manage Machine Registrations
-    manageOsImageUpgrade: Manage OS Image Upgrades
-    noMachineReg: There are currently no Machine Registrations available
-    noMachineRegAction: Create a Machine Registration
-    noManageOs: There are currently no OS Image Upgrades available
-    noManageOsAction: Create an OS Image Upgrade
+    manageReg: Manage Registration Endpoints
+    manageOsImageUpgrade: Manage Update Groups
+    noMachineReg: There are currently no Registration Endpoints available
+    noMachineRegAction: Create a Registration Endpoint
+    noManageOs: There are currently no Update Groups available
+    noManageOsAction: Create an Update Group
     used: Used
     free: Free
     btnLabel:
       create: 
-        elemental.cattle.io.machineregistration: Create Machine Registration
-        elemental.cattle.io.machineinventory: Create Machine Inventory
+        elemental.cattle.io.machineregistration: Create Registration Endpoint
+        elemental.cattle.io.machineinventory: Create Inventory of Machines
         elemental.cattle.io.managedosimage: Create Managed OS Image
         elementalClusters: Create Elemental Cluster
       manage: 
-        elemental.cattle.io.machineregistration: Manage Machine Registrations
+        elemental.cattle.io.machineregistration: Manage Registration Endpoints
         elementalClusters: Manage Elemental Clusters
   osimage:
     create:
@@ -109,7 +109,7 @@ elemental:
   machineRegistration:
     edit:
       imageSetup: Setting up an OS image
-      downloadMachineRegistrationFile: 'Download the machine registration file and follow the set of instructions on how to prepare your ISO image <a target="_blank" rel="noopener noreferrer nofollow" style="text-decoration: underline" href="https://rancher.github.io/elemental/quickstart/#preparing-the-iso">here</a>.'
+      downloadMachineRegistrationFile: 'Download the Registration Endpoint file and follow the set of instructions on how to prepare your ISO image <a target="_blank" rel="noopener noreferrer nofollow" style="text-decoration: underline" href="https://rancher.github.io/elemental/quickstart/#preparing-the-iso">here</a>.'
     create:
       registrationToken: Registration Token
       registrationURL: 
@@ -124,19 +124,19 @@ elemental:
       name:
         label: Name
         placeholder: Enter a name
-      machineReg: Machine Registration
-      machineInv: Machine Inventories
+      machineReg: Registration Endpoint
+      machineInv: Inventory of Machines
   clusterGroup:
     selector:
-      label: Machine Inventory Selector Template
-      matchesAll: Matches all {total, number} existing Machine Inventories
-      matchesNone: Matches no existing Machine Inventories
+      label: Inventory of Machines Selector Template
+      matchesAll: Matches all {total, number} existing Inventory of Machines
+      matchesNone: Matches no existing Inventory of Machines
       matchesSome: |-
         {matched, plural,
-          =1 {Matches 1 of {total, number} existing Machine Inventories: "{sample}"}
-          other {Matches {matched, number} of {total, number} existing Machine Inventories, including "{sample}"}
+          =1 {Matches 1 of {total, number} existing Inventory of Machines: "{sample}"}
+          other {Matches {matched, number} of {total, number} existing Inventory of Machines, including "{sample}"}
         }
   machineInventory:
     createCluster: Create Elemental Cluster
     import: YAML import
-    updateForCreateClusterError: Error updating machine inventories with label for creating a cluster
+    updateForCreateClusterError: Error updating Inventory of Machines with label for creating a cluster
