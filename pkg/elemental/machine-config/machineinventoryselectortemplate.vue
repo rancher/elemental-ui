@@ -18,7 +18,7 @@ export default {
         value: item
       };
     });
-    this.updateMatchingMachineInventories();
+    this.updateMatchingMachineInventories(true);
   },
   data() {
     if ( !this.value.spec?.template?.spec?.selector ) {
@@ -92,7 +92,7 @@ export default {
       this.updateMatchingMachineInventories();
     },
 
-    updateMatchingMachineInventories: throttle(function() {
+    updateMatchingMachineInventories: throttle(function(isFirstRun) {
       const all = this.machineInventories;
       const match = matching(all, this.expressions);
       const matched = match.length || 0;
@@ -105,6 +105,10 @@ export default {
         isNone:  matched === 0,
         sample,
       };
+
+      if (isFirstRun) {
+        this.$emit('updateMachineCount', matched);
+      }
     }, 250, { leading: true })
   },
 };

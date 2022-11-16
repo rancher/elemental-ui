@@ -160,6 +160,9 @@ export default {
 
         return errors;
       }
+    },
+    updateMachineCount(val) {
+      this.value.pool.quantity = val;
     }
   }
 };
@@ -224,6 +227,7 @@ export default {
       :pool-index="idx"
       :machine-pools="machinePools"
       @error="e=>errors = e"
+      @updateMachineCount="updateMachineCount"
     />
     <Banner v-else-if="value.configMissing" color="error" label-key="cluster.machinePool.configNotFound" />
     <Banner v-else color="info" label-key="cluster.machinePool.noAccessBanner" />
