@@ -161,8 +161,10 @@ export default {
         return errors;
       }
     },
+    // handle emitted matched machine inventories on selector so that machine count
+    // on machine pool can be kept up to date
     updateMachineCount(val) {
-      this.value.pool.quantity = val;
+      this.value.pool.quantity = val || 1;
     }
   }
 };

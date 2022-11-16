@@ -18,7 +18,7 @@ export default {
         value: item
       };
     });
-    this.updateMatchingMachineInventories(true);
+    this.updateMatchingMachineInventories();
   },
   data() {
     if ( !this.value.spec?.template?.spec?.selector ) {
@@ -106,9 +106,9 @@ export default {
         sample,
       };
 
-      if (isFirstRun) {
-        this.$emit('updateMachineCount', matched);
-      }
+      // emit matched machine inventories on selector so that machine count
+      // on machine pool can be kept up to date
+      this.$emit('updateMachineCount', matched);
     }, 250, { leading: true })
   },
 };
