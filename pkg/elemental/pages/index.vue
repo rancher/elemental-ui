@@ -116,6 +116,15 @@ export default {
         query: { type: ELEMENTAL_CLUSTER_PROVIDER }
       };
 
+      const clusterManageRoute = {
+        name:   'c-cluster-product-resource',
+        params: {
+          resource: CAPI.RANCHER_CLUSTER,
+          product:  'manager',
+        },
+        query: { q: 'elemental' }
+      };
+
       [
         ELEMENTAL_SCHEMA_IDS.MACHINE_REGISTRATIONS,
         ELEMENTAL_SCHEMA_IDS.MACHINE_INVENTORIES,
@@ -131,7 +140,10 @@ export default {
           btnVisible:  true
         };
 
-        if (type === this.ELEMENTAL_CLUSTERS) {
+        if (type === this.ELEMENTAL_CLUSTERS && obj.count > 0) {
+          obj.btnRoute = clusterManageRoute;
+          obj.btnLabel = this.t(`elemental.dashboard.btnLabel.manage."${ type }"`);
+        } else {
           obj.btnRoute = clusterCreateRoute;
         }
 
@@ -179,7 +191,7 @@ export default {
   methods: {
     handleRoute(card) {
       if (!card.btnDisabled) {
-        this.$router.replace(card.btnRoute);
+        this.$router.push(card.btnRoute);
       }
     },
     async downloadMachineReg(item, btnCb) {
@@ -220,7 +232,7 @@ export default {
       <Banner
         class="mt-40"
         color="warning"
-        v-html="t('product.notInstalled', {}, true)"
+        v-html="t('product.notInstalledOrNoSchema', {}, true)"
       />
     </div>
     <div v-else>
@@ -228,7 +240,7 @@ export default {
         v-if="isElementalOpNotInstalledAndHasSchema"
         class="mb-20"
         color="warning"
-        v-html="t('product.notInstalled', {}, true)"
+        v-html="t('product.notInstalledHasSchema', {}, true)"
       />
       <h1 class="title">
         {{ t('elemental.menuLabels.titleDashboard') }}
