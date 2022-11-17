@@ -160,6 +160,11 @@ export default {
 
         return errors;
       }
+    },
+    // handle emitted matched machine inventories on selector so that machine count
+    // on machine pool can be kept up to date
+    updateMachineCount(val) {
+      this.value.pool.quantity = val || 1;
     }
   }
 };
@@ -224,6 +229,7 @@ export default {
       :pool-index="idx"
       :machine-pools="machinePools"
       @error="e=>errors = e"
+      @updateMachineCount="updateMachineCount"
     />
     <Banner v-else-if="value.configMissing" color="error" label-key="cluster.machinePool.configNotFound" />
     <Banner v-else color="info" label-key="cluster.machinePool.noAccessBanner" />

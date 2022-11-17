@@ -116,6 +116,15 @@ export default {
         query: { type: ELEMENTAL_CLUSTER_PROVIDER }
       };
 
+      const clusterManageRoute = {
+        name:   'c-cluster-product-resource',
+        params: {
+          resource: CAPI.RANCHER_CLUSTER,
+          product:  'manager',
+        },
+        query: { q: 'elemental' }
+      };
+
       [
         ELEMENTAL_SCHEMA_IDS.MACHINE_REGISTRATIONS,
         ELEMENTAL_SCHEMA_IDS.MACHINE_INVENTORIES,
@@ -125,13 +134,15 @@ export default {
           type,
           count:       this.resourcesData[type]?.length || 0,
           title:       this.t(`typeLabel."${ type }"`, { count: 2 }),
-          btnLabel:    this.t(`elemental.dashboard.btnLabel.create."${ type }"`),
-          btnRoute:    createElementalRoute(`resource-create`, { resource: type }),
+          btnLabel:    this.t(`elemental.dashboard.btnLabel.${ this.resourcesData[type]?.length ? 'manage' : 'create' }."${ type }"`),
+          btnRoute:    createElementalRoute(`resource${ !this.resourcesData[type]?.length ? '-create' : '' }`, { resource: type }),
           btnDisabled: false,
           btnVisible:  true
         };
 
-        if (type === this.ELEMENTAL_CLUSTERS) {
+        if (type === this.ELEMENTAL_CLUSTERS && obj.count > 0) {
+          obj.btnRoute = clusterManageRoute;
+        } else if (type === this.ELEMENTAL_CLUSTERS) {
           obj.btnRoute = clusterCreateRoute;
         }
 
@@ -179,7 +190,7 @@ export default {
   methods: {
     handleRoute(card) {
       if (!card.btnDisabled) {
-        this.$router.replace(card.btnRoute);
+        this.$router.push(card.btnRoute);
       }
     },
     async downloadMachineReg(item, btnCb) {
@@ -220,7 +231,7 @@ export default {
       <Banner
         class="mt-40"
         color="warning"
-        v-html="t('product.notInstalled', {}, true)"
+        v-html="t('product.notInstalledOrNoSchema', {}, true)"
       />
     </div>
     <div v-else>
@@ -228,7 +239,7 @@ export default {
         v-if="isElementalOpNotInstalledAndHasSchema"
         class="mb-20"
         color="warning"
-        v-html="t('product.notInstalled', {}, true)"
+        v-html="t('product.notInstalledHasSchema', {}, true)"
       />
       <h1 class="title">
         {{ t('elemental.menuLabels.titleDashboard') }}
