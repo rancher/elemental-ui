@@ -3,7 +3,7 @@ import { ELEMENTAL_PRODUCT_NAME } from '../config/elemental-types';
 const BLANK_CLUSTER = '_';
 
 export const rootElementalRoute = () => ({
-  name:    `${ ELEMENTAL_PRODUCT_NAME }-c-cluster`,
+  name:    `c-cluster-product`,
   params: { product: ELEMENTAL_PRODUCT_NAME, cluster: BLANK_CLUSTER }
 });
 
