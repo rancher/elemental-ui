@@ -92,7 +92,7 @@ export default {
       this.updateMatchingMachineInventories();
     },
 
-    updateMatchingMachineInventories: throttle(function(isFirstRun) {
+    updateMatchingMachineInventories: throttle(function() {
       const all = this.machineInventories;
       const match = matching(all, this.expressions);
       const matched = match.length || 0;
