@@ -1799,9 +1799,6 @@ export default {
                 :tooltip="t('cluster.kubernetesVersion.deprecatedPatchWarning')"
                 class="patch-version"
               />
-              <div v-if="showK3sTechPreviewWarning" class="k3s-tech-preview-info">
-                {{ t('cluster.k3s.techPreview') }}
-              </div>
             </div>
             <div v-if="showCloudProvider" class="col span-6">
               <LabeledSelect
