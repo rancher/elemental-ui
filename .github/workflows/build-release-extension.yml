@@ -67,7 +67,7 @@ jobs:
         id: build_script
         run: |
           chmod +x ./scripts/publish
-          ./scripts/publish -s "${{ github.repository }}" -b main
+          ./scripts/publish -g
       - name: Commit build
         run: |
           git add ./assets ./charts/elemental ./extensions ./index.yaml
