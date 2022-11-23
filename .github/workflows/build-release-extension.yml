@@ -3,9 +3,10 @@ name: Build Elemental UI Extension
 on:
   push:
     branches: [main]
-    paths-ignore:
-      ## - ".github/workflows/**"
-      - "README.md"
+    paths:
+      - 'pkg/elemental/package.json'
+      - 'package.json'  
+    
     
 env:
   ACTIONS_RUNNER_DEBUG: false
