@@ -5,4 +5,8 @@ export default class ElementalResource extends SteveModel {
   get listLocation() {
     return createElementalRoute('resource', { resource: this.type });
   }
+
+  get doneRoute() {
+    return this.listLocation.name;
+  }
 }
