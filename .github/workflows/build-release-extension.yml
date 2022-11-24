@@ -68,7 +68,7 @@ jobs:
         id: build_script
         run: |
           chmod +x ./scripts/publish
-          ./scripts/publish -g
+          ./scripts/publish -g -b main
       - name: Commit build
         run: |
           git add ./assets ./charts/elemental ./extensions ./index.yaml
