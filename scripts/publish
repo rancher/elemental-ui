@@ -35,7 +35,7 @@ usage() {
   exit 1
 }
 
-while getopts "hvr:o:pi:fg" opt; do
+while getopts "hvr:o:pi:fgb:s:" opt; do
   case $opt in
     h)
       usage
