@@ -7,8 +7,8 @@ import ResourceTable from '@shell/components/ResourceTable';
 import PercentageBar from '@shell/components/PercentageBar';
 import { Banner } from '@components/Banner';
 import AsyncButton from '@shell/components/AsyncButton';
-import { 
-  ELEMENTAL_SCHEMA_IDS, 
+import {
+  ELEMENTAL_SCHEMA_IDS,
   ELEMENTAL_CLUSTER_PROVIDER,
   KIND
 } from '../config/elemental-types';

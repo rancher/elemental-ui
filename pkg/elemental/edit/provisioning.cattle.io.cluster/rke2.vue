@@ -202,26 +202,6 @@ export default {
       set(this.value.spec, 'kubernetesVersion', this.defaultVersion);
     }
 
-    for ( const k in this.serverArgs ) {
-      if ( this.serverConfig[k] === undefined ) {
-        const def = this.serverArgs[k].default;
-
-        set(this.serverConfig, k, (def !== undefined ? def : undefined));
-      }
-    }
-
-    for ( const k in this.agentArgs ) {
-      if ( this.agentConfig[k] === undefined ) {
-        const def = this.agentArgs[k].default;
-
-        set(this.agentConfig, k, (def !== undefined ? def : undefined));
-      }
-    }
-
-    if ( !this.serverConfig.profile ) {
-      set(this.serverConfig, 'profile', null);
-    }
-
     if ( this.rkeConfig.etcd?.s3?.bucket ) {
       this.s3Backup = true;
     }
@@ -349,12 +329,6 @@ export default {
 
     agentConfig() {
       return this.value.agentConfig;
-    },
-
-    showK3sTechPreviewWarning() {
-      const selectedVersion = this.value?.spec?.kubernetesVersion || 'none';
-
-      return !!this.k3sVersions.find(v => v.version === selectedVersion);
     },
 
     // kubeletConfigs() {
@@ -932,6 +906,9 @@ export default {
 
       // Allow time for addonNames to update... then fetch any missing addons
       this.$nextTick(() => this.initAddons());
+      if (this.mode === _CREATE) {
+        this.initServerAgentArgs();
+      }
     },
 
     showCni(neu) {
@@ -1412,6 +1389,28 @@ export default {
       const key = this.chartVersionKey(name);
 
       return merge({}, defaultChartValue?.values || {}, this.userChartValues[key] || {});
+    },
+
+    initServerAgentArgs() {
+      for ( const k in this.serverArgs ) {
+        if ( this.serverConfig[k] === undefined ) {
+          const def = this.serverArgs[k].default;
+
+          set(this.serverConfig, k, (def !== undefined ? def : undefined));
+        }
+      }
+
+      for ( const k in this.agentArgs ) {
+        if ( this.agentConfig[k] === undefined ) {
+          const def = this.agentArgs[k].default;
+
+          set(this.agentConfig, k, (def !== undefined ? def : undefined));
+        }
+      }
+
+      if ( !this.serverConfig.profile ) {
+        set(this.serverConfig, 'profile', null);
+      }
     },
 
     chartVersionKey(name) {
