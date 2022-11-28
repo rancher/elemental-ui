@@ -1,3 +1,4 @@
+import { ELEMENTAL_PRODUCT_NAME } from '../config/elemental-types';
 import Dashboard from '../pages/index.vue';
 import ListElementalResource from '../pages/_resource/index.vue';
 import CreateElementalResource from '../pages/_resource/create.vue';
@@ -5,23 +6,28 @@ import ElementalResourceDetails from '../pages/_resource/_id.vue';
 
 const routes = [
   {
-    name:      `c-cluster-product`,
-    path:      `/c/:cluster/:product/dashboard`,
+    name:      `${ ELEMENTAL_PRODUCT_NAME }-c-cluster`,
+    path:      `/:product/c/:cluster/dashboard`,
     component: Dashboard,
   },
   {
-    name:      `c-cluster-product-resource`,
-    path:      `/c/:cluster/:product/:resource`,
+    name:      `${ ELEMENTAL_PRODUCT_NAME }-c-cluster-resource`,
+    path:      `/:product/c/:cluster/:resource`,
     component: ListElementalResource,
   },
   {
-    name:      `c-cluster-product-resource-create`,
-    path:      `/c/:cluster/:product/:resource/create`,
+    name:      `${ ELEMENTAL_PRODUCT_NAME }-c-cluster-resource-create`,
+    path:      `/:product/c/:cluster/:resource/create`,
     component: CreateElementalResource,
   },
   {
-    name:      `c-cluster-product-resource-id`,
-    path:      `/c/:cluster/:product/:resource/id`,
+    name:      `${ ELEMENTAL_PRODUCT_NAME }-c-cluster-resource-id`,
+    path:      `/:product/c/:cluster/:resource/:id`,
+    component: ElementalResourceDetails,
+  },
+  {
+    name:      `${ ELEMENTAL_PRODUCT_NAME }-c-cluster-resource-namespace-id`,
+    path:      `/:product/c/:cluster/:resource/:namespace/:id`,
     component: ElementalResourceDetails,
   },
 ];
