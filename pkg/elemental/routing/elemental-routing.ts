@@ -22,7 +22,12 @@ const routes = [
   },
   {
     name:      `${ ELEMENTAL_PRODUCT_NAME }-c-cluster-resource-id`,
-    path:      `/:product/c/:cluster/:resource/id`,
+    path:      `/:product/c/:cluster/:resource/:id`,
+    component: ElementalResourceDetails,
+  },
+  {
+    name:      `${ ELEMENTAL_PRODUCT_NAME }-c-cluster-resource-namespace-id`,
+    path:      `/:product/c/:cluster/:resource/:namespace/:id`,
     component: ElementalResourceDetails,
   },
 ];
