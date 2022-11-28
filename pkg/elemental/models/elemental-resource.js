@@ -9,11 +9,12 @@ export default class ElementalResource extends SteveModel {
   }
 
   get detailLocation() {
+    const schema = this.$getters['schemaFor'](this.type);
     const detailLocation = clone(this._detailLocation);
 
     detailLocation.params.resource = this.type;
 
-    if (detailLocation.name.includes('namespace')) {
+    if (schema?.attributes?.namespaced) {
       detailLocation.name = `${ ELEMENTAL_PRODUCT_NAME }-c-cluster-resource-namespace-id`;
     } else {
       detailLocation.name = `${ ELEMENTAL_PRODUCT_NAME }-c-cluster-resource-id`;
