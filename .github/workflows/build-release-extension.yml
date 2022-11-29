@@ -70,6 +70,7 @@ jobs:
           ./scripts/publish -s "${{ github.repository }}" -b main
       - name: Commit build
         run: |
+          git pull
           git add ./assets ./charts/elemental ./extensions ./index.yaml
           git commit -a -m "${{ env.CI_COMMIT_MESSAGE }}"
           git push
