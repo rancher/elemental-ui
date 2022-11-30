@@ -2,7 +2,6 @@
 import { LabeledInput } from '@components/Form/LabeledInput';
 import { Checkbox } from '@components/Form/Checkbox';
 import { _EDIT } from '@shell/config/query-params';
-import { importMachineConfig } from '@shell/utils/dynamic-importer';
 import Taints from '@shell/components/form/Taints.vue';
 import KeyValue from '@shell/components/form/KeyValue.vue';
 import AdvancedSection from '@shell/components/AdvancedSection.vue';
@@ -117,10 +116,10 @@ export default {
       const haveProviders = this.$store.getters['plugins/machineDrivers'];
 
       if ( haveProviders.includes(this.provider) ) {
-        return importMachineConfig(this.provider);
+        return () => import(/* webpackChunkName: "machine-config" */ `@shell/machine-config/${ this.provider }`);
       }
 
-      return importMachineConfig('generic');
+      return () => import(/* webpackChunkName: "machine-config" */ `@shell/machine-config/generic`);
     },
 
     isWindows() {
