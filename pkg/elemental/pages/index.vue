@@ -334,7 +334,7 @@ export default {
             <h3 class="mb-20">
               {{ managedOsTitle }}
             </h3>
-            <nuxt-link :to="managedOsCreateLocation">
+            <nuxt-link :to="managedOsListLocation">
               {{ t('elemental.dashboard.manageOsImageUpgrade') }}
             </nuxt-link>
           </div>
@@ -343,7 +343,7 @@ export default {
             class="empty-table-state"
           >
             <p>{{ t('elemental.dashboard.noManageOs') }}</p>
-            <nuxt-link :to="managedOsListLocation">
+            <nuxt-link :to="managedOsCreateLocation">
               {{ t('elemental.dashboard.noManageOsAction') }}
             </nuxt-link>
           </div>
