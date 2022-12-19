@@ -291,7 +291,10 @@ export default {
             <h3 class="mb-20">
               {{ machineRegTitle }}
             </h3>
-            <nuxt-link :to="machineRegListLocation">
+            <nuxt-link
+              :to="machineRegListLocation"
+              class="table-title-block-link"
+            >
               {{ t('elemental.dashboard.manageReg') }}
             </nuxt-link>
           </div>
@@ -334,7 +337,10 @@ export default {
             <h3 class="mb-20">
               {{ managedOsTitle }}
             </h3>
-            <nuxt-link :to="managedOsCreateLocation">
+            <nuxt-link
+              :to="managedOsListLocation"
+              class="table-title-block-link"
+            >
               {{ t('elemental.dashboard.manageOsImageUpgrade') }}
             </nuxt-link>
           </div>
@@ -343,7 +349,7 @@ export default {
             class="empty-table-state"
           >
             <p>{{ t('elemental.dashboard.noManageOs') }}</p>
-            <nuxt-link :to="managedOsListLocation">
+            <nuxt-link :to="managedOsCreateLocation">
               {{ t('elemental.dashboard.noManageOsAction') }}
             </nuxt-link>
           </div>
@@ -475,6 +481,9 @@ export default {
     .table-title-block {
       display: flex;
       justify-content: space-between;
+    }
+    .table-title-block-link {
+      margin-top: 2px;
     }
 
     .token-truncate {
