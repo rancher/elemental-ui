@@ -5,7 +5,7 @@ import { Banner } from '@components/Banner';
 import { set } from '@shell/utils/object';
 import { convert, matching, simplify } from '@shell/utils/selector';
 import throttle from 'lodash/throttle';
-import { ELEMENTAL_SCHEMA_IDS } from '../config/elemental-types';
+import { ELEMENTAL_SCHEMA_IDS, ELEMENTAL_PRODUCT_NAME } from '../config/elemental-types';
 
 export default {
   components: { MatchExpressions, Banner },
@@ -57,6 +57,7 @@ export default {
     );
 
     return {
+      elementalType:                      ELEMENTAL_PRODUCT_NAME,
       machineInventories:                 null,
       matchingMachineInventories:         null,
       machineInventorySelectorKeyOptions: null,
@@ -119,6 +120,7 @@ export default {
     <h2 v-t="'elemental.clusterGroup.selector.label'" class="mt-20 mb-20" />
     <MatchExpressions
       :mode="mode"
+      :type="elementalType"
       :value="expressions"
       :show-remove="false"
       :keys-select-options="machineInventorySelectorKeyOptions"
