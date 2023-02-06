@@ -11,7 +11,9 @@
     "@rancher/shell": "0.3.1",
     "@types/lodash": "4.14.184",
     "core-js": "3.21.1",
-    "css-loader": "4.3.0",
+    "css-loader": "4.3.0"
+  },
+  "devDependencies": {
     "vue-virtual-scroll-list": "^2.3.4"
   },
   "scripts": {
