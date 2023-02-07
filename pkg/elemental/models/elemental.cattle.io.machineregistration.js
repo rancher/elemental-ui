@@ -93,7 +93,7 @@ export default class MachineRegistration extends ElementalResource {
   }
 
   async getMachineRegistrationData() {
-    const url = `${ window.location.origin }/elemental/registration/${ this.status.registrationToken }`;
+    const url = `/elemental/registration/${ this.status.registrationToken }`;
 
     try {
       const inStore = this.$rootGetters['currentStore']();
