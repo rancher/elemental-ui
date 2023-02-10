@@ -1,7 +1,7 @@
 {
   "name": "elemental",
   "description": "OS Management plugin",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": false,
   "rancher": true,
   "icon": "https://raw.githubusercontent.com/rancher/elemental-ui/main/pkg/elemental/icon.svg",
