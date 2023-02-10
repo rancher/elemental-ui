@@ -2895,10 +2895,10 @@
   dependencies:
     lodash.debounce "4.0.8"
 
-"@rancher/shell@0.3.1":
-  version "0.3.1"
-  resolved "https://registry.yarnpkg.com/@rancher/shell/-/shell-0.3.1.tgz#66475992bce23b2143358a003af750607bbbf5a0"
-  integrity sha512-tJD5HHLx+lA1sgnut0iD0pcv+WgWNZXysNW2HpaUTH523FYryXRL7OjrZwKM7BLigTznlrVuGYS7w1vBWi7Zgg==
+"@rancher/shell@0.3.3":
+  version "0.3.3"
+  resolved "https://registry.yarnpkg.com/@rancher/shell/-/shell-0.3.3.tgz#980274b52cb8832ba83e2308dc6afc9b50a7a10f"
+  integrity sha512-2PRS2tTQgBvrs3md4m9Hzpq2+aK9BmOy/Dacq/xaRHQm9R2uCVCnS8h1/laVWdWlA9EgHEKFkvE1dosvIPifCg==
   dependencies:
     "@aws-sdk/client-ec2" "3.1.0"
     "@aws-sdk/client-eks" "3.1.0"
@@ -3006,6 +3006,7 @@
     vue-server-renderer "2.6.14"
     vue-shortkey "3.1.7"
     vue-template-compiler "2.6.14"
+    vue-virtual-scroll-list "^2.3.4"
     vue2-transitions "0.3.0"
     vuedraggable "2.24.3"
     vuex "3.6.2"
