@@ -42,8 +42,9 @@ export default {
   },
   data() {
     return {
-      cloudConfig:  typeof this.value.spec === 'string' ? this.value.spec : saferDump(this.value.spec),
-      yamlErrors:   null
+      cloudConfig: typeof this.value.spec === 'string' ? this.value.spec : saferDump(this.value.spec),
+      yamlErrors:  null,
+      isFormValid: true
     };
   },
   watch: {
@@ -96,6 +97,27 @@ export default {
         saveCb(false);
       }
     },
+    updateLabels(ev) {
+      this.value.setLabels(ev, 'machineInventoryLabels', true);
+      let labelLengthExceeded = false;
+
+      this.errors = [];
+
+      if (this.value.spec.machineInventoryLabels && Object.keys(this.value.spec.machineInventoryLabels).length) {
+        Object.keys(this.value.spec.machineInventoryLabels).forEach((key) => {
+          if (this.value.spec.machineInventoryLabels[key].length > 63) {
+            labelLengthExceeded = true;
+          }
+        });
+      }
+
+      if (labelLengthExceeded) {
+        this.isFormValid = false;
+        this.errors.push(this.t('elemental.machineRegistration.validation.machineInventoryLabels'));
+      } else {
+        this.isFormValid = true;
+      }
+    },
     onFileSelected(value) {
       const component = this.$refs.yamleditor;
 
@@ -116,6 +138,7 @@ export default {
     :mode="mode"
     :resource="value"
     :errors="errors"
+    :validation-passed="isFormValid"
     @error="e=>errors = e"
     @finish="save"
     @cancel="done"
@@ -186,7 +209,7 @@ export default {
                 :title="t('labels.labels.title')"
                 :read-allowed="false"
                 :value-can-be-empty="true"
-                @input="value.setLabels($event, 'machineInventoryLabels', true)"
+                @input="updateLabels($event)"
               />
             </div>
             <div class="row mb-10">
