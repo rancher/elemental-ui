@@ -13,6 +13,11 @@ tableHeaders:
   token: Token
   downloadTableDashboard: ''
   download: 'Download'
+  imagePath: Image Path
+  osVersion: OS Version
+  osVersionChannel: OS Version Channel
+  channelImage: Channel Image
+  targetClusters: Target Clusters
 
 typeLabel:
   elemental:  |-
@@ -103,9 +108,16 @@ elemental:
       targetCluster:
         label: Target Cluster
         placeholder: Enter a target cluster name
+      radioOptions:
+        osImages: Use Managed OS version
+        registry: Use image from registry
       osImage:
-        label: OS Image
-        placeholder: Enter an OS image name
+        label: Image path
+        placeholder: Enter an OS image path
+      managedOsImage:
+        label: Managed OS version
+        placeholder: Select a Managed OS version
+        channel: OS Channel - { name }
   machineRegistration:
     edit:
       imageSetup: Setting up an OS image
