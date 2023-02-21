@@ -12,4 +12,21 @@ export default class ManagedOsImage extends ElementalResource {
       Vue.set(this, 'metadata', { namespace: ELEMENTAL_DEFAULT_NAMESPACE });
     }
   }
+
+  get clusterTargetsList() {
+    if (this.spec?.clusterTargets?.length) {
+      let val = '';
+
+      this.spec.clusterTargets.forEach((target, i) => {
+        val += target.clusterName;
+        if (i !== this.spec.clusterTargets.length - 1) {
+          val += ', ';
+        }
+      });
+
+      return val || '---';
+    }
+
+    return '---';
+  }
 }

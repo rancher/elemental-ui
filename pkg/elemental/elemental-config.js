@@ -99,18 +99,9 @@ export function init($plugin, store) {
     {
       name:          'TargetClusters',
       labelKey:      'tableHeaders.targetClusters',
-      getValue:      (row) => {
-        let val = '';
-
-        row.spec?.clusterTargets?.forEach((target, i) => {
-          val += target.clusterName;
-          if (i !== row.spec?.clusterTargets?.length - 1) {
-            val += ', ';
-          }
-        });
-
-        return val || '---';
-      },
+      value:         'clusterTargetsList',
+      getValue:      row => row.clusterTargetsList || '---',
+      sort:          ['clusterTargetsList']
     },
     AGE
   ]);

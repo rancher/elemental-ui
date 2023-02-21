@@ -95,12 +95,19 @@ export default {
       managedOsHeaders:  [
         NAME,
         {
-          name:     'osImage',
-          labelKey: 'tableHeaders.osImage',
-          value:    'spec.osImage',
-          getValue: row => row.spec?.osImage,
-          sort:     'spec.osImage'
-        }
+          name:          'OsVersion',
+          labelKey:      'tableHeaders.osVersion',
+          value:         'spec.managedOSVersionName',
+          getValue:      row => row.spec.managedOSVersionName || '---',
+          sort:          ['spec.managedOSVersionName']
+        },
+        {
+          name:          'TargetClusters',
+          labelKey:      'tableHeaders.targetClusters',
+          value:         'clusterTargetsList',
+          getValue:      row => row.clusterTargetsList || '---',
+          sort:          ['clusterTargetsList']
+        },
       ],
       colorStops: {
         0: '--error', 20: '--warning', 75: '--info', 95: '--success'
