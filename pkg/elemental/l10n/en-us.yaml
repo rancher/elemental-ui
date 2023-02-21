@@ -108,7 +108,10 @@ elemental:
         placeholder: Enter an OS image name
   machineRegistration:
     validation:
-      machineInventoryLabels: One of the labels for Inventory of Machines exceeds the 63 characters limit. Please shorten the length of the label value
+      machineInventoryLabelKeyLength: One of the labels for Inventory of Machines has a key that exceeds the 63 characters limit. Please shorten the length of the label key.
+      machineInventoryLabelKeyPrefixLength: One of the labels for Inventory of Machines has a key prefix that exceeds the 253 characters limit. Please shorten the length of the label key prefix.
+      machineInventoryLabelKeyNameLength: One of the labels for Inventory of Machines has a key name that exceeds the 63 characters limit. Please shorten the length of the label key name.
+      machineInventoryLabelValueLength: One of the labels for Inventory of Machines has a value that exceeds the 63 characters limit. Please shorten the length of the label value.
     edit:
       imageSetup: Setting up an OS image
       downloadMachineRegistrationFile: 'Download the Registration Endpoint file and follow the set of instructions on how to prepare your ISO image <a target="_blank" rel="noopener noreferrer nofollow" style="text-decoration: underline" href="https://rancher.github.io/elemental/quickstart/#preparing-the-iso">here</a>.'
