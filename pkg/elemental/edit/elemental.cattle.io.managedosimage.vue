@@ -7,7 +7,7 @@ import LabeledSelect from '@shell/components/form/LabeledSelect';
 import NameNsDescription from '@shell/components/form/NameNsDescription';
 import { RadioGroup } from '@components/Form/Radio';
 import { allHash } from '@shell/utils/promise';
-import { _CREATE } from '@shell/config/query-params';
+import { _CREATE, _EDIT, _VIEW } from '@shell/config/query-params';
 import { CAPI } from '@shell/config/types';
 import { ELEMENTAL_SCHEMA_IDS } from '../config/elemental-types';
 import {
@@ -47,6 +47,24 @@ export default {
     this.osGroups = res.osGroups || [];
     this.osVersions = res.osVersions || [];
     this.osVersionChannels = res.osVersionChannels || [];
+
+    if ((this.mode === _EDIT || this.mode === _VIEW)) {
+      // populate OS version selected
+      if (this.value?.spec?.managedOSVersionName) {
+        this.osVersionSelected = this.value?.spec?.managedOSVersionName;
+      }
+
+      // populate cluster targets selected
+      if (this.value?.spec?.clusterTargets?.length) {
+        const targetsArray = [];
+
+        this.value?.spec?.clusterTargets.forEach((ct) => {
+          targetsArray.push(ct.clusterName);
+        });
+
+        this.clusterTargets = targetsArray;
+      }
+    }
   },
   data() {
     return {
@@ -54,7 +72,7 @@ export default {
       osGroups:           [],
       osVersions:         [],
       osVersionChannels:  [],
-      clusterTargets:     this.handleClusterTargets(),
+      clusterTargets:     [],
       useManagedOsImages: true,
       osVersionSelected:  ''
     };
@@ -75,9 +93,10 @@ export default {
 
       this.osVersionChannels.forEach((channel) => {
         const versions = this.osVersions.filter((version) => {
-          const channelExists = version.metadata?.ownerReferences.find(ref => ref.name === channel.name);
+          // use only the same namespace as the OS groups for now...
+          const channelExists = version.metadata?.ownerReferences.find(ref => ref.name === channel.name && this.value?.metadata?.namespace === channel.metadata?.namespace);
 
-          return channelExists && Object.keys(channelExists).length;
+          return channelExists && Object.keys(channelExists).length && this.value?.metadata?.namespace === version.metadata?.namespace;
         });
 
         if (versions.length) {
@@ -102,28 +121,11 @@ export default {
       return this.mode === _CREATE;
     }
   },
-  watch: {
-    clusterTargets(neu) {
-      this.value.spec.clusterTargets = neu.map((val) => {
+  methods: {
+    handleClusterTargetChange(ev) {
+      this.value.spec.clusterTargets = ev.map((val) => {
         return { clusterName: val };
       });
-    }
-  },
-  methods: {
-    handleClusterTargets() {
-      const clusterTargets = this.value?.spec?.clusterTargets;
-
-      if (clusterTargets?.length) {
-        const targetsArray = [];
-
-        clusterTargets.forEach((ct) => {
-          targetsArray.push(ct.clusterName);
-        });
-
-        return targetsArray;
-      }
-
-      return [];
     },
     handleManagedOSVersionNameChange(ev) {
       this.value.spec.managedOSVersionName = ev.split(STRING_SEPARATOR)[1];
@@ -162,6 +164,7 @@ export default {
           :mode="mode"
           :options="clusterTargetOptions"
           :multiple="true"
+          @input="handleClusterTargetChange($event)"
         />
         <RadioGroup
           v-model="useManagedOsImages"
