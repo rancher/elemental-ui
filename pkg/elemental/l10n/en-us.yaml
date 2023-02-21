@@ -157,3 +157,10 @@ elemental:
     createCluster: Create Elemental Cluster
     import: YAML import
     updateForCreateClusterError: Error updating Inventory of Machines with label for creating a cluster
+  osversionchannels:
+    create:
+      configuration: Configuration
+      spec: Spec
+      imageRegistry:
+        label: Image registry path
+        placeholder: Enter an image registry path
