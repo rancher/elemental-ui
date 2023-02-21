@@ -52,6 +52,9 @@ export default {
       // populate OS version selected
       if (this.value?.spec?.managedOSVersionName) {
         this.osVersionSelected = this.value?.spec?.managedOSVersionName;
+        this.useManagedOsImages = true;
+      } else {
+        this.useManagedOsImages = false;
       }
 
       // populate cluster targets selected
