@@ -19,14 +19,8 @@ export default {
     mode: {
       type:     String,
       required: true
-    },
-  },
-  async fetch() {},
-  data() {
-    return {};
-  },
-  computed: {},
-  methods:  {},
+    }
+  }
 };
 </script>
 
@@ -54,8 +48,8 @@ export default {
         <h3>{{ t('elemental.osversionchannels.create.spec') }}</h3>
         <LabeledInput
           v-model.trim="value.spec.options.image"
-          :label="t('elemental.osversionchannels.create.imageRegistry.label')"
-          :placeholder="t('elemental.osversionchannels.create.imageRegistry.placeholder', null, true)"
+          :label="t('elemental.osversionchannels.create.registryUri.label')"
+          :placeholder="t('elemental.osversionchannels.create.registryUri.placeholder', null, true)"
           :mode="mode"
         />
       </div>

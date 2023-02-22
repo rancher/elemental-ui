@@ -161,6 +161,6 @@ elemental:
     create:
       configuration: Configuration
       spec: Spec
-      imageRegistry:
+      registryUri:
         label: Image registry path
         placeholder: Enter an image registry path
