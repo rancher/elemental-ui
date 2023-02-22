@@ -5,14 +5,22 @@ import CreateEditView from '@shell/mixins/create-edit-view';
 import { LabeledInput } from '@components/Form/LabeledInput';
 import LabeledSelect from '@shell/components/form/LabeledSelect';
 import NameNsDescription from '@shell/components/form/NameNsDescription';
-import { _CREATE } from '@shell/config/query-params';
+import { RadioGroup } from '@components/Form/Radio';
+import { allHash } from '@shell/utils/promise';
+import { _CREATE, _EDIT, _VIEW } from '@shell/config/query-params';
 import { CAPI } from '@shell/config/types';
-import { filterForElementalClusters } from '../utils/elemental-utils';
+import { ELEMENTAL_SCHEMA_IDS } from '../config/elemental-types';
+import {
+  filterForElementalClusters,
+  filterForUsedElementalClustersOnManagedOs
+} from '../utils/elemental-utils';
+
+const STRING_SEPARATOR = '_***_';
 
 export default {
   name:       'ManagedOsImagesEditView',
   components: {
-    Loading, LabeledInput, LabeledSelect, CruResource, NameNsDescription
+    Loading, LabeledInput, LabeledSelect, CruResource, NameNsDescription, RadioGroup
   },
   mixins:     [CreateEditView],
   props:      {
@@ -26,48 +34,104 @@ export default {
     },
   },
   async fetch() {
-    const rancherClusters = await this.$store.dispatch('management/findAll', { type: CAPI.RANCHER_CLUSTER });
+    const hash = {};
 
-    this.elementalClusters = filterForElementalClusters(rancherClusters);
+    hash.rancherClusters = this.$store.dispatch('management/findAll', { type: CAPI.RANCHER_CLUSTER });
+    hash.osGroups = this.$store.dispatch('management/findAll', { type: ELEMENTAL_SCHEMA_IDS.MANAGED_OS_IMAGES });
+    hash.osVersions = this.$store.dispatch('management/findAll', { type: ELEMENTAL_SCHEMA_IDS.MANAGED_OS_VERSIONS });
+    hash.osVersionChannels = this.$store.dispatch('management/findAll', { type: ELEMENTAL_SCHEMA_IDS.MANAGED_OS_VERSION_CHANNELS });
+
+    const res = await allHash(hash);
+
+    this.elementalClusters = filterForElementalClusters(res.rancherClusters || []);
+    this.osGroups = res.osGroups || [];
+    this.osVersions = res.osVersions || [];
+    this.osVersionChannels = res.osVersionChannels || [];
+
+    if ((this.mode === _EDIT || this.mode === _VIEW)) {
+      // populate OS version selected
+      if (this.value?.spec?.managedOSVersionName) {
+        this.osVersionSelected = this.value?.spec?.managedOSVersionName;
+        this.useManagedOsImages = true;
+      } else {
+        this.useManagedOsImages = false;
+      }
+
+      // populate cluster targets selected
+      if (this.value?.spec?.clusterTargets?.length) {
+        const targetsArray = [];
+
+        this.value?.spec?.clusterTargets.forEach((ct) => {
+          targetsArray.push(ct.clusterName);
+        });
+
+        this.clusterTargets = targetsArray;
+      }
+    }
   },
   data() {
-    return { elementalClusters: [], clusterTargets: this.handleClusterTargets() };
+    return {
+      elementalClusters:  [],
+      osGroups:           [],
+      osVersions:         [],
+      osVersionChannels:  [],
+      clusterTargets:     [],
+      useManagedOsImages: true,
+      osVersionSelected:  ''
+    };
   },
   computed: {
     clusterTargetOptions() {
-      return this.elementalClusters.map((cluster) => {
+      const targetableClusters = filterForUsedElementalClustersOnManagedOs(this.elementalClusters, this.osGroups);
+
+      return targetableClusters.map((cluster) => {
         return {
           label: cluster.name,
           value: cluster.name
         };
       });
     },
+    managedOSVersionOptions() {
+      const out = [];
+
+      this.osVersionChannels.forEach((channel) => {
+        const versions = this.osVersions.filter((version) => {
+          // use only the same namespace as the OS groups for now...
+          const channelExists = version.metadata?.ownerReferences.find(ref => ref.name === channel.name && this.value?.metadata?.namespace === channel.metadata?.namespace);
+
+          return channelExists && Object.keys(channelExists).length && this.value?.metadata?.namespace === version.metadata?.namespace;
+        });
+
+        if (versions.length) {
+          out.push({
+            kind:  'group',
+            label: this.t('elemental.osimage.create.managedOsImage.channel', { name: channel.name }),
+            value: this.t('elemental.osimage.create.managedOsImage.channel', { name: channel.name })
+          });
+
+          versions.forEach((v) => {
+            out.push({
+              label: v.name,
+              value: `${ channel.name }${ STRING_SEPARATOR }${ v.name }`
+            });
+          });
+        }
+      });
+
+      return out;
+    },
     isCreate() {
       return this.mode === _CREATE;
     }
   },
-  watch: {
-    clusterTargets(neu) {
-      this.value.spec.clusterTargets = neu.map((val) => {
+  methods: {
+    handleClusterTargetChange(ev) {
+      this.value.spec.clusterTargets = ev.map((val) => {
         return { clusterName: val };
       });
-    }
-  },
-  methods: {
-    handleClusterTargets() {
-      const clusterTargets = this.value?.spec?.clusterTargets;
-
-      if (clusterTargets?.length) {
-        const targetsArray = [];
-
-        clusterTargets.forEach((ct) => {
-          targetsArray.push(ct.clusterName);
-        });
-
-        return targetsArray;
-      }
-
-      return [];
+    },
+    handleManagedOSVersionNameChange(ev) {
+      this.value.spec.managedOSVersionName = ev.split(STRING_SEPARATOR)[1];
     }
   },
 };
@@ -97,19 +161,41 @@ export default {
         <h3>{{ t('elemental.osimage.create.spec') }}</h3>
         <LabeledSelect
           v-model="clusterTargets"
-          class="mb-40"
+          class="mb-20"
           :label="t('elemental.osimage.create.targetCluster.label')"
           :placeholder="t('elemental.osimage.create.targetCluster.placeholder', null, true)"
           :mode="mode"
           :options="clusterTargetOptions"
           :multiple="true"
+          @input="handleClusterTargetChange($event)"
         />
-        <LabeledInput
-          v-model.trim="value.spec.osImage"
-          :label="t('elemental.osimage.create.osImage.label')"
-          :placeholder="t('elemental.osimage.create.osImage.placeholder', null, true)"
+        <RadioGroup
+          v-model="useManagedOsImages"
+          class="mb-20"
+          name="os-image-mode"
+          :options="[true, false]"
+          :labels="[t('elemental.osimage.create.radioOptions.osImages'), t('elemental.osimage.create.radioOptions.registry')]"
           :mode="mode"
         />
+        <div v-if="useManagedOsImages">
+          <LabeledSelect
+            v-model="osVersionSelected"
+            :mode="mode"
+            :options="managedOSVersionOptions"
+            label-key="elemental.osimage.create.managedOsImage.label"
+            :placeholder="t('elemental.osimage.create.managedOsImage.placeholder', null, true)"
+            option-key="value"
+            @input="handleManagedOSVersionNameChange($event)"
+          />
+        </div>
+        <div v-else>
+          <LabeledInput
+            v-model.trim="value.spec.osImage"
+            :label="t('elemental.osimage.create.osImage.label')"
+            :placeholder="t('elemental.osimage.create.osImage.placeholder', null, true)"
+            :mode="mode"
+          />
+        </div>
       </div>
     </div>
   </CruResource>
