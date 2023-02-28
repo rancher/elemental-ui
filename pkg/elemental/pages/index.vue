@@ -56,14 +56,14 @@ export default {
       // we need to check for the length of the response
       // due to some issue with a standard-user, which can list apps
       // but the list comes up empty []
-      const checkInstalledAppsForElemental = allDispatches.installedApps && allDispatches.installedApps.length && !allDispatches.installedApps.find(item => item.id.includes('elemental-operator'));
+      const isElementalOperatorNotInstalledOnApps = allDispatches.installedApps && allDispatches.installedApps.length && !allDispatches.installedApps.find(item => item.id.includes('elemental-operator'));
 
       // check if operator is installed
-      if (!allDispatches.elementalSchema || checkInstalledAppsForElemental) {
+      if (!allDispatches.elementalSchema || isElementalOperatorNotInstalledOnApps) {
         this.isElementalOpInstalled = false;
       }
       // check if CRD is there but operator isn't
-      if (allDispatches.elementalSchema && checkInstalledAppsForElemental) {
+      if (allDispatches.elementalSchema && isElementalOperatorNotInstalledOnApps) {
         this.isElementalOpNotInstalledAndHasSchema = true;
       }
     } else {
