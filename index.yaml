@@ -11,26 +11,6 @@ entries:
       catalog.cattle.io/scope: management
       catalog.cattle.io/ui-component: plugins
     apiVersion: v2
-    appVersion: 1.0.1
-    created: "2023-02-10T15:53:51.598229357Z"
-    description: OS Management plugin.
-    digest: 9d3a9c5784ae13244b20aacfec5233bfeda6ebcf2ffd0e4af5e6602975c24dc9
-    icon: https://raw.githubusercontent.com/rancher/elemental-ui/main/pkg/elemental/icon.svg
-    name: elemental
-    type: application
-    urls:
-    - assets/elemental/elemental-1.0.1.tgz
-    version: 1.0.1
-  - annotations:
-      catalog.cattle.io/certified: rancher
-      catalog.cattle.io/kube-version: '>= 1.16.0-0 < 1.25.0-0'
-      catalog.cattle.io/namespace: cattle-ui-plugin-system
-      catalog.cattle.io/os: linux
-      catalog.cattle.io/permits-os: linux, windows
-      catalog.cattle.io/rancher-version: '>= 2.7.0-0 < 2.8.0-0'
-      catalog.cattle.io/scope: management
-      catalog.cattle.io/ui-component: plugins
-    apiVersion: v2
     appVersion: 1.0.0
     created: "2023-02-10T15:53:51.597886062Z"
     description: OS Management plugin
