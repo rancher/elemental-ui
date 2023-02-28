@@ -11,7 +11,7 @@ export function init($plugin, store) {
 
   // app in sidebar
   product({
-    icon:                'os-management',
+    icon:                'elemental',
     inStore:             'management',
     removable:           false,
     showClusterSwitcher: false,
