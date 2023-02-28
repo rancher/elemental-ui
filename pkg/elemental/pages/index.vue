@@ -233,7 +233,7 @@ export default {
     >
       <div class="logo mt-20 mb-10">
         <img
-          src="../icon.svg"
+          src="../icon-v2.svg"
           height="64"
         />
       </div>
