@@ -53,12 +53,17 @@ export default {
       this.resourcesData[ELEMENTAL_SCHEMA_IDS.MANAGED_OS_IMAGES] = allDispatches.managedOsImages;
       this.resourcesData[ELEMENTAL_SCHEMA_IDS.MACHINE_INV_SELECTOR] = allDispatches.machineInvSelector;
 
+      // we need to check for the length of the response
+      // due to some issue with a standard-user, which can list apps
+      // but the list comes up empty []
+      const checkInstalledAppsForElemental = allDispatches.installedApps && allDispatches.installedApps.length && !allDispatches.installedApps.find(item => item.id.includes('elemental-operator'));
+
       // check if operator is installed
-      if (!allDispatches.elementalSchema || (allDispatches.installedApps && !allDispatches.installedApps.find(item => item.id.includes('elemental-operator')))) {
+      if (!allDispatches.elementalSchema || checkInstalledAppsForElemental) {
         this.isElementalOpInstalled = false;
       }
       // check if CRD is there but operator isn't
-      if (allDispatches.elementalSchema && (allDispatches.installedApps && !allDispatches.installedApps.find(item => item.id.includes('elemental-operator')))) {
+      if (allDispatches.elementalSchema && checkInstalledAppsForElemental) {
         this.isElementalOpNotInstalledAndHasSchema = true;
       }
     } else {
