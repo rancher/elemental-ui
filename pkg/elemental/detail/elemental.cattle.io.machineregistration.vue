@@ -103,6 +103,7 @@ export default {
         <h3>{{ t('elemental.machineRegistration.create.registrationURL.title') }}</h3>
         <DetailText
           v-show="registrationUrl"
+          data-testid="registration-url"
           :value="registrationUrl"
           :label="t('elemental.machineRegistration.create.registrationURL.label')"
         />
@@ -114,7 +115,7 @@ export default {
       <div class="col span-12">
         <h3>{{ t('elemental.machineRegistration.edit.imageSetup') }}</h3>
         <p v-html="t('elemental.machineRegistration.edit.downloadMachineRegistrationFile', {}, true)" />
-        <AsyncButton class="mt-10" mode="download" @click="download" />
+        <AsyncButton class="mt-10" mode="download" data-testid="download-btn" @click="download" />
       </div>
     </div>
     <div class="row mb-20">

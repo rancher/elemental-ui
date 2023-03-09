@@ -48,6 +48,7 @@ export default {
         <h3>{{ t('elemental.osversionchannels.create.spec') }}</h3>
         <LabeledInput
           v-model.trim="value.spec.options.image"
+          data-testid="os-version-channel-path"
           :label="t('elemental.osversionchannels.create.registryUri.label')"
           :placeholder="t('elemental.osversionchannels.create.registryUri.placeholder', null, true)"
           :mode="mode"
