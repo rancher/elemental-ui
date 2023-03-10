@@ -5,6 +5,8 @@ import CreateEditView from '@shell/mixins/create-edit-view';
 import YamlEditor, { EDITOR_MODES } from '@shell/components/YamlEditor';
 import DetailText from '@shell/components/DetailText';
 import AsyncButton from '@shell/components/AsyncButton';
+import LabeledSelect from '@shell/components/form/LabeledSelect';
+import { Banner } from '@components/Banner';
 
 import jsyaml from 'js-yaml';
 import { saferDump } from '@shell/utils/create-yaml';
@@ -18,7 +20,9 @@ export default {
     CruResource,
     YamlEditor,
     DetailText,
-    AsyncButton
+    AsyncButton,
+    LabeledSelect,
+    Banner
   },
   mixins:     [CreateEditView],
   props:      {
@@ -33,8 +37,17 @@ export default {
   },
   data() {
     return {
-      cloudConfig:  typeof this.value.spec === 'string' ? this.value.spec : saferDump(this.value.spec),
-      yamlErrors:   null
+      cloudConfig:        typeof this.value.spec === 'string' ? this.value.spec : saferDump(this.value.spec),
+      buildIsoOsVersions: [
+        {
+          label: 'SLE micro stuff bananas',
+          value: 'this-is-the-url-for-the-image'
+        }
+      ],
+      buildIsoOsVersionSelected: 'this-is-the-url-for-the-image',
+      isoReadyToDownload:        false,
+      isoBuildError:             '',
+      yamlErrors:                null
     };
   },
   watch: {
@@ -71,6 +84,17 @@ export default {
     }
   },
   methods: {
+    async buildIso(btnCb) {
+      try {
+        await setTimeout(() => {
+          this.isoReadyToDownload = true;
+          btnCb(true);
+        }, 3000);
+        // btnCb(true);
+      } catch (error) {
+        btnCb(false);
+      }
+    },
     async download(btnCb) {
       try {
         await this.value.downloadMachineRegistration();
@@ -109,13 +133,59 @@ export default {
         />
       </div>
     </div>
+    <h3 class="build-iso-title">
+      {{ t('elemental.machineRegistration.edit.buildIsoTitle') }}
+    </h3>
     <div
-      class="row mb-40"
+      class="row mb-10"
+    >
+      <div class="col span-4">
+        <LabeledSelect
+          v-model="buildIsoOsVersionSelected"
+          class="mr-20"
+          data-testid="mach-reg-select-build-os-version"
+          :label="t('elemental.machineRegistration.edit.osVersion')"
+          :placeholder="t('elemental.machineRegistration.edit.osVersionPlaceholder')"
+          :options="buildIsoOsVersions"
+        />
+      </div>
+      <div class="col mt-10 mb-10 span-4 flex">
+        <AsyncButton
+          mode="buildIso"
+          class="mr-20"
+          data-testid="mach-reg-build-iso-btn"
+          @click="buildIso"
+        />
+        <a
+          :disabled="!isoReadyToDownload"
+          class="btn role-primary"
+          href="#"
+          download="iso"
+          data-testid="mach-reg-download-iso-btn"
+        >
+          {{ t('elemental.machineRegistration.edit.downloadIso') }}
+        </a>
+      </div>
+    </div>
+    <Banner
+      v-if="isoBuildError"
+      class="mb-10"
+      color="error"
+      data-testid="mach-reg-build-iso-banner"
+      v-html="isoBuildError"
+    />
+    <div
+      class="row mb-40 mt-30"
     >
       <div class="col span-12">
         <h3>{{ t('elemental.machineRegistration.edit.imageSetup') }}</h3>
         <p v-html="t('elemental.machineRegistration.edit.downloadMachineRegistrationFile', {}, true)" />
-        <AsyncButton class="mt-10" mode="download" data-testid="download-btn" @click="download" />
+        <AsyncButton
+          class="mt-10"
+          mode="downloadMachineReg"
+          data-testid="download-btn"
+          @click="download"
+        />
       </div>
     </div>
     <div class="row mb-20">
@@ -133,4 +203,7 @@ export default {
 </template>
 
 <style lang="scss" scoped>
+.flex {
+  display: flex;
+}
 </style>

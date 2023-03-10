@@ -64,9 +64,14 @@ typeLabel:
 
 asyncButton:
   downloadMachineReg:
-    action: Download
+    action: Download Configuration File
     waiting: Preparing..
-    success: Download
+    success: Download Configuration File
+  buildIso:
+    action: Build ISO
+    waiting: Building...
+    waitingIcon: gear
+    success: ISO built!
 
 description:
   elemental.cattle.io.machineregistration: Endpoints to connect Machines
@@ -126,7 +131,11 @@ elemental:
       machineInventoryLabelValueLength: One of the labels for Inventory of Machines has a value that exceeds the 63 characters limit. Please shorten the length of the label value.
     edit:
       imageSetup: Setting up an OS image
-      downloadMachineRegistrationFile: 'Download the Registration Endpoint file and follow the set of instructions on how to prepare your ISO image <a target="_blank" rel="noopener noreferrer nofollow" style="text-decoration: underline" href="https://rancher.github.io/elemental/quickstart/#preparing-the-iso">here</a>.'
+      downloadMachineRegistrationFile: 'Download the Registration Endpoint Configuration file in order to manually prepare your ISO image. Instructions <a target="_blank" rel="noopener noreferrer nofollow" style="text-decoration: underline" href="https://rancher.github.io/elemental/quickstart/#preparing-the-iso">here</a>.'
+      buildIsoTitle: Build ISO image
+      osVersion: OS version
+      osVersionPlaceholder: Select OS version
+      downloadIso: Download ISO
     create:
       registrationToken: Registration Token
       registrationURL: 
