@@ -206,6 +206,7 @@ export default {
         >
           <FileSelector
             class="btn role-secondary"
+            data-testid="read-from-file-btn"
             :label="t('elemental.machineRegistration.create.readFromFile')"
             @selected="onFileSelected"
           />
@@ -223,20 +224,23 @@ export default {
         <h3 class="mt-10">
           {{ t('elemental.machineRegistration.create.labelsAndAnnotations') }}
         </h3>
-        <Tabbed>
+        <Tabbed data-testid="labels-and-annotations-block">
           <Tab
             label-key="elemental.machineRegistration.create.machineInv"
             name="machine-inventory"
+            data-testid="mach-inv-tab"
             :weight="3"
           >
             <Banner
               class="mb-40"
               color="info"
+              data-testid="mach-inv-banner"
               v-html="t('elemental.machineRegistration.create.labelsAndAnnotationsMachInvBanner', {}, true)"
             />
             <div class="row mb-30">
               <KeyValue
                 key="labels"
+                data-testid="add-label-mach-inv"
                 :value="value.machineInventoryLabels"
                 :add-label="t('labels.addLabel')"
                 :mode="mode"
@@ -249,6 +253,7 @@ export default {
             <div class="row mb-10">
               <KeyValue
                 key="annotations"
+                data-testid="add-annotation-mach-inv"
                 :value="value.machineInventoryAnnotations"
                 :add-label="t('labels.addAnnotation')"
                 :mode="mode"
@@ -262,16 +267,19 @@ export default {
           <Tab
             label-key="elemental.machineRegistration.create.machineReg"
             name="machine-reg"
+            data-testid="mach-reg-tab"
             :weight="2"
           >
             <Banner
               class="mb-40"
               color="info"
+              data-testid="mach-reg-banner"
               v-html="t('elemental.machineRegistration.create.labelsAndAnnotationsMachRegBanner', {}, true)"
             />
             <div class="row mb-30">
               <KeyValue
                 key="labels"
+                data-testid="add-label-mach-reg"
                 :value="value.labels"
                 :add-label="t('labels.addLabel')"
                 :mode="mode"
@@ -284,6 +292,7 @@ export default {
             <div class="row mb-10">
               <KeyValue
                 key="annotations"
+                data-testid="add-annotation-mach-reg"
                 :value="value.annotations"
                 :add-label="t('labels.addAnnotation')"
                 :mode="mode"

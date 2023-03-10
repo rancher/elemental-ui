@@ -162,6 +162,7 @@ export default {
         <LabeledSelect
           v-model="clusterTargets"
           class="mb-20"
+          data-testid="cluster-target"
           :label="t('elemental.osimage.create.targetCluster.label')"
           :placeholder="t('elemental.osimage.create.targetCluster.placeholder', null, true)"
           :mode="mode"
@@ -172,6 +173,7 @@ export default {
         <RadioGroup
           v-model="useManagedOsImages"
           class="mb-20"
+          data-testid="upgrade-choice-selector"
           name="os-image-mode"
           :options="[true, false]"
           :labels="[t('elemental.osimage.create.radioOptions.osImages'), t('elemental.osimage.create.radioOptions.registry')]"
@@ -180,6 +182,7 @@ export default {
         <div v-if="useManagedOsImages">
           <LabeledSelect
             v-model="osVersionSelected"
+            data-testid="os-version-box"
             :mode="mode"
             :options="managedOSVersionOptions"
             label-key="elemental.osimage.create.managedOsImage.label"
@@ -191,6 +194,7 @@ export default {
         <div v-else>
           <LabeledInput
             v-model.trim="value.spec.osImage"
+            data-testid="os-image-box"
             :label="t('elemental.osimage.create.osImage.label')"
             :placeholder="t('elemental.osimage.create.osImage.placeholder', null, true)"
             :mode="mode"

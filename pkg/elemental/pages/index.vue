@@ -218,6 +218,13 @@ export default {
 
         btnCb(false);
       }
+    },
+    formatDataTestid(item) {
+      try {
+        return item.toLowerCase().replace(/\s/g, '-');
+      } catch (error) {
+        return 'name-not-generated';
+      }
     }
   },
 };
@@ -235,6 +242,7 @@ export default {
         <img
           src="../icon-v2.svg"
           height="64"
+          data-testid="elemental-icon"
         />
       </div>
       <h1 class="mb-20">
@@ -242,11 +250,13 @@ export default {
       </h1>
       <p
         class="description"
+        data-testid="elemental-description-text"
         v-html="t('product.description', {}, true)"
       />
       <Banner
         class="mt-40"
         color="warning"
+        data-testid="warning-not-install-or-no-schema"
         v-html="t('product.notInstalledOrNoSchema', {}, true)"
       />
     </div>
@@ -255,9 +265,10 @@ export default {
         v-if="isElementalOpNotInstalledAndHasSchema"
         class="mb-20"
         color="warning"
+        data-testid="warning-not-install-with-schema"
         v-html="t('product.notInstalledHasSchema', {}, true)"
       />
-      <h1 class="title">
+      <h1 class="title" data-testid="elemental-main-title">
         {{ t('elemental.menuLabels.titleDashboard') }}
       </h1>
       <!-- Top cards -->
@@ -265,6 +276,7 @@ export default {
         <div
           v-for="card, index in cards"
           :key="index"
+          :data-testid="`card-${formatDataTestid(card.title)}`"
           class="card"
         >
           <div class="card-top-block">
@@ -275,6 +287,7 @@ export default {
             v-if="card.type !== machineInvCrd || (card.type === machineInvCrd && !card.count)"
             type="button"
             class="btn role-secondary"
+            :data-testid="`button-${formatDataTestid(card.btnLabel)}`"
             :class="{disabled: card.btnDisabled}"
             @click="handleRoute(card)"
           >
@@ -298,7 +311,10 @@ export default {
       </div>
       <!-- Tables -->
       <div class="main-tables-container mb-40 mt-40">
-        <div class="table-list">
+        <div
+          class="table-list"
+          data-testid="machine-reg-block"
+        >
           <div class="table-title-block">
             <h3 class="mb-20">
               {{ machineRegTitle }}
@@ -306,6 +322,7 @@ export default {
             <nuxt-link
               :to="machineRegListLocation"
               class="table-title-block-link"
+              data-testid="manage-reg-btn"
             >
               {{ t('elemental.dashboard.manageReg') }}
             </nuxt-link>
@@ -315,7 +332,10 @@ export default {
             class="empty-table-state"
           >
             <p>{{ t('elemental.dashboard.noMachineReg') }}</p>
-            <nuxt-link :to="machineRegCreateLocation">
+            <nuxt-link
+              :to="machineRegCreateLocation"
+              data-testid="create-machine-reg-btn"
+            >
               {{ t('elemental.dashboard.noMachineRegAction') }}
             </nuxt-link>
           </div>
@@ -344,7 +364,10 @@ export default {
             </template>
           </ResourceTable>
         </div>
-        <div class="table-list">
+        <div
+          class="table-list"
+          data-testid="update-group-block"
+        >
           <div class="table-title-block">
             <h3 class="mb-20">
               {{ managedOsTitle }}
@@ -352,6 +375,7 @@ export default {
             <nuxt-link
               :to="managedOsListLocation"
               class="table-title-block-link"
+              data-testid="manage-update-group-btn"
             >
               {{ t('elemental.dashboard.manageOsImageUpgrade') }}
             </nuxt-link>
@@ -361,7 +385,10 @@ export default {
             class="empty-table-state"
           >
             <p>{{ t('elemental.dashboard.noManageOs') }}</p>
-            <nuxt-link :to="managedOsCreateLocation">
+            <nuxt-link
+              :to="managedOsCreateLocation"
+              data-testid="create-update-group-btn"
+            >
               {{ t('elemental.dashboard.noManageOsAction') }}
             </nuxt-link>
           </div>
