@@ -5,9 +5,7 @@ import { CAPI, CATALOG } from '@shell/config/types';
 import { NAME } from '@shell/config/table-headers';
 import ResourceTable from '@shell/components/ResourceTable';
 import PercentageBar from '@shell/components/PercentageBar';
-import LabeledSelect from '@shell/components/form/LabeledSelect';
 import { Banner } from '@components/Banner';
-import AsyncButton from '@shell/components/AsyncButton';
 import {
   ELEMENTAL_SCHEMA_IDS,
   ELEMENTAL_CLUSTER_PROVIDER,
@@ -15,13 +13,14 @@ import {
 } from '../config/elemental-types';
 import { createElementalRoute } from '../utils/custom-routing';
 import { filterForElementalClusters } from '../utils/elemental-utils';
+import BuildIso from '../components/BuildIso';
 
 const MAX_ITEMS_PER_TABLE = 6;
 
 export default {
   name:       'Dashboard',
   components: {
-    Loading, Banner, PercentageBar, ResourceTable, AsyncButton, LabeledSelect
+    Loading, Banner, PercentageBar, ResourceTable, BuildIso
   },
   async fetch() {
     // this covers scenario where Elemental Operator is deleted from Apps and we lose the Elemental Admin role for Standard Users...
@@ -112,16 +111,7 @@ export default {
       ],
       colorStops: {
         0: '--error', 20: '--warning', 75: '--info', 95: '--success'
-      },
-      buildIsoOsVersions: [
-        {
-          label: 'SLE micro stuff bananas',
-          value: 'this-is-the-url-for-the-image'
-        }
-      ],
-      buildIsoOsVersionSelected: 'this-is-the-url-for-the-image',
-      isoReadyToDownload:        false,
-      isoBuildError:             '',
+      }
     };
   },
   computed: {
@@ -206,6 +196,9 @@ export default {
       const clusterAssignedInventories = this.resourcesData[ELEMENTAL_SCHEMA_IDS.MACHINE_INVENTORIES].filter(item => item.clusterName);
 
       return clusterAssignedInventories.length || 0;
+    },
+    registrationEndpoints() {
+      return this.resourcesData?.[ELEMENTAL_SCHEMA_IDS.MACHINE_REGISTRATIONS] || [];
     }
   },
   methods: {
@@ -314,39 +307,10 @@ export default {
           </div>
         </div>
       </div>
-      <!-- SADSDASDDASA -->
-      <h3 class="build-iso-title">
-        {{ t('elemental.machineRegistration.edit.buildIsoTitle') }}
-      </h3>
-      <div class="row mb-10">
-        <div class="col span-4">
-          <LabeledSelect
-            v-model="buildIsoOsVersionSelected"
-            class="mr-20"
-            data-testid="mach-reg-select-build-os-version"
-            :label="t('elemental.machineRegistration.edit.osVersion')"
-            :placeholder="t('elemental.machineRegistration.edit.osVersionPlaceholder')"
-            :options="buildIsoOsVersions"
-          />
-        </div>
-        <div class="col mt-10 mb-10 span-4 flex">
-          <AsyncButton
-            mode="buildIso"
-            class="mr-20"
-            data-testid="mach-reg-build-iso-btn"
-            @click="buildIso"
-          />
-          <a
-            :disabled="!isoReadyToDownload"
-            class="btn role-primary"
-            href="#"
-            download="iso"
-            data-testid="mach-reg-download-iso-btn"
-          >
-            {{ t('elemental.machineRegistration.edit.downloadIso') }}
-          </a>
-        </div>
-      </div>
+      <!-- Build ISO interface -->
+      <BuildIso
+        :registration-endpoint-list="registrationEndpoints"
+      />
       <!-- Tables -->
       <div class="main-tables-container mb-40 mt-40">
         <div
@@ -389,15 +353,6 @@ export default {
             <template #col:token="{row}">
               <td class="token-truncate">
                 {{ row.status.registrationToken }}
-              </td>
-            </template>
-            <template #col:download="{row}">
-              <td class="download-machine-reg">
-                <AsyncButton
-                  action-color="role-multi-action"
-                  mode="downloadMachineReg"
-                  @click="downloadMachineReg(row, $event)"
-                />
               </td>
             </template>
           </ResourceTable>

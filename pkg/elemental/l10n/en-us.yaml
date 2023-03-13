@@ -69,9 +69,7 @@ asyncButton:
     success: Download Configuration File
   buildIso:
     action: Build ISO
-    waiting: Building...
-    waitingIcon: gear
-    success: ISO built!
+    success: Build ISO triggered!
 
 description:
   elemental.cattle.io.machineregistration: Endpoints to connect Machines
@@ -92,6 +90,7 @@ elemental:
     noMachineRegAction: Create a Registration Endpoint
     noManageOs: There are currently no Update Groups available
     noManageOsAction: Create an Update Group
+    regEndpointPlaceholder: Select Registration Endpoint
     used: Used
     free: Free
     btnLabel:
