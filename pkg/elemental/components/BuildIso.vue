@@ -28,7 +28,6 @@ export default {
   },
   async fetch() {
     this.seedImagesList = await this.$store.dispatch('management/findAll', { type: ELEMENTAL_SCHEMA_IDS.SEED_IMAGE });
-    console.log('seedImagesList', this.seedImagesList);
   },
   data() {
     return {
@@ -58,8 +57,6 @@ export default {
       return this.displayRegEndpoints ? (this.buildIsoOsVersionSelected && this.registrationEndpointSelected) : this.buildIsoOsVersionSelected;
     },
     isIsoReadyToDownload() {
-      console.log('TRIGGERED!', this.seedImage);
-      console.log('TRIGGERED! seedImagesList', this.seedImagesList);
       if (this.seedImage) {
         const imgFound = this.seedImagesList.find(img => img.metadata?.uid === this.seedImage.metadata?.uid);
 
@@ -92,12 +89,8 @@ export default {
         type: ELEMENTAL_SCHEMA_IDS.SEED_IMAGE,
       });
 
-      console.log('seedImageModel', seedImageModel);
-
       try {
         this.seedImage = await seedImageModel.save({ url: `/v1/${ ELEMENTAL_SCHEMA_IDS.SEED_IMAGE }`, method: 'POST' });
-
-        console.log('RES!', this.seedImage);
         btnCb(true);
       } catch (e) {
         this.isoBuildError = e;
@@ -109,8 +102,6 @@ export default {
 
       if (this.isIsoReadyToDownload) {
         const downloadUrl = this.isIsoReadyToDownload?.status?.downloadURL;
-
-        console.log('URL', downloadUrl);
         const link = document.createElement('a');
 
         link.download = 'elemental.iso';
