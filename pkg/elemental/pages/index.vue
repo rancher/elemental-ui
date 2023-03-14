@@ -308,9 +308,11 @@ export default {
         </div>
       </div>
       <!-- Build ISO interface -->
-      <BuildIso
-        :registration-endpoint-list="registrationEndpoints"
-      />
+      <div class="mt-20 mb-20">
+        <BuildIso
+          :registration-endpoint-list="registrationEndpoints"
+        />
+      </div>
       <!-- Tables -->
       <div class="main-tables-container mb-40 mt-40">
         <div

@@ -31,7 +31,7 @@ export default {
   },
   data() {
     return {
-      seedImagesList:         [],
+      seedImagesList:     [],
       buildIsoOsVersions: [
         {
           label: 'Elemental Teal x86 64bit',
@@ -40,13 +40,15 @@ export default {
       ],
       buildIsoOsVersionSelected:    'https://download.opensuse.org/repositories/isv:/Rancher:/Elemental:/Stable:/Teal53/media/iso/elemental-teal.x86_64.iso',
       registrationEndpointSelected: '',
-      isoBuildError:                '',
+      isoBuildTriggerError:         '',
       seedImage:                    undefined
     };
   },
   computed: {
     registrationEndpointsOptions() {
-      return this.registrationEndpointList.map((machReg) => {
+      const activeRegEndpoints = this.registrationEndpointList.filter(item => item.state === 'active');
+
+      return activeRegEndpoints.map((machReg) => {
         return {
           label: machReg.name,
           value: `${ machReg.namespace }/${ machReg.name }`
@@ -56,21 +58,49 @@ export default {
     isBuildIsoBtnEnabled() {
       return this.displayRegEndpoints ? (this.buildIsoOsVersionSelected && this.registrationEndpointSelected) : this.buildIsoOsVersionSelected;
     },
-    isIsoReadyToDownload() {
+    seedImageFound() {
       if (this.seedImage) {
         const imgFound = this.seedImagesList.find(img => img.metadata?.uid === this.seedImage.metadata?.uid);
 
-        if (imgFound && imgFound.status?.downloadURL) {
+        if (imgFound) {
           return imgFound;
         }
       }
 
+      return {};
+    },
+    isIsoBuilt() {
+      if (this.seedImageFound && this.seedImageFound.status?.downloadURL) {
+        return true;
+      }
+
       return false;
+    },
+    isoBuildProcessError() {
+      if (this.seedImageFound && this.seedImageFound.status?.conditions) {
+        let errorFound = '';
+        const excludedReasons = ['SeedImageBuildSuccess', 'ResourcesSuccessfullyCreated', 'SeedImageBuildOngoing'];
+
+        for (let i = 0; i < this.seedImageFound.status?.conditions.length; i++) {
+          const condition = this.seedImageFound.status?.conditions[i];
+
+          if (condition.status === 'False' && !excludedReasons.includes(condition.reason)) {
+            errorFound = condition.message;
+            break;
+          }
+        }
+
+        if (errorFound) {
+          return errorFound;
+        }
+      }
+
+      return '';
     }
   },
   methods: {
     async buildIso(btnCb) {
-      this.isoBuildError = '';
+      this.isoBuildTriggerError = '';
       this.seedImage = undefined;
 
       const seedImageModel = await this.$store.dispatch('management/create', {
@@ -93,15 +123,15 @@ export default {
         this.seedImage = await seedImageModel.save({ url: `/v1/${ ELEMENTAL_SCHEMA_IDS.SEED_IMAGE }`, method: 'POST' });
         btnCb(true);
       } catch (e) {
-        this.isoBuildError = e;
+        this.isoBuildTriggerError = e;
         btnCb(false);
       }
     },
     downloadIso(ev) {
       ev.preventDefault();
 
-      if (this.isIsoReadyToDownload) {
-        const downloadUrl = this.isIsoReadyToDownload?.status?.downloadURL;
+      if (this.isIsoBuilt) {
+        const downloadUrl = this.seedImageFound?.status?.downloadURL;
         const link = document.createElement('a');
 
         link.download = 'elemental.iso';
@@ -153,7 +183,7 @@ export default {
           @click="buildIso"
         />
         <a
-          :disabled="!isIsoReadyToDownload"
+          :disabled="!isIsoBuilt"
           class="btn role-primary"
           data-testid="download-iso-btn"
           @click="$event => downloadIso($event)"
@@ -163,10 +193,10 @@ export default {
       </div>
     </div>
     <Banner
-      v-if="isoBuildError"
+      v-if="isoBuildTriggerError || isoBuildProcessError"
       color="error"
       data-testid="build-iso-banner"
-      v-html="isoBuildError"
+      v-html="isoBuildTriggerError || isoBuildProcessError"
     />
   </div>
 </template>
