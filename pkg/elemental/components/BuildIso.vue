@@ -41,7 +41,8 @@ export default {
       buildIsoOsVersionSelected:    'https://download.opensuse.org/repositories/isv:/Rancher:/Elemental:/Stable:/Teal53/media/iso/elemental-teal.x86_64.iso',
       registrationEndpointSelected: '',
       isoBuildTriggerError:         '',
-      seedImage:                    undefined
+      seedImage:                    undefined,
+      buildBtnCallback:             undefined
     };
   },
   computed: {
@@ -71,6 +72,8 @@ export default {
     },
     isIsoBuilt() {
       if (this.seedImageFound && this.seedImageFound.status?.downloadURL) {
+        this.buildBtnCallback(true);
+
         return true;
       }
 
@@ -85,6 +88,7 @@ export default {
           const condition = this.seedImageFound.status?.conditions[i];
 
           if (condition.status === 'False' && !excludedReasons.includes(condition.reason)) {
+            this.buildBtnCallback(false);
             errorFound = condition.message;
             break;
           }
@@ -121,7 +125,7 @@ export default {
 
       try {
         this.seedImage = await seedImageModel.save({ url: `/v1/${ ELEMENTAL_SCHEMA_IDS.SEED_IMAGE }`, method: 'POST' });
-        btnCb(true);
+        this.buildBtnCallback = btnCb;
       } catch (e) {
         this.isoBuildTriggerError = e;
         btnCb(false);

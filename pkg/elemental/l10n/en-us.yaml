@@ -69,7 +69,10 @@ asyncButton:
     success: Download Configuration File
   buildIso:
     action: Build ISO
-    success: Build ISO triggered!
+    waiting: Building ISO...
+    error: Build ISO error
+    waitingIcon: gear
+    success: ISO built!
 
 description:
   elemental.cattle.io.machineregistration: Endpoints to connect Machines
