@@ -10,6 +10,7 @@ import jsyaml from 'js-yaml';
 import { saferDump } from '@shell/utils/create-yaml';
 import { _CREATE, _EDIT } from '@shell/config/query-params';
 import { exceptionToErrorsArray } from '@shell/utils/error';
+import BuildIso from '../components/BuildIso';
 
 export default {
   name:       'MachineRegistrationDetailView',
@@ -18,7 +19,8 @@ export default {
     CruResource,
     YamlEditor,
     DetailText,
-    AsyncButton
+    AsyncButton,
+    BuildIso
   },
   mixins:     [CreateEditView],
   props:      {
@@ -33,8 +35,8 @@ export default {
   },
   data() {
     return {
-      cloudConfig:  typeof this.value.spec === 'string' ? this.value.spec : saferDump(this.value.spec),
-      yamlErrors:   null
+      cloudConfig: typeof this.value.spec === 'string' ? this.value.spec : saferDump(this.value.spec),
+      yamlErrors:  null
     };
   },
   watch: {
@@ -109,13 +111,24 @@ export default {
         />
       </div>
     </div>
+    <div>
+      <BuildIso
+        :display-reg-endpoints="false"
+        :registration-endpoint="`${value.metadata.namespace}/${value.metadata.name}`"
+      />
+    </div>
     <div
-      class="row mb-40"
+      class="row mb-40 mt-30"
     >
       <div class="col span-12">
         <h3>{{ t('elemental.machineRegistration.edit.imageSetup') }}</h3>
         <p v-html="t('elemental.machineRegistration.edit.downloadMachineRegistrationFile', {}, true)" />
-        <AsyncButton class="mt-10" mode="download" data-testid="download-btn" @click="download" />
+        <AsyncButton
+          class="mt-10"
+          mode="downloadMachineReg"
+          data-testid="download-btn"
+          @click="download"
+        />
       </div>
     </div>
     <div class="row mb-20">
@@ -133,4 +146,7 @@ export default {
 </template>
 
 <style lang="scss" scoped>
+.flex {
+  display: flex;
+}
 </style>

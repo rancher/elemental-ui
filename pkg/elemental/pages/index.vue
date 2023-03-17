@@ -6,7 +6,6 @@ import { NAME } from '@shell/config/table-headers';
 import ResourceTable from '@shell/components/ResourceTable';
 import PercentageBar from '@shell/components/PercentageBar';
 import { Banner } from '@components/Banner';
-import AsyncButton from '@shell/components/AsyncButton';
 import {
   ELEMENTAL_SCHEMA_IDS,
   ELEMENTAL_CLUSTER_PROVIDER,
@@ -14,13 +13,14 @@ import {
 } from '../config/elemental-types';
 import { createElementalRoute } from '../utils/custom-routing';
 import { filterForElementalClusters } from '../utils/elemental-utils';
+import BuildIso from '../components/BuildIso';
 
 const MAX_ITEMS_PER_TABLE = 6;
 
 export default {
   name:       'Dashboard',
   components: {
-    Loading, Banner, PercentageBar, ResourceTable, AsyncButton
+    Loading, Banner, PercentageBar, ResourceTable, BuildIso
   },
   async fetch() {
     // this covers scenario where Elemental Operator is deleted from Apps and we lose the Elemental Admin role for Standard Users...
@@ -90,12 +90,7 @@ export default {
           value:    'status.registrationToken',
           getValue: row => row.status?.registrationToken,
           sort:     'status.registrationToken'
-        },
-        {
-          name:          'download',
-          labelKey:      'tableHeaders.downloadTableDashboard',
-          value:         this.t('tableHeaders.download')
-        },
+        }
       ],
       managedOsHeaders:  [
         NAME,
@@ -201,6 +196,9 @@ export default {
       const clusterAssignedInventories = this.resourcesData[ELEMENTAL_SCHEMA_IDS.MACHINE_INVENTORIES].filter(item => item.clusterName);
 
       return clusterAssignedInventories.length || 0;
+    },
+    registrationEndpoints() {
+      return this.resourcesData?.[ELEMENTAL_SCHEMA_IDS.MACHINE_REGISTRATIONS] || [];
     }
   },
   methods: {
@@ -309,6 +307,12 @@ export default {
           </div>
         </div>
       </div>
+      <!-- Build ISO interface -->
+      <div class="mt-20 mb-20">
+        <BuildIso
+          :registration-endpoint-list="registrationEndpoints"
+        />
+      </div>
       <!-- Tables -->
       <div class="main-tables-container mb-40 mt-40">
         <div
@@ -351,15 +355,6 @@ export default {
             <template #col:token="{row}">
               <td class="token-truncate">
                 {{ row.status.registrationToken }}
-              </td>
-            </template>
-            <template #col:download="{row}">
-              <td class="download-machine-reg">
-                <AsyncButton
-                  action-color="role-multi-action"
-                  mode="downloadMachineReg"
-                  @click="downloadMachineReg(row, $event)"
-                />
               </td>
             </template>
           </ResourceTable>
