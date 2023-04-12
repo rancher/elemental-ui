@@ -163,6 +163,14 @@ export function init($plugin, store) {
     AGE
   ]);
 
+  weightType(ELEMENTAL_SCHEMA_IDS.SEED_IMAGE, 6, true);
+  configureType(ELEMENTAL_SCHEMA_IDS.SEED_IMAGE, {
+    isCreatable: true,
+    isEditable:  true,
+    isRemovable: true,
+    customRoute: createElementalRoute('resource', { resource: ELEMENTAL_SCHEMA_IDS.SEED_IMAGE })
+  });
+
   basicType([
     ELEMENTAL_TYPES.DASHBOARD,
     ELEMENTAL_SCHEMA_IDS.MACHINE_REGISTRATIONS,
@@ -173,5 +181,6 @@ export function init($plugin, store) {
     ELEMENTAL_SCHEMA_IDS.MANAGED_OS_IMAGES,
     ELEMENTAL_SCHEMA_IDS.MANAGED_OS_VERSIONS,
     ELEMENTAL_SCHEMA_IDS.MANAGED_OS_VERSION_CHANNELS,
+    ELEMENTAL_SCHEMA_IDS.SEED_IMAGE,
   ], 'advanced');
 }
