@@ -10,48 +10,6 @@ entries:
       catalog.cattle.io/rancher-version: '>= 2.7.0-0 < 2.8.0-0'
       catalog.cattle.io/scope: management
       catalog.cattle.io/ui-component: plugins
-      catalog.cattle.io/ui-version: '>= 2.7.2'
-    apiVersion: v2
-    appVersion: 1.2.0
-    created: "2023-03-17T12:16:03.782461949Z"
-    description: OS Management extension
-    digest: 31a9d5f3f49cd4721614ddd34effdb2b0964d3a43749b54478154dff0eec6b90
-    icon: https://raw.githubusercontent.com/rancher/elemental-ui/main/pkg/elemental/icon-v2.svg
-    name: elemental
-    type: application
-    urls:
-    - assets/elemental/elemental-1.2.0.tgz
-    version: 1.2.0
-  - annotations:
-      catalog.cattle.io/certified: rancher
-      catalog.cattle.io/kube-version: '>= 1.16.0-0 < 1.26.0-0'
-      catalog.cattle.io/namespace: cattle-ui-plugin-system
-      catalog.cattle.io/os: linux
-      catalog.cattle.io/permits-os: linux, windows
-      catalog.cattle.io/rancher-version: '>= 2.7.0-0 < 2.8.0-0'
-      catalog.cattle.io/scope: management
-      catalog.cattle.io/ui-component: plugins
-      catalog.cattle.io/ui-version: '>= 2.7.2'
-    apiVersion: v2
-    appVersion: 1.1.0
-    created: "2023-03-17T12:16:03.781942353Z"
-    description: OS Management extension
-    digest: 1b6bcb6ea32ea8d6e1a41c486f8f2c68f1ad08dc83d61f65385b85e500ed6449
-    icon: https://raw.githubusercontent.com/rancher/elemental-ui/main/pkg/elemental/icon-v2.svg
-    name: elemental
-    type: application
-    urls:
-    - assets/elemental/elemental-1.1.0.tgz
-    version: 1.1.0
-  - annotations:
-      catalog.cattle.io/certified: rancher
-      catalog.cattle.io/kube-version: '>= 1.16.0-0 < 1.26.0-0'
-      catalog.cattle.io/namespace: cattle-ui-plugin-system
-      catalog.cattle.io/os: linux
-      catalog.cattle.io/permits-os: linux, windows
-      catalog.cattle.io/rancher-version: '>= 2.7.0-0 < 2.8.0-0'
-      catalog.cattle.io/scope: management
-      catalog.cattle.io/ui-component: plugins
       catalog.cattle.io/ui-version: '<= 2.7.1'
     apiVersion: v2
     appVersion: 1.0.0
