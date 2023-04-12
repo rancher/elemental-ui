@@ -60,6 +60,11 @@ typeLabel:
       one {OS Version}
       other {OS Versions}
     }
+  elemental.cattle.io.seedimage: |-
+    {count, plural,
+      one {Seed Image}
+      other {Seed Images}
+    }
   elementalClusters: Clusters
 
 asyncButton:
@@ -116,14 +121,14 @@ elemental:
         label: Target Cluster
         placeholder: Enter a target cluster name
       radioOptions:
-        osImages: Use Managed OS version
+        osImages: Use Managed OS Version
         registry: Use image from registry
       osImage:
         label: Image path
         placeholder: Enter an OS image path
       managedOsImage:
-        label: Managed OS version
-        placeholder: Select a Managed OS version
+        label: Managed OS Version
+        placeholder: Select a Managed OS Version
         channel: OS Channel - { name }
   machineRegistration:
     validation:
@@ -135,8 +140,8 @@ elemental:
       imageSetup: Setting up an OS image
       downloadMachineRegistrationFile: 'Download the Registration Endpoint Configuration file in order to manually prepare your ISO image. Instructions <a target="_blank" rel="noopener noreferrer nofollow" style="text-decoration: underline" href="https://rancher.github.io/elemental/quickstart/#preparing-the-iso">here</a>.'
       buildIsoTitle: Build ISO image
-      osVersion: OS version
-      osVersionPlaceholder: Select OS version
+      osVersion: OS Version
+      osVersionPlaceholder: Select OS Version
       downloadIso: Download ISO
     create:
       registrationToken: Registration Token

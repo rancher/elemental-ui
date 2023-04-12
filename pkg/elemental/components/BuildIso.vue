@@ -106,18 +106,19 @@ export default {
     async buildIso(btnCb) {
       this.isoBuildTriggerError = '';
       this.seedImage = undefined;
+      const machineRegName = this.displayRegEndpoints ? this.registrationEndpointSelected.split('/')[1] : this.registrationEndpoint.split('/')[1];
+      const machineRegNamespace = this.displayRegEndpoints ? this.registrationEndpointSelected.split('/')[0] : this.registrationEndpoint.split('/')[0];
 
       const seedImageModel = await this.$store.dispatch('management/create', {
         metadata: {
-          name:      randomStr(16, CHARSET.ALPHA_LOWER),
+          name:      `iso-image-reg-${ machineRegName }-${ randomStr(8, CHARSET.ALPHA_LOWER ) }`,
           namespace: 'fleet-default'
         },
         spec: {
           baseImage:       this.buildIsoOsVersionSelected,
           registrationRef: {
-            type:      ELEMENTAL_SCHEMA_IDS.MACHINE_REGISTRATIONS,
-            name:      this.displayRegEndpoints ? this.registrationEndpointSelected.split('/')[1] : this.registrationEndpoint.split('/')[1],
-            namespace: this.displayRegEndpoints ? this.registrationEndpointSelected.split('/')[0] : this.registrationEndpoint.split('/')[0]
+            name:      machineRegName,
+            namespace: machineRegNamespace
           }
         },
         type: ELEMENTAL_SCHEMA_IDS.SEED_IMAGE,
