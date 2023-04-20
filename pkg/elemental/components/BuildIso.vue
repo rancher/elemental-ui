@@ -34,11 +34,11 @@ export default {
       seedImagesList:     [],
       buildIsoOsVersions: [
         {
-          label: 'Elemental Teal x86 64bit',
-          value: 'https://download.opensuse.org/repositories/isv:/Rancher:/Elemental:/Staging:/Teal53/media/iso/elemental-teal.x86_64.iso?PEDANTIC=1'
+          label: 'Elemental Teal x86 64bit - 1.1.4',
+          value: 'https://download.opensuse.org/repositories/isv:/Rancher:/Elemental:/Stable:/Teal53/media/iso/elemental-teal.x86_64-1.1.4-Build9.6.iso?PEDANTIC=1'
         }
       ],
-      buildIsoOsVersionSelected:    'https://download.opensuse.org/repositories/isv:/Rancher:/Elemental:/Staging:/Teal53/media/iso/elemental-teal.x86_64.iso?PEDANTIC=1',
+      buildIsoOsVersionSelected:    'https://download.opensuse.org/repositories/isv:/Rancher:/Elemental:/Stable:/Teal53/media/iso/elemental-teal.x86_64-1.1.4-Build9.6.iso?PEDANTIC=1',
       registrationEndpointSelected: '',
       isoBuildTriggerError:         '',
       seedImage:                    undefined,
