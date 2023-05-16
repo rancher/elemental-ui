@@ -1,5 +1,5 @@
 # elemental-ui
-Rancher Extension used in [rancher/dashboard](https://github.com/rancher/dashboard) for [Elemental](https://rancher.github.io/elemental/)/OS Management UI.
+Rancher Extension used in [rancher/dashboard](https://github.com/rancher/dashboard) for [Elemental](https://elemental.docs.rancher.com/)/OS Management UI.
 
 
 ## Running for Development

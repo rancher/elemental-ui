@@ -1,8 +1,8 @@
 product:
   elemental: OS Management
   description: "Elemental is a software stack enabling a centralized, full cloud-native OS management with Kubernetes. <br><br> Cluster Node OSes are built and maintained via container images through the Elemental Toolkit and installed on new hosts using the Elemental CLI. <br><br> The Elemental Operator and the Rancher System Agent enable Rancher Manager to fully control Elemental clusters, from the installation and management of the OS on the Nodes to the provisioning of new K3s or RKE2 clusters in a centralized way."
-  notInstalledOrNoSchema: Either the user doesn't have enough permissions to run the OS Management extension or the Elemental Operator is not installed (required to run the OS Management extension). <br><br> For user permissions, check with your Rancher administrator if the correct role is assigned. To install Elemental Operator please follow the instructions on the official <a target="blank" href="https://rancher.github.io/elemental/elementaloperatorchart-reference/" target="_blank" rel="noopener nofollow">documentation</a>.
-  notInstalledHasSchema: The Elemental Operator is required to run the OS Management extension. To install it please follow the instructions on the official <a target="blank" href="https://rancher.github.io/elemental/elementaloperatorchart-reference/" target="_blank" rel="noopener nofollow">documentation</a>.
+  notInstalledOrNoSchema: Either the user doesn't have enough permissions to run the OS Management extension or the Elemental Operator is not installed (required to run the OS Management extension). <br><br> For user permissions, check with your Rancher administrator if the correct role is assigned. To install Elemental Operator please follow the instructions on the official <a target="blank" href="https://elemental.docs.rancher.com/quickstart-cli#install-elemental-operator" target="_blank" rel="noopener nofollow">documentation</a>.
+  notInstalledHasSchema: The Elemental Operator is required to run the OS Management extension. To install it please follow the instructions on the official <a target="blank" href="https://elemental.docs.rancher.com/quickstart-cli#install-elemental-operator" target="_blank" rel="noopener nofollow">documentation</a>.
 
 cluster:
   provider:
@@ -138,7 +138,7 @@ elemental:
       machineInventoryLabelValueLength: One of the labels for Inventory of Machines has a value that exceeds the 63 characters limit. Please shorten the length of the label value.
     edit:
       imageSetup: Setting up an OS image
-      downloadMachineRegistrationFile: 'Download the Registration Endpoint Configuration file in order to manually prepare your ISO image. Instructions <a target="_blank" rel="noopener noreferrer nofollow" style="text-decoration: underline" href="https://rancher.github.io/elemental/quickstart/#preparing-the-iso">here</a>.'
+      downloadMachineRegistrationFile: 'Download the Registration Endpoint Configuration file in order to manually prepare your ISO image. Instructions <a target="_blank" rel="noopener noreferrer nofollow" style="text-decoration: underline" href=https://elemental.docs.rancher.com/customizing">here</a>.'
       buildIsoTitle: Build ISO image
       osVersion: OS Version
       osVersionPlaceholder: Select OS Version
@@ -151,7 +151,7 @@ elemental:
       configuration: Configuration
       cloudConfiguration: Cloud Configuration
       labelsAndAnnotations: Labels And Annotations
-      labelsAndAnnotationsMachInvBanner: 'Labels and annotations to be added to the <b>Inventory of Machines</b> resource when a new machine is registered. These can be used to select the correct <b>Inventory of Machines</b> when creating clusters and also can be used as templates using SMBIOS data. <br> For reference on SMBIOS data check the official <a target="_blank" rel="noopener noreferrer nofollow" style="text-decoration: underline" href="https://rancher.github.io/elemental/smbios">documentation</a>.'
+      labelsAndAnnotationsMachInvBanner: 'Labels and annotations to be added to the <b>Inventory of Machines</b> resource when a new machine is registered. These can be used to select the correct <b>Inventory of Machines</b> when creating clusters and also can be used as templates using SMBIOS data. <br> For reference on SMBIOS data check the official <a target="_blank" rel="noopener noreferrer nofollow" style="text-decoration: underline" href="https://elemental.docs.rancher.com/smbios">documentation</a>.'
       labelsAndAnnotationsMachRegBanner: 'Labels and annotations for the <b>Registration Endpoint</b> resource about to be created/edited.'
       readFromFile: Read from File
       name:
