@@ -9,7 +9,7 @@ const BLANK_CLUSTER = '_';
 const routes = [
   {
     name:      `${ ELEMENTAL_PRODUCT_NAME }-c-cluster`,
-    path:      `/:product/c/:cluster/dashboard`,
+    path:      `/${ ELEMENTAL_PRODUCT_NAME }/c/:cluster/dashboard`,
     component: Dashboard,
     meta:      {
       product: ELEMENTAL_PRODUCT_NAME,
@@ -19,7 +19,7 @@ const routes = [
   },
   {
     name:      `${ ELEMENTAL_PRODUCT_NAME }-c-cluster-resource`,
-    path:      `/:product/c/:cluster/:resource`,
+    path:      `/${ ELEMENTAL_PRODUCT_NAME }/c/:cluster/:resource`,
     component: ListElementalResource,
     meta:      {
       product: ELEMENTAL_PRODUCT_NAME,
@@ -29,7 +29,7 @@ const routes = [
   },
   {
     name:      `${ ELEMENTAL_PRODUCT_NAME }-c-cluster-resource-create`,
-    path:      `/:product/c/:cluster/:resource/create`,
+    path:      `/${ ELEMENTAL_PRODUCT_NAME }/c/:cluster/:resource/create`,
     component: CreateElementalResource,
     meta:      {
       product: ELEMENTAL_PRODUCT_NAME,
@@ -39,7 +39,7 @@ const routes = [
   },
   {
     name:      `${ ELEMENTAL_PRODUCT_NAME }-c-cluster-resource-id`,
-    path:      `/:product/c/:cluster/:resource/:id`,
+    path:      `/${ ELEMENTAL_PRODUCT_NAME }/c/:cluster/:resource/:id`,
     component: ElementalResourceDetails,
     meta:      {
       product: ELEMENTAL_PRODUCT_NAME,
@@ -49,7 +49,7 @@ const routes = [
   },
   {
     name:      `${ ELEMENTAL_PRODUCT_NAME }-c-cluster-resource-namespace-id`,
-    path:      `/:product/c/:cluster/:resource/:namespace/:id`,
+    path:      `/${ ELEMENTAL_PRODUCT_NAME }/c/:cluster/:resource/:namespace/:id`,
     component: ElementalResourceDetails,
     meta:      {
       product: ELEMENTAL_PRODUCT_NAME,
