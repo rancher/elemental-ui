@@ -28,17 +28,19 @@ export default {
   },
   async fetch() {
     this.seedImagesList = await this.$store.dispatch('management/findAll', { type: ELEMENTAL_SCHEMA_IDS.SEED_IMAGE });
+    const managedOsVersions = await this.$store.dispatch('management/findAll', { type: ELEMENTAL_SCHEMA_IDS.MANAGED_OS_VERSIONS });
+
+    this.filteredManagedOsVersions = managedOsVersions.filter(v => v.spec?.type === 'iso') || [];
+
+    if (this.filteredManagedOsVersions.length) {
+      this.buildIsoOsVersionSelected = this.filteredManagedOsVersions[0].spec?.metadata?.uri;
+    }
   },
   data() {
     return {
-      seedImagesList:     [],
-      buildIsoOsVersions: [
-        {
-          label: 'Elemental Teal x86 64bit - 1.1.4',
-          value: 'https://download.opensuse.org/repositories/isv:/Rancher:/Elemental:/Stable:/Teal53/media/iso/elemental-teal.x86_64-1.1.4-Build9.6.iso?PEDANTIC=1'
-        }
-      ],
-      buildIsoOsVersionSelected:    'https://download.opensuse.org/repositories/isv:/Rancher:/Elemental:/Stable:/Teal53/media/iso/elemental-teal.x86_64-1.1.4-Build9.6.iso?PEDANTIC=1',
+      seedImagesList:               [],
+      filteredManagedOsVersions:    [],
+      buildIsoOsVersionSelected:    '',
       registrationEndpointSelected: '',
       isoBuildTriggerError:         '',
       seedImage:                    undefined,
@@ -46,6 +48,14 @@ export default {
     };
   },
   computed: {
+    buildIsoOsVersions() {
+      return this.filteredManagedOsVersions.map((f) => {
+        return {
+          label: f.spec?.metadata?.displayName,
+          value: f.spec?.metadata?.uri,
+        };
+      });
+    },
     registrationEndpointsOptions() {
       const activeRegEndpoints = this.registrationEndpointList.filter(item => item.state === 'active');
 
