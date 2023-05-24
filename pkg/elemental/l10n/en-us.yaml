@@ -78,6 +78,12 @@ asyncButton:
     error: Build ISO error
     waitingIcon: gear
     success: ISO built!
+  rebuildIso:
+    action: Rebuild ISO
+    waiting: Rebuilding ISO...
+    error: Rebuild ISO error
+    waitingIcon: gear
+    success: ISO rebuilt!
 
 description:
   elemental.cattle.io.machineregistration: Endpoints to connect Machines

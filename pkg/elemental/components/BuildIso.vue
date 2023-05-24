@@ -38,13 +38,13 @@ export default {
   },
   data() {
     return {
-      seedImagesList:               [],
-      filteredManagedOsVersions:    [],
-      buildIsoOsVersionSelected:    '',
-      registrationEndpointSelected: '',
-      isoBuildTriggerError:         '',
-      seedImage:                    undefined,
-      buildBtnCallback:             undefined
+      seedImagesList:                [],
+      filteredManagedOsVersions:     [],
+      buildIsoOsVersionSelected:     '',
+      registrationEndpointSelected:  '',
+      isoBuildTriggerError:          '',
+      seedImage:                     undefined,
+      buildBtnCallback:              undefined
     };
   },
   computed: {
@@ -67,11 +67,12 @@ export default {
       });
     },
     isBuildIsoBtnEnabled() {
-      return this.displayRegEndpoints ? (this.buildIsoOsVersionSelected && this.registrationEndpointSelected) : this.buildIsoOsVersionSelected;
+      return this.displayRegEndpoints ? !!(this.buildIsoOsVersionSelected && this.registrationEndpointSelected) : !!this.buildIsoOsVersionSelected;
     },
     seedImageFound() {
-      if (this.seedImage) {
-        const imgFound = this.seedImagesList.find(img => img.metadata?.uid === this.seedImage.metadata?.uid);
+      console.log('this.seedImagesList', this.seedImagesList);
+      if (this.machineRegName && this.selectedBuildIsoValidLabel) {
+        const imgFound = this.seedImagesList.find(s => s.metadata?.name === `iso-image-reg-${ this.machineRegName }-${ this.selectedBuildIsoValidLabel }`);
 
         if (imgFound) {
           return imgFound;
@@ -81,8 +82,11 @@ export default {
       return {};
     },
     isIsoBuilt() {
+      console.log('isIsoBuilt seedImageFound', this.seedImageFound);
       if (this.seedImageFound && this.seedImageFound.status?.downloadURL) {
-        this.buildBtnCallback(true);
+        if (this.buildBtnCallback) {
+          this.buildBtnCallback(true);
+        }
 
         return true;
       }
@@ -98,7 +102,10 @@ export default {
           const condition = this.seedImageFound.status?.conditions[i];
 
           if (condition.status === 'False' && !excludedReasons.includes(condition.reason)) {
-            this.buildBtnCallback(false);
+            if (this.buildBtnCallback) {
+              this.buildBtnCallback(false);
+            }
+
             errorFound = condition.message;
             break;
           }
@@ -110,32 +117,105 @@ export default {
       }
 
       return '';
+    },
+    isoBuildProcessOngoing() {
+      let isoBuildProcessOngoing = false;
+
+      console.log('isoBuildProcessOngoing', this.seedImageFound?.id);
+
+      if (this.seedImageFound && this.seedImageFound.status?.conditions) {
+        for (let i = 0; i < this.seedImageFound.status?.conditions.length; i++) {
+          const condition = this.seedImageFound.status?.conditions[i];
+
+          if (condition.status === 'False' && condition.reason === 'SeedImageBuildOngoing') {
+            isoBuildProcessOngoing = true;
+            break;
+          }
+        }
+      }
+
+      return isoBuildProcessOngoing;
+    },
+    machineRegName() {
+      if (this.isBuildIsoBtnEnabled) {
+        return this.displayRegEndpoints ? this.registrationEndpointSelected.split('/')[1] : this.registrationEndpoint.split('/')[1];
+      }
+
+      return '';
+    },
+    machineRegNamespace() {
+      if (this.isBuildIsoBtnEnabled) {
+        return this.displayRegEndpoints ? this.registrationEndpointSelected.split('/')[0] : this.registrationEndpoint.split('/')[0];
+      }
+
+      return '';
+    },
+    selectedBuildIsoValidLabel() {
+      if (this.buildIsoOsVersionSelected) {
+        const isoVersion = this.buildIsoOsVersions.find(v => v.value === this.buildIsoOsVersionSelected);
+
+        if (isoVersion && isoVersion.label?.length) {
+          const stripSpecialChars = isoVersion.label.replace(/[^a-zA-Z0-9 ]/g, '');
+
+          return stripSpecialChars?.toLowerCase()?.replace(/\s+/g, '-') || '';
+        }
+      }
+
+      return '';
+    },
+    disableBuildIsoBtn() {
+      console.log('this.isBuildIsoBtnEnabled', this.isBuildIsoBtnEnabled);
+      console.log('this.isIsoBuilt', this.isIsoBuilt);
+      console.log('this.isoBuildProcessOngoing', this.isoBuildProcessOngoing);
+      if (!this.isBuildIsoBtnEnabled || this.isIsoBuilt || (!this.isIsoBuilt && this.isoBuildProcessOngoing)) {
+        return true;
+      }
+
+      return false;
+    },
+    disableRebuildIsoBtn() {
+      if (!this.isBuildIsoBtnEnabled || !(this.isIsoBuilt || (!this.isIsoBuilt && this.isoBuildProcessOngoing))) {
+        return true;
+      }
+
+      return false;
     }
   },
   methods: {
+    async rebuildIso(btnCb) {
+      this.isoBuildTriggerError = '';
+
+      // flag to re-trigger build process
+      this.seedImageFound.spec.retriggerBuild = true;
+
+      try {
+        await this.seedImageFound.save();
+        this.buildBtnCallback = btnCb;
+      } catch (e) {
+        this.isoBuildTriggerError = e;
+        btnCb(false);
+      }
+    },
     async buildIso(btnCb) {
       this.isoBuildTriggerError = '';
-      this.seedImage = undefined;
-      const machineRegName = this.displayRegEndpoints ? this.registrationEndpointSelected.split('/')[1] : this.registrationEndpoint.split('/')[1];
-      const machineRegNamespace = this.displayRegEndpoints ? this.registrationEndpointSelected.split('/')[0] : this.registrationEndpoint.split('/')[0];
 
       const seedImageModel = await this.$store.dispatch('management/create', {
         metadata: {
-          name:      `iso-image-reg-${ machineRegName }-${ randomStr(8, CHARSET.ALPHA_LOWER ) }`,
+          name:      `iso-image-reg-${ this.machineRegName }-${ this.selectedBuildIsoValidLabel }`,
           namespace: 'fleet-default'
         },
         spec: {
           baseImage:       this.buildIsoOsVersionSelected,
           registrationRef: {
-            name:      machineRegName,
-            namespace: machineRegNamespace
+            name:      this.machineRegName,
+            namespace: this.machineRegNamespace
           }
         },
         type: ELEMENTAL_SCHEMA_IDS.SEED_IMAGE,
       });
 
       try {
-        this.seedImage = await seedImageModel.save({ url: `/v1/${ ELEMENTAL_SCHEMA_IDS.SEED_IMAGE }`, method: 'POST' });
+        await seedImageModel.save({ url: `/v1/${ ELEMENTAL_SCHEMA_IDS.SEED_IMAGE }`, method: 'POST' });
         this.buildBtnCallback = btnCb;
       } catch (e) {
         this.isoBuildTriggerError = e;
@@ -194,8 +274,15 @@ export default {
           mode="buildIso"
           class="mr-20"
           data-testid="build-iso-btn"
-          :disabled="!isBuildIsoBtnEnabled"
+          :disabled="disableBuildIsoBtn"
           @click="buildIso"
+        />
+        <AsyncButton
+          mode="rebuildIso"
+          class="mr-20"
+          data-testid="rebuild-iso-btn"
+          :disabled="disableRebuildIsoBtn"
+          @click="rebuildIso"
         />
         <a
           :disabled="!isIsoBuilt"
@@ -208,7 +295,13 @@ export default {
       </div>
     </div>
     <Banner
-      v-if="isoBuildTriggerError || isoBuildProcessError"
+      v-if="isoBuildProcessOngoing && (!isoBuildTriggerError && !isoBuildProcessError)"
+      color="warning"
+      data-testid="build-iso-process-banner"
+      v-html="'Build Process ongoing...'"
+    />
+    <Banner
+      v-if="!isoBuildProcessOngoing && (isoBuildTriggerError || isoBuildProcessError)"
       color="error"
       data-testid="build-iso-banner"
       v-html="isoBuildTriggerError || isoBuildProcessError"
