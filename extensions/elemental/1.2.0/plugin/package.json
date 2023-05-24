@@ -1,0 +1,20 @@
+{
+  "name": "elemental",
+  "description": "OS Management extension",
+  "version": "1.2.0",
+  "private": false,
+  "rancher": true,
+  "icon": "https://raw.githubusercontent.com/rancher/elemental-ui/main/pkg/elemental/icon-v2.svg",
+  "engines": {
+    "node": ">=12"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "~4.5.0",
+    "@vue/cli-service": "~4.5.0",
+    "@vue/cli-plugin-typescript": "^4.5.15"
+  },
+  "files": [
+    "**/*"
+  ],
+  "main": "elemental-1.2.0.umd.min.js"
+}

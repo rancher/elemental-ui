@@ -3,6 +3,26 @@ entries:
   elemental:
   - annotations:
       catalog.cattle.io/certified: rancher
+      catalog.cattle.io/kube-version: '>= 1.16.0-0 < 1.26.0-0'
+      catalog.cattle.io/namespace: cattle-ui-plugin-system
+      catalog.cattle.io/os: linux
+      catalog.cattle.io/permits-os: linux, windows
+      catalog.cattle.io/rancher-version: '>= 2.7.0-0 < 2.8.0-0'
+      catalog.cattle.io/scope: management
+      catalog.cattle.io/ui-component: plugins
+    apiVersion: v2
+    appVersion: 1.2.0
+    created: "2023-05-24T10:51:02.56937267Z"
+    description: OS Management extension
+    digest: 23c810934be34358524689a71955cb4bc120ff60474c083f696a6e7b07878373
+    icon: https://raw.githubusercontent.com/rancher/elemental-ui/main/pkg/elemental/icon-v2.svg
+    name: elemental
+    type: application
+    urls:
+    - assets/elemental/elemental-1.2.0.tgz
+    version: 1.2.0
+  - annotations:
+      catalog.cattle.io/certified: rancher
       catalog.cattle.io/kube-version: '>= 1.16.0-0 < 1.25.0-0'
       catalog.cattle.io/namespace: cattle-ui-plugin-system
       catalog.cattle.io/os: linux
@@ -12,7 +32,7 @@ entries:
       catalog.cattle.io/ui-component: plugins
     apiVersion: v2
     appVersion: 1.1.0
-    created: "2023-05-24T09:18:46.576791666Z"
+    created: "2023-05-24T10:51:02.568999865Z"
     description: OS Management extension
     digest: 2f1d4b81d28f1d6387d15f105ae6ef62659a3a1ee6016673082f7620d61bc8ad
     icon: https://raw.githubusercontent.com/rancher/elemental-ui/main/pkg/elemental/icon-v2.svg
@@ -32,7 +52,7 @@ entries:
       catalog.cattle.io/ui-component: plugins
     apiVersion: v2
     appVersion: 1.0.0
-    created: "2023-05-24T09:18:46.575963856Z"
+    created: "2023-05-24T10:51:02.56861736Z"
     description: OS Management plugin
     digest: 5ca7bb30b2d665f3ab47f4022c2529b8189df5ddc9a60af7cdf5207fc91a998a
     icon: https://raw.githubusercontent.com/rancher/elemental-ui/main/pkg/elemental/icon.svg
@@ -52,7 +72,7 @@ entries:
       catalog.cattle.io/ui-component: plugins
     apiVersion: v2
     appVersion: 0.1.4
-    created: "2023-05-24T09:18:46.575119946Z"
+    created: "2023-05-24T10:51:02.568231755Z"
     description: OS Management plugin
     digest: e4cda7c58b8d52bcc419c4705f3f5e126f9e848e6b985960d2d07131b70fb40b
     icon: https://raw.githubusercontent.com/rancher/elemental-ui/main/pkg/elemental/icon.svg
@@ -72,7 +92,7 @@ entries:
       catalog.cattle.io/ui-component: plugins
     apiVersion: v2
     appVersion: 0.1.3
-    created: "2023-05-24T09:18:46.574106034Z"
+    created: "2023-05-24T10:51:02.567464345Z"
     description: OS Management plugin
     digest: b0c70908eb8ff601f1c031fabb4827b214f690f07ffdfb17a526f99fe37c2ca4
     icon: https://raw.githubusercontent.com/rancher/elemental-ui/main/pkg/elemental/icon.svg
@@ -92,7 +112,7 @@ entries:
       catalog.cattle.io/ui-component: plugins
     apiVersion: v2
     appVersion: 0.1.2
-    created: "2023-05-24T09:18:46.573290424Z"
+    created: "2023-05-24T10:51:02.566996738Z"
     description: OS Management plugin
     digest: e6c17deaf3125a3eee770ca269cf56227eec282026a1a65389903940f9692c50
     icon: https://raw.githubusercontent.com/rancher/elemental-ui/main/pkg/elemental/icon.svg
@@ -112,7 +132,7 @@ entries:
       catalog.cattle.io/ui-component: plugins
     apiVersion: v2
     appVersion: 0.1.1
-    created: "2023-05-24T09:18:46.572396114Z"
+    created: "2023-05-24T10:51:02.566132627Z"
     description: OS Management plugin
     digest: 87d4c55d97f77cd690bae5dabbe25bfcd09b9dc68bbf47a9dfda9adf8fd8037a
     icon: https://raw.githubusercontent.com/rancher/elemental-ui/main/pkg/elemental/icon.svg
@@ -132,7 +152,7 @@ entries:
       catalog.cattle.io/ui-component: plugins
     apiVersion: v2
     appVersion: 0.1.0
-    created: "2023-05-24T09:18:46.571652605Z"
+    created: "2023-05-24T10:51:02.565742121Z"
     description: OS Management plugin
     digest: 3cce4d5585fdb76c3c094943b07adf43a5f66df5edd404718e3a232a136b9254
     icon: https://raw.githubusercontent.com/rancher/elemental-ui/main/pkg/elemental/icon.svg
@@ -141,4 +161,4 @@ entries:
     urls:
     - assets/elemental/elemental-0.1.0.tgz
     version: 0.1.0
-generated: "2023-05-24T09:18:46.570390789Z"
+generated: "2023-05-24T10:51:02.565185014Z"
