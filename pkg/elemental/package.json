@@ -1,6 +1,6 @@
 {
   "name": "elemental",
-  "description": "OS Management extension.",
+  "description": "OS Management extension",
   "version": "1.2.0",
   "private": false,
   "rancher": true,
