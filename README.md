@@ -10,7 +10,7 @@ yarn install
 
 # For development, serve with hot reload at https://localhost:8005
 # using the endpoint for your Rancher API
-API=https://your-rancher yarn mem-dev
+API=https://your-rancher yarn dev
 # or put the variable into a .env file
 # Goto https://localhost:8005
 ```
