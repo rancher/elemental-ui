@@ -187,6 +187,7 @@ export default {
           :label="t('elemental.machineRegistration.edit.osVersion')"
           :placeholder="t('elemental.machineRegistration.edit.osVersionPlaceholder')"
           :options="buildIsoOsVersions"
+          option-key="value"
         />
       </div>
       <div class="col mt-10 span-5 flex">
@@ -194,7 +195,7 @@ export default {
           mode="buildIso"
           class="mr-20"
           data-testid="build-iso-btn"
-          :disabled="!isBuildIsoBtnEnabled"
+          :disabled="!isBuildIsoBtnEnabled || isIsoBuilt"
           @click="buildIso"
         />
         <a

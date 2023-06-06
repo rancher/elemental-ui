@@ -127,7 +127,7 @@ export function init($plugin, store) {
   // advanced tab
   weightType(ELEMENTAL_SCHEMA_IDS.MANAGED_OS_VERSIONS, 8, true);
   configureType(ELEMENTAL_SCHEMA_IDS.MANAGED_OS_VERSIONS, {
-    isCreatable: true,
+    isCreatable: false,
     isEditable:  true,
     isRemovable: true,
     customRoute: createElementalRoute('resource', { resource: ELEMENTAL_SCHEMA_IDS.MANAGED_OS_VERSIONS })
@@ -135,6 +135,12 @@ export function init($plugin, store) {
   headers(ELEMENTAL_SCHEMA_IDS.MANAGED_OS_VERSIONS, [
     STATE,
     NAME_COL,
+    {
+      name:          'OsVersionType',
+      labelKey:      'tableHeaders.osVersionType',
+      getValue:      row => row.spec?.type || '---',
+      sort:          ['spec.type']
+    },
     {
       name:          'OsVersionChannels',
       labelKey:      'tableHeaders.osVersionChannel',

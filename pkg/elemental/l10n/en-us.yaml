@@ -15,6 +15,7 @@ tableHeaders:
   download: 'Download'
   imagePath: Image Path
   osVersion: OS Version
+  osVersionType: Type
   osVersionChannel: OS Version Channel
   channelImage: Channel Image
   targetClusters: Target Clusters
