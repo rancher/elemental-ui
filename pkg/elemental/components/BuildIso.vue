@@ -51,7 +51,7 @@ export default {
     buildIsoOsVersions() {
       return this.filteredManagedOsVersions.map((f) => {
         return {
-          label: f.spec?.metadata?.displayName,
+          label: `${ f.spec?.metadata?.displayName } ${ f.spec?.version }`,
           value: f.spec?.metadata?.uri,
         };
       });
