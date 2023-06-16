@@ -27,10 +27,9 @@ entries:
       catalog.cattle.io/namespace: cattle-ui-plugin-system
       catalog.cattle.io/os: linux
       catalog.cattle.io/permits-os: linux, windows
-      catalog.cattle.io/rancher-version: '>= 2.7.0-0 < 2.8.0-0'
+      catalog.cattle.io/rancher-version: '>= 2.7.0-0 < 2.7.2-0'
       catalog.cattle.io/scope: management
       catalog.cattle.io/ui-component: plugins
-      catalog.cattle.io/ui-version: '< 2.7.3'
     apiVersion: v2
     appVersion: 1.1.0
     created: "2023-06-16T08:42:46.642078373Z"
