@@ -1,6 +1,6 @@
 {
   "name": "desktop",
-  "description": "desktop plugin.",
+  "description": "desktop plugin",
   "version": "0.1.0",
   "private": false,
   "rancher": true,
