@@ -4,7 +4,7 @@ on:
   push:
     branches: [main]
     paths:
-      - 'pkg/desktop/package.json'
+      - 'pkg/elemental/package.json'
     
     
 env:
@@ -71,13 +71,13 @@ jobs:
       - name: Commit build
         run: |
           git pull
-          git add ./assets ./charts/desktop ./extensions ./index.yaml
+          git add ./assets ./charts/elemental ./extensions ./index.yaml
           git commit -a -m "${{ env.CI_COMMIT_MESSAGE }}"
           git push
       - name: Run chart-releaser
         uses: helm/chart-releaser-action@v1.4.1
         with:
-          charts_dir: ./charts/desktop
+          charts_dir: ./charts/elemental
         env:
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
           CR_SKIP_EXISTING: true
