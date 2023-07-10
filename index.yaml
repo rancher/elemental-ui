@@ -21,6 +21,26 @@ entries:
     urls:
     - https://github.com/rancher/elemental-ui/releases/download/Elemental-1.0.0/Elemental-1.0.0.tgz
     version: 1.0.0
+  desktop:
+  - annotations:
+      catalog.cattle.io/certified: rancher
+      catalog.cattle.io/kube-version: '>= 1.16.0-0 < 1.28.0-0'
+      catalog.cattle.io/namespace: cattle-ui-plugin-system
+      catalog.cattle.io/os: linux
+      catalog.cattle.io/permits-os: linux, windows
+      catalog.cattle.io/rancher-version: '>= 2.7.0-0 < 2.8.0-0'
+      catalog.cattle.io/scope: management
+      catalog.cattle.io/ui-component: plugins
+    apiVersion: v2
+    appVersion: 0.1.0
+    created: "2023-07-10T10:09:37.927500199Z"
+    description: desktop plugin
+    digest: 8a1e65250eb2d449b3a7ef03f1ae52dc1fd5e05e152f3e87e54a5767b7c9e77c
+    name: desktop
+    type: application
+    urls:
+    - https://github.com/rancher/elemental-ui/releases/download/desktop-0.1.0/desktop-0.1.0.tgz
+    version: 0.1.0
   elemental:
   - annotations:
       catalog.cattle.io/certified: rancher
@@ -202,4 +222,4 @@ entries:
     urls:
     - assets/elemental/elemental-0.1.0.tgz
     version: 0.1.0
-generated: "2023-03-17T12:16:14.442696523Z"
+generated: "2023-07-10T10:09:37.9275869Z"
