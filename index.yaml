@@ -1,5 +1,25 @@
 apiVersion: v1
 entries:
+  desktop:
+  - annotations:
+      catalog.cattle.io/certified: rancher
+      catalog.cattle.io/kube-version: '>= 1.16.0-0 < 1.28.0-0'
+      catalog.cattle.io/namespace: cattle-ui-plugin-system
+      catalog.cattle.io/os: linux
+      catalog.cattle.io/permits-os: linux, windows
+      catalog.cattle.io/rancher-version: '>= 2.7.0-0 < 2.8.0-0'
+      catalog.cattle.io/scope: management
+      catalog.cattle.io/ui-component: plugins
+    apiVersion: v2
+    appVersion: 0.1.0
+    created: "2023-07-10T10:08:59.278940253Z"
+    description: desktop plugin
+    digest: a06367d12e7ddcb83e39b080598fdc5f6ec7b7e9f37a660f6b5f6303fffa2ab6
+    name: desktop
+    type: application
+    urls:
+    - assets/desktop/desktop-0.1.0.tgz
+    version: 0.1.0
   elemental:
   - annotations:
       catalog.cattle.io/certified: rancher
@@ -52,7 +72,7 @@ entries:
       catalog.cattle.io/rancher-version: '>= 2.7.0-0 < 2.8.0-0'
       catalog.cattle.io/scope: management
       catalog.cattle.io/ui-component: plugins
-      catalog.cattle.io/ui-version: '< 2.7.2'
+      catalog.cattle.io/ui-version: < 2.7.2
     apiVersion: v2
     appVersion: 1.0.0
     created: "2023-06-16T08:42:46.641735772Z"
@@ -164,4 +184,4 @@ entries:
     urls:
     - assets/elemental/elemental-0.1.0.tgz
     version: 0.1.0
-generated: "2023-06-16T08:42:46.636872766Z"
+generated: "2023-07-10T10:08:59.277711334Z"
