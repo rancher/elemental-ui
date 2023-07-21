@@ -413,7 +413,7 @@ export default {
 
 <style lang="scss">
 body.theme-dark .elemental-logo svg {
-  fill: #FFFFFF;
+  fill: var(--body-text);
 }
 </style>
 
