@@ -1,14 +1,15 @@
-name: Build Elemental UI Extension
+name: Build and Release Extension
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
     paths:
-      - 'pkg/elemental/package.json'
-    
-    
+      - pkg/elemental/package.json
+
 env:
   ACTIONS_RUNNER_DEBUG: false
+  CI_COMMIT_MESSAGE: CI Build Artifacts
 
 defaults:
   run:
@@ -16,15 +17,11 @@ defaults:
     working-directory: ./
 
 jobs:
-  release:
+  build:
     if: github.repository_owner == 'rancher'
+    name: Build extension artifact
     runs-on: ubuntu-latest
-    permissions:
-      id-token: write
-      packages: write
-      contents: write
-    env:
-      CI_COMMIT_MESSAGE: CI Build Artifacts
+    permissions: write-all
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -33,8 +30,9 @@ jobs:
 
       - name: Configure Git
         run: |
-          git config user.name "$GITHUB_ACTOR"
-          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+          git config user.name 'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+
       - name: Setup Helm
         uses: azure/setup-helm@v3
         with:
@@ -43,12 +41,12 @@ jobs:
       - name: Setup yq
         uses: chrisdickinson/setup-yq@v1.0.1
         with:
-          yq-version: v4.28.2  
+          yq-version: v4.28.2
 
       - name: Setup Nodejs and npm
         uses: actions/setup-node@v3
         with:
-          node-version: "16"
+          node-version: '16'
 
       - name: Setup yarn
         run: npm install -g yarn
@@ -56,7 +54,7 @@ jobs:
       - name: Setup Nodejs with yarn caching
         uses: actions/setup-node@v3
         with:
-          node-version: "16"
+          node-version: '16'
           cache: yarn
 
       - name: Install dependencies
@@ -66,18 +64,47 @@ jobs:
         shell: bash
         id: build_script
         run: |
-          chmod +x ./scripts/publish
-          ./scripts/publish -s "${{ github.repository }}" -b main
+          yarn publish-pkgs -s "${{ github.repository }}" -b gh-pages
+
+      - name: Upload charts artifact
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+        uses: actions/upload-artifact@v3
+        with:
+          name: charts
+          path: tmp
+
+  release:
+    name: Release Build
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    needs: build
+    runs-on: ubuntu-latest
+    permissions: write-all
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: gh-pages
+
+      - name: Configure Git
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+
+      - name: Download build artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: charts
+
       - name: Commit build
         run: |
-          git pull
-          git add ./assets ./charts/elemental ./extensions ./index.yaml
+          git add ./{assets,charts,extensions,index.yaml}
           git commit -a -m "${{ env.CI_COMMIT_MESSAGE }}"
           git push
+
       - name: Run chart-releaser
-        uses: helm/chart-releaser-action@v1.4.1
+        uses: helm/chart-releaser-action@v1.5.0
         with:
-          charts_dir: ./charts/elemental
+          charts_dir: ./charts/*
         env:
-          CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+          CR_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
           CR_SKIP_EXISTING: true
