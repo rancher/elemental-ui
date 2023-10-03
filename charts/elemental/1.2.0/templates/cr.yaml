@@ -1,14 +1,12 @@
-{{- if .Values.plugin.enabled }}
 apiVersion: catalog.cattle.io/v1
 kind: UIPlugin
 metadata:
-  name: {{ include "plugin-server.fullname" . }}
+  name: {{ include "extension-server.fullname" . }}
   namespace: {{ .Release.Namespace }}
-  labels: {{ include "plugin-server.labels" . | nindent 4 }}
+  labels: {{ include "extension-server.labels" . | nindent 4 }}
 spec:
-  plugin: # should initially follow the design of the Helm Chart.yaml fields, could discuss modifying this
-    name: {{ include "plugin-server.fullname" . }}
+  plugin:
+    name: {{ include "extension-server.fullname" . }}
     version: {{ (semver (default .Chart.AppVersion .Values.plugin.versionOverride)).Original }}
     endpoint: https://raw.githubusercontent.com/rancher/elemental-ui/gh-pages/extensions/elemental/1.2.0
     noCache: {{ .Values.plugin.noCache }}
-{{- end }}

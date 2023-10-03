@@ -16,5 +16,4 @@ plugin/elemental-1.2.0.umd.min.vendors~edit.js
 plugin/elemental-1.2.0.umd.min.vendors~edit.js.map
 plugin/elemental-1.2.0.umd.min.vendors~machine-config.js
 plugin/elemental-1.2.0.umd.min.vendors~machine-config.js.map
-plugin/img/icon-v2.6a284a05.svg
 plugin/package.json
