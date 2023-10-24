@@ -210,9 +210,9 @@ export default {
     </div>
     <Banner
       v-if="isoBuildTriggerError || isoBuildProcessError"
+      v-clean-html="isoBuildTriggerError || isoBuildProcessError"
       color="error"
       data-testid="build-iso-banner"
-      v-html="isoBuildTriggerError || isoBuildProcessError"
     />
   </div>
 </template>
