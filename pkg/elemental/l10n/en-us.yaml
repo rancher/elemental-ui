@@ -6,9 +6,18 @@ extensions:
   installScreen:
     stepTitle: "OS Management"
     stepSubtitle: "OS Management"
+    versionError:
+      title: Chart Version not found.
+      message: Unable to determine the latest stable version of the elemental chart. Please make sure the Helm repository is configured correctly.
+    repo:
+      title: Repository
+      description: You will need the Elemental Helm repository (https://github.com/rancher/elemental-operator/tree/gh-pages/stable) to install the `Elemental` chart.
     crds:
       title: Install Elemental CRDs
       description: Elemental CRDs description
+      button: Install Elemental
+      reload: Unable to fetch Elemental Helm chart - reload required.
+      # from this point forward, we might need to delete it as it shouldnt be needed
       manualStep: |
         Click the button below and follow the <a target="_blank" rel="noopener noreferrer nofollow" href="https://elemental.docs.rancher.com/elementaloperatorchart-reference#install-chart">Documentation</a>, or run the <code>kubectl</code> command to install the latest version of the Elemental CRDs:
       applyCommand: 'helm install --create-namespace -n cattle-elemental-system elemental-operator-crds \
@@ -90,6 +99,10 @@ typeLabel:
   elementalClusters: Clusters
 
 asyncButton:
+  elementalRepo:
+    action: Add Elemental Repository
+    success: Added
+    waiting: Adding&hellip;
   downloadMachineReg:
     action: Download Configuration File
     waiting: Preparing..

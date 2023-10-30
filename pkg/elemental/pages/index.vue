@@ -2,14 +2,20 @@
 import { mapGetters } from 'vuex';
 import { allHash } from '@shell/utils/promise';
 
-import Loading from '@shell/components/Loading';
 import { CATALOG, MANAGEMENT } from '@shell/config/types';
+import { REPO_TYPE, REPO, CHART, VERSION } from '@shell/config/query-params';
+
+import Loading from '@shell/components/Loading';
 import { Banner } from '@components/Banner';
 import CopyCode from '@shell/components/CopyCode';
-import { ELEMENTAL_SCHEMA_IDS } from '../config/elemental-types';
+import AsyncButton from '@shell/components/AsyncButton';
+
 import ElementalOpNotInstalled from '../components/ElementalOpNotInstalled';
 import InstallView from '../components/InstallView';
 import DashboardView from '../components/DashboardView';
+
+import { ELEMENTAL_SCHEMA_IDS, ELEMENTAL_REPO, ELEMENTAL_CHARTS } from '../config/elemental-types';
+import { handleGrowl, getLatestStableVersion } from '../utils/elemental-utils';
 
 export default {
   name:       'BaseView',
@@ -19,6 +25,7 @@ export default {
     InstallView,
     DashboardView,
     CopyCode,
+    AsyncButton,
     Banner
   },
   async fetch() {
@@ -30,8 +37,14 @@ export default {
       if (this.$store.getters['management/canList'](CATALOG.APP)) {
         requests.installedApps = this.$store.dispatch('management/findAll', { type: CATALOG.APP });
       }
+      // get repos installer
+      if (this.$store.getters['management/canList'](CATALOG.CLUSTER_REPO)) {
+        requests.installedRepos = this.$store.dispatch('management/findAll', { type: CATALOG.CLUSTER_REPO });
+      }
 
       const allDispatches = await allHash(requests);
+
+      console.log('allDispatches', allDispatches);
 
       // get local cluster for opening kubectl shell
       const clusters = this.$store.getters['management/all'](MANAGEMENT.CLUSTER);
@@ -39,6 +52,11 @@ export default {
 
       if (localCluster) {
         this.localCluster = localCluster;
+      }
+
+      // force the refresh of the catalog to populate the charts
+      if ( !this.elementalRepo || !this.operatorChart ) {
+        await this.$store.dispatch('catalog/refresh');
       }
 
       // we need to check for the length of the response
@@ -63,8 +81,6 @@ export default {
         {
           name:        'crds',
           label:       'Elemental CRDs',
-          title:       '',
-          description: '',
           ready:       false,
         },
         {
@@ -79,16 +95,47 @@ export default {
     crds() {
       this.installSteps[0].ready = true;
 
-      this.$children.$refs.wizard?.goToStep(2);
+      // this.$children.$refs.wizard?.goToStep(2);
     }
   },
   computed: {
+    ...mapGetters({
+      charts: 'catalog/charts', repos: 'catalog/repos', t: 'i18n/t'
+    }),
+
+    operatorChart() {
+      if ( this.elementalRepo ) {
+        return this.$store.getters['catalog/chart']({
+          repoName:  this.elementalRepo.id,
+          repoType:  'cluster',
+          chartName: ELEMENTAL_CHARTS.OPERATOR
+        });
+      }
+
+      return null;
+    },
+
+    elementalRepo() {
+      console.log('this.charts', this.charts?.find(c => c.chartName.includes('elemental')));
+      const chart = this.charts?.find(chart => chart.chartName === ELEMENTAL_CHARTS.OPERATOR);
+
+      console.log('chart', chart);
+      console.log('this.repos', this.repos);
+
+      return this.repos?.find(repo => repo.id === chart?.repoName);
+    },
+
+    // not needed
     crds() {
       return this.$store.getters['management/all'](CATALOG.APP).find(s => s.metadata?.name === 'elemental-operator-crds');
     },
+
+    // not needed
     operator() {
       return this.$store.getters['management/all'](CATALOG.APP).find(s => s.metadata?.name === 'elemental-operator');
     },
+
+    // not needed
     shellEnabled() {
       if (this.localCluster && this.localCluster?.links?.shell) {
         return !!this.localCluster?.links?.shell;
@@ -96,7 +143,96 @@ export default {
 
       return false;
     },
-  }
+  },
+  methods: {
+    async addRepository(btnCb) {
+      try {
+        const repoObj = await this.$store.dispatch('cluster/create', {
+          type:     CATALOG.CLUSTER_REPO,
+          metadata: { name: 'elemental-operator-charts' },
+          spec:     {
+            gitBranch: ELEMENTAL_REPO.BRANCH,
+            gitRepo:   ELEMENTAL_REPO.REPO
+          },
+        });
+
+        try {
+          await repoObj.save();
+        } catch (e) {
+          handleGrowl({ error: e, store: this.$store });
+          btnCb(false);
+
+          return;
+        }
+
+        await this.refreshCharts();
+        btnCb(true);
+      } catch (e) {
+        handleGrowl({ error: e, store: this.$store });
+        btnCb(false);
+      }
+    },
+
+    async refreshCharts(retry = 0, init) {
+      try {
+        await this.$store.dispatch('catalog/refresh');
+      } catch (e) {
+        handleGrowl({ error: e, store: this.$store });
+      }
+
+      if ( !this.operatorChart && retry === 0 ) {
+        await this.$store.dispatch('management/findAll', { type: CATALOG.CLUSTER_REPO });
+        await this.refreshCharts(retry + 1);
+      }
+
+      if ( !this.operatorChart && retry === 1 && !init ) {
+        this.reloadReady = true;
+      }
+    },
+
+    async chartRoute() {
+      if ( !this.operatorChart ) {
+        try {
+          await this.refreshCharts();
+        } catch (e) {
+          handleGrowl({ error: e, store: this.$store });
+
+          return;
+        }
+      }
+
+      const {
+        repoType, repoName, chartName, versions
+      } = this.operatorChart;
+      const latestStableVersion = getLatestStableVersion(versions);
+
+      if ( latestStableVersion ) {
+        const query = {
+          [REPO_TYPE]: repoType,
+          [REPO]:      repoName,
+          [CHART]:     chartName,
+          [VERSION]:   latestStableVersion.version
+        };
+
+        this.$router.push({
+          name:   'c-cluster-apps-charts-install',
+          params: { cluster: '_' },
+          query,
+        });
+      } else {
+        const error = {
+          _statusText: this.t('extensions.installScreen.versionError.title'),
+          message:     this.t('extensions.installScreen.versionError.message')
+        };
+
+        handleGrowl({ error, store: this.$store });
+      }
+    },
+
+    reload() {
+      this.$router.go();
+    }
+  },
 };
 </script>
 
@@ -112,6 +248,7 @@ export default {
       :wizard-title="t('extensions.installScreen.stepTitle')"
       :wizard-sub-title="t('extensions.installScreen.stepSubtitle')"
     >
+      <!-- elemental icon -->
       <template #extension-icon>
         <svg
           width="32"
@@ -130,6 +267,61 @@ export default {
       </template>
 
       <template #crds>
+        <template v-if="!elementalRepo">
+          <h2
+            class="mt-20 mb-10"
+            data-testid="kw-repo-title"
+          >
+            {{ t("extensions.installScreen.repo.title") }}
+          </h2>
+          <p class="mb-20">
+            {{ t("extensions.installScreen.repo.description") }}
+          </p>
+
+          <AsyncButton
+            mode="elementalRepo"
+            data-testid="kw-repo-add-button"
+            @click="addRepository"
+          />
+        </template>
+
+        <template v-else>
+          <h2 class="mt-20 mb-10" data-testid="kw-app-install-title">
+            {{ t("extensions.installScreen.crds.title") }}
+          </h2>
+          <p class="mb-20">
+            {{ t("extensions.installScreen.crds.description") }}
+          </p>
+
+          <div class="chart-route">
+            <Loading v-if="!operatorChart && !reloadReady" mode="relative" class="mt-20" />
+
+            <template v-else-if="!operatorChart && reloadReady">
+              <Banner color="warning">
+                <span class="mb-20">
+                  {{ t('extensions.installScreen.crds.reload' ) }}
+                </span>
+                <button class="ml-10 btn btn-sm role-primary" @click="reload()">
+                  {{ t('generic.reload') }}
+                </button>
+              </Banner>
+            </template>
+
+            <template v-else>
+              <button
+                data-testid="kw-app-install-button"
+                class="btn role-primary mt-20"
+                :disabled="!operatorChart"
+                @click.prevent="chartRoute"
+              >
+                {{ t("extensions.installScreen.crds.button") }}
+              </button>
+            </template>
+          </div>
+        </template>
+      </template>
+
+      <!-- <template #crds>
         <h2
           class="mt-20 mb-10"
           data-testid="kw-cm-title"
@@ -162,7 +354,7 @@ export default {
             :label="t('extensions.installScreen.crds.stepProgress')"
           />
         </slot>
-      </template>
+      </template> -->
     </InstallView>
     <!-- <ElementalOpNotInstalled
       v-else-if="!isElementalOpInstalled"
