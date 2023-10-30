@@ -13,3 +13,10 @@ export const ELEMENTAL_SCHEMA_IDS = {
 };
 
 export const KIND = { MACHINE_INV_SELECTOR_TEMPLATES: 'MachineInventorySelectorTemplate' };
+
+export const ELEMENTAL_REPO = {
+  REPO:   'https://github.com/rancher/elemental-operator',
+  BRANCH: 'gh-pages'
+};
+
+export const ELEMENTAL_CHARTS = { OPERATOR: 'elemental-operator' };

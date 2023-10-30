@@ -232,10 +232,10 @@ export default {
             :weight="3"
           >
             <Banner
+              v-clean-html="t('elemental.machineRegistration.create.labelsAndAnnotationsMachInvBanner', {}, true)"
               class="mb-40"
               color="info"
               data-testid="mach-inv-banner"
-              v-html="t('elemental.machineRegistration.create.labelsAndAnnotationsMachInvBanner', {}, true)"
             />
             <div class="row mb-30">
               <KeyValue
@@ -271,10 +271,10 @@ export default {
             :weight="2"
           >
             <Banner
+              v-clean-html="t('elemental.machineRegistration.create.labelsAndAnnotationsMachRegBanner', {}, true)"
               class="mb-40"
               color="info"
               data-testid="mach-reg-banner"
-              v-html="t('elemental.machineRegistration.create.labelsAndAnnotationsMachRegBanner', {}, true)"
             />
             <div class="row mb-30">
               <KeyValue
