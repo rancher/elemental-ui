@@ -122,7 +122,7 @@ export default {
     >
       <div class="col span-12">
         <h3>{{ t('elemental.machineRegistration.edit.imageSetup') }}</h3>
-        <p v-html="t('elemental.machineRegistration.edit.downloadMachineRegistrationFile', {}, true)" />
+        <p v-clean-html="t('elemental.machineRegistration.edit.downloadMachineRegistrationFile', {}, true)" />
         <AsyncButton
           class="mt-10"
           mode="downloadMachineReg"

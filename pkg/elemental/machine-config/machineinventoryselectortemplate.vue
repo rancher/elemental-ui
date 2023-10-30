@@ -127,11 +127,11 @@ export default {
       @input="matchChanged($event)"
     />
     <Banner v-if="matchingMachineInventories" :color="(matchingMachineInventories.isNone || matchingMachineInventories.isAll ? 'warning' : 'success')">
-      <span v-if="matchingMachineInventories.isAll" v-html="t('elemental.clusterGroup.selector.matchesAll', matchingMachineInventories)" />
-      <span v-else-if="matchingMachineInventories.isNone" v-html="t('elemental.clusterGroup.selector.matchesNone', matchingMachineInventories)" />
+      <span v-if="matchingMachineInventories.isAll" v-clean-html="t('elemental.clusterGroup.selector.matchesAll', matchingMachineInventories)" />
+      <span v-else-if="matchingMachineInventories.isNone" v-clean-html="t('elemental.clusterGroup.selector.matchesNone', matchingMachineInventories)" />
       <span
         v-else
-        v-html="t('elemental.clusterGroup.selector.matchesSome', matchingMachineInventories)"
+        v-clean-html="t('elemental.clusterGroup.selector.matchesSome', matchingMachineInventories)"
       />
     </Banner>
   </div>

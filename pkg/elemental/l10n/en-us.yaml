@@ -1,3 +1,33 @@
+extensions:
+  splashScreen: 
+    title: OS Management
+    description: "Elemental is a software stack enabling a centralized, full cloud-native OS management with Kubernetes. <br><br> Cluster Node OSes are built and maintained via container images through the Elemental Toolkit and installed on new hosts using the Elemental CLI. <br><br> The Elemental Operator and the Rancher System Agent enable Rancher Manager to fully control Elemental clusters, from the installation and management of the OS on the Nodes to the provisioning of new K3s or RKE2 clusters in a centralized way."
+    button: "Install {product}"
+  installScreen:
+    stepTitle: "OS Management"
+    stepSubtitle: "OS Management"
+    versionError:
+      title: Chart Version not found.
+      message: Unable to determine the latest stable version of the elemental chart. Please make sure the Helm repository is configured correctly.
+    repo:
+      title: Repository
+      description: You will need the Elemental Helm repository (https://github.com/rancher/elemental-operator/tree/gh-pages/stable) to install the `Elemental` chart.
+    crds:
+      title: Install Elemental CRDs
+      description: Elemental CRDs description
+      button: Install Elemental
+      reload: Unable to fetch Elemental Helm chart - reload required.
+      # from this point forward, we might need to delete it as it shouldnt be needed
+      manualStep: |
+        Click the button below and follow the <a target="_blank" rel="noopener noreferrer nofollow" href="https://elemental.docs.rancher.com/elementaloperatorchart-reference#install-chart">Documentation</a>, or run the <code>kubectl</code> command to install the latest version of the Elemental CRDs:
+      applyCommand: 'helm install --create-namespace -n cattle-elemental-system elemental-operator-crds \
+             oci://registry.suse.com/rancher/elemental-operator-crds-chart'
+      openShell: Open Kubectl Shell
+      stepProgress: The active step will progress once Elemental CRDs are installed.
+
+
+
+
 product:
   elemental: OS Management
   description: "Elemental is a software stack enabling a centralized, full cloud-native OS management with Kubernetes. <br><br> Cluster Node OSes are built and maintained via container images through the Elemental Toolkit and installed on new hosts using the Elemental CLI. <br><br> The Elemental Operator and the Rancher System Agent enable Rancher Manager to fully control Elemental clusters, from the installation and management of the OS on the Nodes to the provisioning of new K3s or RKE2 clusters in a centralized way."
@@ -69,6 +99,10 @@ typeLabel:
   elementalClusters: Clusters
 
 asyncButton:
+  elementalRepo:
+    action: Add Elemental Repository
+    success: Added
+    waiting: Adding&hellip;
   downloadMachineReg:
     action: Download Configuration File
     waiting: Preparing..
