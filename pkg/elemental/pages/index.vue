@@ -31,8 +31,6 @@ export default {
 
       const allDispatches = await allHash(requests);
 
-      console.log('allDispatches', allDispatches);
-
       // we need to check for the length of the response
       // due to some issue with a standard-user, which can list apps
       // but the list comes up empty []

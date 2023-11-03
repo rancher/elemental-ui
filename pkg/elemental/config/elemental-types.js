@@ -19,4 +19,4 @@ export const ELEMENTAL_REPO = {
   BRANCH: 'gh-pages'
 };
 
-export const ELEMENTAL_CHARTS = { OPERATOR: 'elemental-operator' };
+export const ELEMENTAL_CHARTS = { OPERATOR: 'elemental' };

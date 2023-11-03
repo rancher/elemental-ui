@@ -23,10 +23,6 @@ export default {
     this.reloadReady = false;
     const reqs = {};
 
-    // if (this.$store.getters['management/canList'](CATALOG.APP)) {
-    //   reqs.apps = this.$store.dispatch('management/findAll', { type: CATALOG.APP });
-    // }
-
     if (this.$store.getters['management/canList'](CATALOG.CLUSTER_REPO)) {
       reqs.repos = this.$store.dispatch('management/findAll', { type: CATALOG.CLUSTER_REPO });
     }
@@ -36,11 +32,9 @@ export default {
       reqs.catalogRefresh = this.$store.dispatch('catalog/refresh');
     }
 
-    const allDispatches = await allHash(reqs);
+    await allHash(reqs);
 
     this.initLoading = false;
-
-    console.log('INSTALL VIEW FETCH', allDispatches);
   },
   data() {
     return { reloadReady: false, initLoading: true };
@@ -51,25 +45,17 @@ export default {
     }),
 
     elementalRepo() {
-      console.log('elemental repo chart', this.charts?.find(chart => chart.chartName.includes('elemental')));
       const chart = this.charts?.find(chart => chart.chartName === ELEMENTAL_CHARTS.OPERATOR);
-
-      console.log('elemental repo chart', chart);
-      console.log('elemental repo this.repos', this.repos);
 
       return this.repos?.find(repo => repo.id === chart?.repoName);
     },
 
     operatorChart() {
-      if ( this.elementalRepo ) {
-        return this.$store.getters['catalog/chart']({
-          repoName:  this.elementalRepo.id,
-          repoType:  'cluster',
-          chartName: ELEMENTAL_CHARTS.OPERATOR
-        });
-      }
-
-      return null;
+      return this.$store.getters['catalog/chart']({
+        repoName:  this.elementalRepo.id,
+        repoType:  'cluster',
+        chartName: ELEMENTAL_CHARTS.OPERATOR
+      }) || null;
     },
 
   },
@@ -134,11 +120,7 @@ export default {
         repoType, repoName, chartName, versions
       } = this.operatorChart;
 
-      console.log('chartRoute this.operatorChart', this.operatorChart);
-
       const latestStableVersion = getLatestStableVersion(versions);
-
-      console.log('chartRoute latestStableVersion', latestStableVersion);
 
       if ( latestStableVersion ) {
         const query = {
@@ -147,9 +129,6 @@ export default {
           [CHART]:     chartName,
           [VERSION]:   latestStableVersion.version
         };
-
-        console.log('chartRoute query', query);
-        // https://localhost:8005/c/local/apps/charts/install?repo-type=cluster&repo=elemental-operator-charts&chart=elemental-operator&version=1.3.5
 
         this.$router.push({
           name:   'c-cluster-apps-charts-install',
@@ -216,7 +195,7 @@ export default {
       />
 
       <!-- Add repo btn -->
-      <div v-else-if="!elementalRepo">
+      <div v-else-if="!elementalRepo && !operatorChart">
         <AsyncButton
           mode="elementalRepository"
           data-testid="repo-add-button"
@@ -240,7 +219,11 @@ export default {
             <span class="mb-20">
               {{ t('elemental.appInstall.reload' ) }}
             </span>
-            <button class="ml-10 btn btn-sm role-primary" @click="reload()">
+            <button
+              class="ml-10 btn btn-sm role-primary"
+              data-testid="install-reload-btn"
+              @click="reload()"
+            >
               {{ t('generic.reload') }}
             </button>
           </Banner>
