@@ -1,14 +1,8 @@
 <script>
-import { allHash } from '@shell/utils/promise';
-
 import { CATALOG } from '@shell/config/types';
-
 import Loading from '@shell/components/Loading';
-
 import InstallView from '../components/InstallView';
-// import InstallView from '../components/InstallView';
 import DashboardView from '../components/DashboardView';
-
 import { ELEMENTAL_SCHEMA_IDS } from '../config/elemental-types';
 
 export default {
@@ -16,28 +10,26 @@ export default {
   components: {
     Loading,
     InstallView,
-    // InstallView,
     DashboardView
   },
   async fetch() {
     // this covers scenario where Elemental Operator is deleted from Apps and we lose the Elemental Admin role for Standard Users...
     if (this.$store.getters['management/canList'](ELEMENTAL_SCHEMA_IDS.MACHINE_REGISTRATIONS)) {
-      const requests = { elementalSchema: this.$store.getters['management/schemaFor'](ELEMENTAL_SCHEMA_IDS.MACHINE_INVENTORIES) };
-
+      let installedApps;
       // needed to check if operator is installed
       if (this.$store.getters['management/canList'](CATALOG.APP)) {
-        requests.installedApps = this.$store.dispatch('management/findAll', { type: CATALOG.APP });
+        installedApps = await this.$store.dispatch('management/findAll', { type: CATALOG.APP });
       }
 
-      const allDispatches = await allHash(requests);
+      const elementalSchema = this.$store.getters['management/schemaFor'](ELEMENTAL_SCHEMA_IDS.MACHINE_INVENTORIES)
 
       // we need to check for the length of the response
       // due to some issue with a standard-user, which can list apps
       // but the list comes up empty []
-      const isElementalOperatorNotInstalledOnApps = allDispatches.installedApps?.length && !allDispatches.installedApps.find(item => item.id.includes('elemental-operator'));
+      const isElementalOperatorNotInstalledOnApps = installedApps?.length && !installedApps?.find(item => item.id.includes('elemental-operator'));
 
       // check if operator is installed
-      if (!allDispatches.elementalSchema || isElementalOperatorNotInstalledOnApps) {
+      if (!elementalSchema || isElementalOperatorNotInstalledOnApps) {
         this.isElementalOpInstalled = false;
       }
     } else {
