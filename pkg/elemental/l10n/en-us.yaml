@@ -4,6 +4,10 @@ product:
   notInstalledOrNoSchema: Either the user doesn't have enough permissions to run the OS Management extension or the Elemental Operator is not installed (required to run the OS Management extension). <br><br> For user permissions, check with your Rancher administrator if the correct role is assigned. To install Elemental Operator please click the button below.
   notInstalledHasSchema: The Elemental Operator is required to run the OS Management extension. To install it please follow the instructions on the official <a target="blank" href="https://elemental.docs.rancher.com/quickstart-cli#install-elemental-operator" target="_blank" rel="noopener nofollow">documentation</a>.
 
+nav:
+  group:
+    elemental.cattle.io: OS Management
+
 cluster:
   provider:
     machineinventoryselectortemplate: Elemental
