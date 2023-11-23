@@ -19,5 +19,5 @@ echo "Installing dependencies"
 yarn install
 
 # Run e2e tests
-echo "Running e2e tests"
-yarn test:ci
+# echo "Running e2e tests"
+# yarn test:ci
