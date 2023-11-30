@@ -13,6 +13,9 @@
     "core-js": "3.21.1",
     "css-loader": "4.3.0"
   },
+  "devDependencies": {
+    "@types/node": "18.11.9"
+  },
   "scripts": {
     "dev": "NODE_ENV=dev ./node_modules/.bin/vue-cli-service serve",
     "parse-tag-name": "./node_modules/@rancher/shell/scripts/extension/parse-tag-name",
