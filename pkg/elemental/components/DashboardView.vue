@@ -12,7 +12,7 @@ import {
 } from '../config/elemental-types';
 import { createElementalRoute } from '../utils/custom-routing';
 import { filterForElementalClusters } from '../utils/elemental-utils';
-import BuildIso from './BuildIso';
+import BuildMedia from './BuildMedia';
 
 const MAX_ITEMS_PER_TABLE = 6;
 
@@ -22,7 +22,7 @@ export default {
     Banner,
     PercentageBar,
     ResourceTable,
-    BuildIso,
+    BuildMedia,
   },
   async fetch() {
     const requests = {
@@ -232,11 +232,12 @@ export default {
   <div>
     <Banner
       v-if="isElementalOpNotInstalledAndHasSchema"
-      v-clean-html="t('product.notInstalledHasSchema', {}, true)"
       class="mb-20"
       color="warning"
       data-testid="warning-not-install-with-schema"
-    />
+    >
+      <div v-clean-html="t('product.notInstalledHasSchema', {}, true)" />
+    </Banner>
     <h1 class="title" data-testid="elemental-main-title">
       {{ t('elemental.menuLabels.titleDashboard') }}
     </h1>
@@ -280,7 +281,7 @@ export default {
     </div>
     <!-- Build ISO interface -->
     <div class="mt-20 mb-20">
-      <BuildIso
+      <BuildMedia
         :registration-endpoint-list="registrationEndpoints"
       />
     </div>

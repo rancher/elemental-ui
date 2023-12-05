@@ -10,7 +10,7 @@ import jsyaml from 'js-yaml';
 import { saferDump } from '@shell/utils/create-yaml';
 import { _CREATE, _EDIT } from '@shell/config/query-params';
 import { exceptionToErrorsArray } from '@shell/utils/error';
-import BuildIso from '../components/BuildIso';
+import BuildMedia from '../components/BuildMedia';
 
 export default {
   name:       'MachineRegistrationDetailView',
@@ -20,7 +20,7 @@ export default {
     YamlEditor,
     DetailText,
     AsyncButton,
-    BuildIso
+    BuildMedia
   },
   mixins:     [CreateEditView],
   props:      {
@@ -112,7 +112,7 @@ export default {
       </div>
     </div>
     <div>
-      <BuildIso
+      <BuildMedia
         :display-reg-endpoints="false"
         :registration-endpoint="`${value.metadata.namespace}/${value.metadata.name}`"
       />
