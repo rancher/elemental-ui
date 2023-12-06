@@ -179,7 +179,6 @@ export default {
         const link = document.createElement('a');
 
         link.download = `elemental.${ this.buildMediaTypeSelected === MEDIA_TYPES.ISO.type ? MEDIA_TYPES.ISO.extension : MEDIA_TYPES.RAW.extension }`;
-        console.log('link.download', link.download);
         link.href = downloadUrl;
         document.body.appendChild(link);
         link.click();
