@@ -181,11 +181,12 @@ export default {
       data-testid="elemental-description-text"
     />
     <Banner
-      v-clean-html="t('product.notInstalledOrNoSchema', {}, true)"
       class="mt-20 mb-40"
       color="warning"
       data-testid="warning-not-install-or-no-schema"
-    />
+    >
+      <div v-clean-html="t('product.notInstalledOrNoSchema', {}, true)" />
+    </Banner>
 
     <div class="relative">
       <Loading

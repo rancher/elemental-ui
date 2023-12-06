@@ -81,12 +81,12 @@ asyncButton:
     action: Download Configuration File
     waiting: Preparing..
     success: Download Configuration File
-  buildIso:
-    action: Build ISO
-    waiting: Building ISO...
-    error: Build ISO error
+  buildMedia:
+    action: Build Media
+    waiting: Building Media...
+    error: Build Media error
     waitingIcon: gear
-    success: ISO built!
+    success: Media built!
 
 description:
   elemental.cattle.io.machineregistration: Endpoints to connect Machines
@@ -154,10 +154,12 @@ elemental:
     edit:
       imageSetup: Setting up an OS image
       downloadMachineRegistrationFile: 'Download the Registration Endpoint Configuration file in order to manually prepare your ISO image. Instructions <a target="_blank" rel="noopener noreferrer nofollow" style="text-decoration: underline" href="https://elemental.docs.rancher.com/customizing">here</a>.'
-      buildIsoTitle: Build ISO image
+      buildMediaTitle: Create OS image
       osVersion: OS Version
       osVersionPlaceholder: Select OS Version
-      downloadIso: Download ISO
+      mediaType: Media Type
+      mediaTypePlaceholder: Select Media Type
+      downloadMedia: Download Media
     create:
       registrationToken: Registration Token
       registrationURL: 

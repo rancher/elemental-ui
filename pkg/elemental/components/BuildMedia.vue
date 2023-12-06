@@ -5,8 +5,23 @@ import AsyncButton from '@shell/components/AsyncButton';
 import { randomStr, CHARSET } from '@shell/utils/string';
 import { ELEMENTAL_SCHEMA_IDS } from '../config/elemental-types';
 
+const MEDIA_TYPES = {
+
+  RAW: {
+    filterType: 'container',
+    type:       'raw',
+    label:      'Raw',
+    extension:  'img'
+  },
+  ISO: {
+    type:      'iso',
+    label:     'Iso',
+    extension: 'iso'
+  }
+};
+
 export default {
-  name:       'BuildIso',
+  name:       'BuildMedia',
   components: {
     LabeledSelect,
     Banner,
@@ -28,34 +43,43 @@ export default {
   },
   async fetch() {
     this.seedImagesList = await this.$store.dispatch('management/findAll', { type: ELEMENTAL_SCHEMA_IDS.SEED_IMAGE });
-    const managedOsVersions = await this.$store.dispatch('management/findAll', { type: ELEMENTAL_SCHEMA_IDS.MANAGED_OS_VERSIONS });
-
-    this.filteredManagedOsVersions = managedOsVersions.filter(v => v.spec?.type === 'iso') || [];
-
-    if (this.filteredManagedOsVersions.length) {
-      this.buildIsoOsVersionSelected = this.filteredManagedOsVersions[0].spec?.metadata?.uri;
-    }
+    this.managedOsVersions = await this.$store.dispatch('management/findAll', { type: ELEMENTAL_SCHEMA_IDS.MANAGED_OS_VERSIONS });
   },
   data() {
     return {
       seedImagesList:               [],
+      managedOsVersions:            [],
       filteredManagedOsVersions:    [],
-      buildIsoOsVersionSelected:    '',
+      buildMediaOsVersions:         [],
+      buildMediaTypes:              [
+        { label: MEDIA_TYPES.ISO.label, value: MEDIA_TYPES.ISO.type },
+        { label: MEDIA_TYPES.RAW.label, value: MEDIA_TYPES.RAW.type },
+      ],
+      buildMediaTypeSelected:       '',
+      buildMediaOsVersionSelected:  '',
       registrationEndpointSelected: '',
-      isoBuildTriggerError:         '',
+      mediaBuildTriggerError:       '',
       seedImage:                    undefined,
       buildBtnCallback:             undefined
     };
   },
+  watch: {
+    buildMediaTypeSelected(neu) {
+      if (neu) {
+        this.buildMediaOsVersionSelected = '';
+        const selectedFilterType = neu === MEDIA_TYPES.ISO.type ? MEDIA_TYPES.ISO.type : MEDIA_TYPES.RAW.filterType;
+
+        this.filteredManagedOsVersions = this.managedOsVersions.filter(v => v.spec?.type === selectedFilterType) || [];
+        this.buildMediaOsVersions = this.filteredManagedOsVersions.map((f) => {
+          return {
+            label: `${ f.spec?.metadata?.displayName } ${ f.spec?.version }`,
+            value: neu === MEDIA_TYPES.ISO.type ? f.spec?.metadata?.uri : f.spec?.metadata?.upgradeImage,
+          };
+        });
+      }
+    }
+  },
   computed: {
-    buildIsoOsVersions() {
-      return this.filteredManagedOsVersions.map((f) => {
-        return {
-          label: `${ f.spec?.metadata?.displayName } ${ f.spec?.version }`,
-          value: f.spec?.metadata?.uri,
-        };
-      });
-    },
     registrationEndpointsOptions() {
       const activeRegEndpoints = this.registrationEndpointList.filter(item => item.state === 'active');
 
@@ -66,8 +90,12 @@ export default {
         };
       });
     },
-    isBuildIsoBtnEnabled() {
-      return this.displayRegEndpoints ? (this.buildIsoOsVersionSelected && this.registrationEndpointSelected) : this.buildIsoOsVersionSelected;
+    isBuildMediaBtnEnabled() {
+      if (this.displayRegEndpoints) {
+        return this.registrationEndpointSelected && this.buildMediaOsVersionSelected && this.buildMediaTypeSelected;
+      }
+
+      return this.buildMediaOsVersionSelected && this.buildMediaTypeSelected;
     },
     seedImageFound() {
       if (this.seedImage) {
@@ -80,7 +108,7 @@ export default {
 
       return {};
     },
-    isIsoBuilt() {
+    isMediaBuilt() {
       if (this.seedImageFound && this.seedImageFound.status?.downloadURL) {
         this.buildBtnCallback(true);
 
@@ -89,7 +117,7 @@ export default {
 
       return false;
     },
-    isoBuildProcessError() {
+    mediaBuildProcessError() {
       if (this.seedImageFound && this.seedImageFound.status?.conditions) {
         let errorFound = '';
         const excludedReasons = ['SeedImageBuildSuccess', 'ResourcesSuccessfullyCreated', 'SeedImageBuildOngoing'];
@@ -113,19 +141,20 @@ export default {
     }
   },
   methods: {
-    async buildIso(btnCb) {
-      this.isoBuildTriggerError = '';
+    async buildMedia(btnCb) {
+      this.mediaBuildTriggerError = '';
       this.seedImage = undefined;
       const machineRegName = this.displayRegEndpoints ? this.registrationEndpointSelected.split('/')[1] : this.registrationEndpoint.split('/')[1];
       const machineRegNamespace = this.displayRegEndpoints ? this.registrationEndpointSelected.split('/')[0] : this.registrationEndpoint.split('/')[0];
 
       const seedImageModel = await this.$store.dispatch('management/create', {
         metadata: {
-          name:      `iso-image-reg-${ machineRegName }-${ randomStr(8, CHARSET.ALPHA_LOWER ) }`,
+          name:      `media-image-reg-${ machineRegName }-${ randomStr(8, CHARSET.ALPHA_LOWER ) }`,
           namespace: 'fleet-default'
         },
         spec: {
-          baseImage:       this.buildIsoOsVersionSelected,
+          type:            this.buildMediaTypeSelected,
+          baseImage:       this.buildMediaOsVersionSelected,
           registrationRef: {
             name:      machineRegName,
             namespace: machineRegNamespace
@@ -138,18 +167,18 @@ export default {
         this.seedImage = await seedImageModel.save({ url: `/v1/${ ELEMENTAL_SCHEMA_IDS.SEED_IMAGE }`, method: 'POST' });
         this.buildBtnCallback = btnCb;
       } catch (e) {
-        this.isoBuildTriggerError = e;
+        this.mediaBuildTriggerError = e;
         btnCb(false);
       }
     },
-    downloadIso(ev) {
+    downloadMedia(ev) {
       ev.preventDefault();
 
-      if (this.isIsoBuilt) {
+      if (this.isMediaBuilt) {
         const downloadUrl = this.seedImageFound?.status?.downloadURL;
         const link = document.createElement('a');
 
-        link.download = 'elemental.iso';
+        link.download = `elemental.${ this.buildMediaTypeSelected === MEDIA_TYPES.ISO.type ? MEDIA_TYPES.ISO.extension : MEDIA_TYPES.RAW.extension }`;
         link.href = downloadUrl;
         document.body.appendChild(link);
         link.click();
@@ -163,57 +192,70 @@ export default {
 <template>
   <div>
     <h3 class="build-iso-title">
-      {{ t('elemental.machineRegistration.edit.buildIsoTitle') }}
+      {{ t('elemental.machineRegistration.edit.buildMediaTitle') }}
     </h3>
     <div class="row mb-10">
       <div
         v-if="displayRegEndpoints"
-        class="col span-3"
+        class="col span-2"
       >
         <LabeledSelect
           v-model="registrationEndpointSelected"
           class="mr-20"
-          data-testid="select-registration-endpoint-build-iso"
+          data-testid="select-registration-endpoint-build-media"
           :label="t('elemental.machineRegistration.create.machineReg')"
           :placeholder="t('elemental.dashboard.regEndpointPlaceholder')"
           :options="registrationEndpointsOptions"
         />
       </div>
+      <div class="col span-2">
+        <LabeledSelect
+          v-model="buildMediaTypeSelected"
+          class="mr-20"
+          data-testid="select-media-type-build-media"
+          :label="t('elemental.machineRegistration.edit.mediaType')"
+          :placeholder="t('elemental.machineRegistration.edit.mediaTypePlaceholder')"
+          :options="buildMediaTypes"
+          option-key="value"
+        />
+      </div>
       <div class="col span-3">
         <LabeledSelect
-          v-model="buildIsoOsVersionSelected"
+          v-model="buildMediaOsVersionSelected"
           class="mr-20"
-          data-testid="select-os-version-build-iso"
+          data-testid="select-os-version-build-media"
           :label="t('elemental.machineRegistration.edit.osVersion')"
+          :disabled="!buildMediaTypeSelected"
           :placeholder="t('elemental.machineRegistration.edit.osVersionPlaceholder')"
-          :options="buildIsoOsVersions"
+          :options="buildMediaOsVersions"
           option-key="value"
         />
       </div>
       <div class="col mt-10 span-5 flex">
         <AsyncButton
-          mode="buildIso"
+          mode="buildMedia"
           class="mr-20"
-          data-testid="build-iso-btn"
-          :disabled="!isBuildIsoBtnEnabled || isIsoBuilt"
-          @click="buildIso"
+          data-testid="build-media-btn"
+          :disabled="!isBuildMediaBtnEnabled || isMediaBuilt"
+          @click="buildMedia"
         />
         <a
-          :disabled="!isIsoBuilt"
+          :disabled="!isMediaBuilt"
           class="btn role-primary"
-          data-testid="download-iso-btn"
-          @click="$event => downloadIso($event)"
+          data-testid="download-media-btn"
+          @click="$event => downloadMedia($event)"
         >
-          {{ t('elemental.machineRegistration.edit.downloadIso') }}
+          {{ t('elemental.machineRegistration.edit.downloadMedia') }}
         </a>
       </div>
     </div>
     <Banner
-      v-if="isoBuildTriggerError || isoBuildProcessError"
-      v-clean-html="isoBuildTriggerError || isoBuildProcessError"
+      v-if="mediaBuildTriggerError || mediaBuildProcessError"
       color="error"
-      data-testid="build-iso-banner"
-    />
+      data-testid="build-media-banner"
+    >
+      <div v-clean-html="mediaBuildTriggerError || mediaBuildProcessError" />
+    </Banner>
   </div>
 </template>
 
