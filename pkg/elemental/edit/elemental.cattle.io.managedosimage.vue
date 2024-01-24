@@ -132,6 +132,16 @@ export default {
     },
     handleManagedOSVersionNameChange(ev) {
       this.value.spec.managedOSVersionName = ev.split(STRING_SEPARATOR)[1];
+    },
+    handleRadioBtnChange(val) {
+      // if TRUE, this mean we are on option "use managed OS version"
+      // so we should clear the "image path" (OS image) field
+      if (val) {
+        delete this.value?.spec?.osImage;
+      } else {
+        delete this.value?.spec?.managedOSVersionName;
+        this.osVersionSelected = '';
+      }
     }
   },
 };
@@ -178,6 +188,7 @@ export default {
           :options="[true, false]"
           :labels="[t('elemental.osimage.create.radioOptions.osImages'), t('elemental.osimage.create.radioOptions.registry')]"
           :mode="mode"
+          @input="handleRadioBtnChange($event)"
         />
         <div v-if="useManagedOsImages">
           <LabeledSelect
