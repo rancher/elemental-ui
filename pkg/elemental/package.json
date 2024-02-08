@@ -1,7 +1,7 @@
 {
   "name": "elemental",
   "description": "OS Management extension",
-  "version": "1.3.0-rc2",
+  "version": "1.3.0",
   "private": false,
   "rancher": {
     "annotations": {
