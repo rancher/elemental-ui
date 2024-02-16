@@ -106,10 +106,6 @@ export default {
         isNone:  matched === 0,
         sample,
       };
-
-      // emit matched machine inventories on selector so that machine count
-      // on machine pool can be kept up to date
-      this.$emit('updateMachineCount', matched);
     }, 250, { leading: true })
   },
 };
