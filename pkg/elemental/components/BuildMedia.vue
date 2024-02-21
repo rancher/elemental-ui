@@ -43,16 +43,6 @@ export default {
   async fetch() {
     this.seedImagesList = await this.$store.dispatch('management/findAll', { type: ELEMENTAL_SCHEMA_IDS.SEED_IMAGE });
     this.managedOsVersions = await this.$store.dispatch('management/findAll', { type: ELEMENTAL_SCHEMA_IDS.MANAGED_OS_VERSIONS });
-
-    // *********** TO DELETE WHEN MEDIA TYPE IS GOOD TO GO
-    this.filteredManagedOsVersions = this.managedOsVersions.filter(v => v.spec?.type === MEDIA_TYPES.ISO.type) || [];
-    this.buildMediaOsVersions = this.filteredManagedOsVersions.map((f) => {
-      return {
-        label: `${ f.spec?.metadata?.displayName } ${ f.spec?.version }`,
-        value: f.spec?.metadata?.uri,
-      };
-    });
-    // EO DELETE!!!
   },
   data() {
     return {
@@ -64,9 +54,7 @@ export default {
         { label: MEDIA_TYPES.ISO.label, value: MEDIA_TYPES.ISO.type },
         { label: MEDIA_TYPES.RAW.label, value: MEDIA_TYPES.RAW.type },
       ],
-      // *********** TO UNCOMMENT WHEN MEDIA TYPE IS GOOD TO GO
-      // buildMediaTypeSelected:       '',
-      buildMediaTypeSelected:       MEDIA_TYPES.ISO,
+      buildMediaTypeSelected:       '',
       buildMediaOsVersionSelected:  '',
       registrationEndpointSelected: '',
       mediaBuildTriggerError:       '',
@@ -103,14 +91,10 @@ export default {
     },
     isBuildMediaBtnEnabled() {
       if (this.displayRegEndpoints) {
-        // *********** TO UNCOMMENT WHEN MEDIA TYPE IS GOOD TO GO
-        // return this.registrationEndpointSelected && this.buildMediaOsVersionSelected && this.buildMediaTypeSelected;
-        return this.registrationEndpointSelected && this.buildMediaOsVersionSelected;
+        return this.registrationEndpointSelected && this.buildMediaOsVersionSelected && this.buildMediaTypeSelected;
       }
 
-      // *********** TO UNCOMMENT WHEN MEDIA TYPE IS GOOD TO GO
-      // return this.buildMediaOsVersionSelected && this.buildMediaTypeSelected;
-      return this.buildMediaOsVersionSelected;
+      return this.buildMediaOsVersionSelected && this.buildMediaTypeSelected;
     },
     seedImageFound() {
       if (this.seedImage) {
@@ -168,8 +152,7 @@ export default {
           namespace: 'fleet-default'
         },
         spec: {
-          // *********** TO UNCOMMENT WHEN MEDIA TYPE IS GOOD TO GO
-          // type:            this.buildMediaTypeSelected,
+          type:            this.buildMediaTypeSelected,
           baseImage:       this.buildMediaOsVersionSelected,
           registrationRef: {
             name:      machineRegName,
@@ -224,8 +207,7 @@ export default {
           :options="registrationEndpointsOptions"
         />
       </div>
-      <!-- *********** TO UNCOMMENT WHEN MEDIA TYPE IS GOOD TO GO -->
-      <!-- <div class="col span-2">
+      <div class="col span-2">
         <LabeledSelect
           v-model="buildMediaTypeSelected"
           class="mr-20"
@@ -235,7 +217,7 @@ export default {
           :options="buildMediaTypes"
           option-key="value"
         />
-      </div> -->
+      </div>
       <div class="col span-3">
         <LabeledSelect
           v-model="buildMediaOsVersionSelected"
