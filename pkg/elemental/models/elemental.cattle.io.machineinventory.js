@@ -23,6 +23,14 @@ export default class MachineInventory extends ElementalResource {
   get _availableActions() {
     const out = super._availableActions;
 
+    if (this.cannotBeDeletedByUi) {
+      const i = out.findIndex(act => act.action === 'promptRemove');
+
+      if (i >= 0) {
+        out.splice(i, 1);
+      }
+    }
+
     if (this.canCreateCluster) {
       out.push({
         action:     'createCluster',
@@ -96,5 +104,15 @@ export default class MachineInventory extends ElementalResource {
     } else {
       return this.$rootGetters['i18n/t']('resourceTable.groupLabel.notInACluster');
     }
+  }
+
+  get cannotBeDeletedByUi() {
+    let cannotBeDeletedByUi = false;
+
+    if (this.status?.conditions && this.status?.conditions.find(c => c.type === 'AdoptionReady' && c.status === 'True')) {
+      cannotBeDeletedByUi = true;
+    }
+
+    return cannotBeDeletedByUi;
   }
 }
