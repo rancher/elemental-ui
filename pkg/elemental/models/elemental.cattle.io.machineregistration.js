@@ -16,11 +16,19 @@ const DEFAULT_CREATION_YAML = `config:
   elemental:
     install:
       reboot: true
-      device: /dev/nvme0n1
+      device-selector:
+      - key: Name
+        operator: In
+        values:
+        - /dev/sda
+        - /dev/vda
+        - /dev/nvme0
+      - key: Size
+        operator: Gt
+        values:
+        - 25Gi
       snapshotter:
-        type: btrfs
-    reset:
-      enabled: true`;
+        type: btrfs`;
 
 export default class MachineRegistration extends ElementalResource {
   applyDefaults(vm, mode) {
