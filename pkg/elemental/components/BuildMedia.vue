@@ -4,6 +4,7 @@ import { Banner } from '@components/Banner';
 import AsyncButton from '@shell/components/AsyncButton';
 import { randomStr, CHARSET } from '@shell/utils/string';
 import { ELEMENTAL_SCHEMA_IDS } from '../config/elemental-types';
+import { semverVersionCheck, getOperatorVersion, getGatedFeatures, BUILD_MEDIA_RAW_SUPPORT } from '../utils/feature-versioning';
 
 const MEDIA_TYPES = {
   RAW: {
@@ -38,17 +39,32 @@ export default {
     registrationEndpoint: {
       type:    String,
       default: ''
+    },
+    resource: {
+      type:    String,
+      default: ''
+    },
+    mode: {
+      type:    String,
+      default: ''
     }
   },
   async fetch() {
     this.seedImagesList = await this.$store.dispatch('management/findAll', { type: ELEMENTAL_SCHEMA_IDS.SEED_IMAGE });
     this.managedOsVersions = await this.$store.dispatch('management/findAll', { type: ELEMENTAL_SCHEMA_IDS.MANAGED_OS_VERSIONS });
+
+    this.operatorVersion = await getOperatorVersion(this.$store);
+    this.gatedFeatures = getGatedFeatures(this.resource, this.mode, BUILD_MEDIA_RAW_SUPPORT);
+    this.buildMediaGatingVersion = this.gatedFeatures?.[0]?.minOperatorVersion || '';
   },
   data() {
     return {
       seedImagesList:               [],
       managedOsVersions:            [],
       filteredManagedOsVersions:    [],
+      operatorVersion:              '',
+      gatedFeatures:                [],
+      buildMediaGatingVersion:      '',
       buildMediaOsVersions:         [],
       buildMediaTypes:              [
         { label: MEDIA_TYPES.ISO.label, value: MEDIA_TYPES.ISO.type },
@@ -79,6 +95,19 @@ export default {
     }
   },
   computed: {
+    isRawDiskImageBuildSupported() {
+      if (this.operatorVersion && this.buildMediaGatingVersion) {
+        const check = semverVersionCheck(this.operatorVersion, this.buildMediaGatingVersion);
+
+        if (!check) {
+          this.buildMediaTypeSelected = MEDIA_TYPES.ISO.type; // eslint-disable-line vue/no-side-effects-in-computed-properties
+        }
+
+        return check;
+      }
+
+      return false;
+    },
     registrationEndpointsOptions() {
       const activeRegEndpoints = this.registrationEndpointList.filter(item => item.state === 'active');
 
@@ -91,10 +120,10 @@ export default {
     },
     isBuildMediaBtnEnabled() {
       if (this.displayRegEndpoints) {
-        return this.registrationEndpointSelected && this.buildMediaOsVersionSelected && this.buildMediaTypeSelected;
+        return this.isRawDiskImageBuildSupported ? this.registrationEndpointSelected && this.buildMediaOsVersionSelected && this.buildMediaTypeSelected : this.registrationEndpointSelected && this.buildMediaOsVersionSelected;
       }
 
-      return this.buildMediaOsVersionSelected && this.buildMediaTypeSelected;
+      return this.isRawDiskImageBuildSupported ? this.buildMediaOsVersionSelected && this.buildMediaTypeSelected : this.buildMediaOsVersionSelected;
     },
     seedImageFound() {
       if (this.seedImage) {
@@ -146,13 +175,12 @@ export default {
       const machineRegName = this.displayRegEndpoints ? this.registrationEndpointSelected.split('/')[1] : this.registrationEndpoint.split('/')[1];
       const machineRegNamespace = this.displayRegEndpoints ? this.registrationEndpointSelected.split('/')[0] : this.registrationEndpoint.split('/')[0];
 
-      const seedImageModel = await this.$store.dispatch('management/create', {
+      const seedImageObject = {
         metadata: {
           name:      `media-image-reg-${ machineRegName }-${ randomStr(8, CHARSET.ALPHA_LOWER ) }`,
           namespace: 'fleet-default'
         },
         spec: {
-          type:            this.buildMediaTypeSelected,
           baseImage:       this.buildMediaOsVersionSelected,
           registrationRef: {
             name:      machineRegName,
@@ -160,7 +188,13 @@ export default {
           }
         },
         type: ELEMENTAL_SCHEMA_IDS.SEED_IMAGE,
-      });
+      };
+
+      if (this.isRawDiskImageBuildSupported) {
+        seedImageObject.spec.type = this.buildMediaTypeSelected;
+      }
+
+      const seedImageModel = await this.$store.dispatch('management/create', seedImageObject);
 
       try {
         this.seedImage = await seedImageModel.save({ url: `/v1/${ ELEMENTAL_SCHEMA_IDS.SEED_IMAGE }`, method: 'POST' });
@@ -207,7 +241,10 @@ export default {
           :options="registrationEndpointsOptions"
         />
       </div>
-      <div class="col span-2">
+      <div
+        v-if="isRawDiskImageBuildSupported"
+        class="col span-2"
+      >
         <LabeledSelect
           v-model="buildMediaTypeSelected"
           class="mr-20"
