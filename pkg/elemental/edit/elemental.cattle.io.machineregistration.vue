@@ -16,6 +16,9 @@ import { exceptionToErrorsArray } from '@shell/utils/error';
 import Tabbed from '@shell/components/Tabbed/index.vue';
 import Tab from '@shell/components/Tabbed/Tab.vue';
 
+import { semverVersionCheck, getOperatorVersion, getGatedFeatures, MACH_REG_CONFIG_DEFAULTS } from '../utils/feature-versioning';
+import { OLD_DEFAULT_CREATION_YAML, DEFAULT_CREATION_YAML } from '../models/elemental.cattle.io.machineregistration';
+
 export default {
   name:       'MachineRegistrationEditView',
   components: {
@@ -39,12 +42,35 @@ export default {
       type:     String,
       required: true
     },
+    resource: {
+      type:     String,
+      required: true
+    },
+  },
+  async fetch() {
+    // in CREATE mode, since YAMLEditor doesn't live update, we need to force a re-render of the component for it to update
+    if (this.mode === _CREATE) {
+      const operatorVersion = await getOperatorVersion(this.$store);
+      const gatedFeatures = getGatedFeatures(this.resource, this.mode, MACH_REG_CONFIG_DEFAULTS);
+      const minOperatorVersion = gatedFeatures?.[0]?.minOperatorVersion || '';
+
+      this.newCloudConfigcompatibilityCheck = semverVersionCheck(operatorVersion, minOperatorVersion);
+
+      if (!this.value.spec) {
+        this.value.spec = this.newCloudConfigcompatibilityCheck ? DEFAULT_CREATION_YAML : OLD_DEFAULT_CREATION_YAML;
+      }
+
+      this.cloudConfig = typeof this.value.spec === 'string' ? this.value.spec : saferDump(this.value.spec);
+      this.rerender = true;
+    }
   },
   data() {
     return {
-      cloudConfig: typeof this.value.spec === 'string' ? this.value.spec : saferDump(this.value.spec),
-      yamlErrors:  null,
-      isFormValid: true
+      rerender:                         false,
+      cloudConfig:                      typeof this.value.spec === 'string' ? this.value.spec : saferDump(this.value.spec),
+      newCloudConfigcompatibilityCheck: false,
+      yamlErrors:                       null,
+      isFormValid:                      true
     };
   },
   watch: {
@@ -195,6 +221,7 @@ export default {
       <div class="col span-6">
         <h3>{{ t('elemental.machineRegistration.create.cloudConfiguration') }}</h3>
         <YamlEditor
+          :key="rerender"
           ref="yamleditor"
           v-model="cloudConfig"
           class="mb-20"

@@ -16,17 +16,18 @@ export default {
     // this covers scenario where Elemental Operator is deleted from Apps and we lose the Elemental Admin role for Standard Users...
     if (this.$store.getters['management/canList'](ELEMENTAL_SCHEMA_IDS.MACHINE_REGISTRATIONS)) {
       let installedApps;
+
       // needed to check if operator is installed
       if (this.$store.getters['management/canList'](CATALOG.APP)) {
         installedApps = await this.$store.dispatch('management/findAll', { type: CATALOG.APP });
       }
 
-      const elementalSchema = this.$store.getters['management/schemaFor'](ELEMENTAL_SCHEMA_IDS.MACHINE_INVENTORIES)
+      const elementalSchema = this.$store.getters['management/schemaFor'](ELEMENTAL_SCHEMA_IDS.MACHINE_INVENTORIES);
 
       // we need to check for the length of the response
       // due to some issue with a standard-user, which can list apps
       // but the list comes up empty []
-      const isElementalOperatorNotInstalledOnApps = installedApps?.length && !installedApps?.find(item => item.id.includes('elemental-operator'));
+      const isElementalOperatorNotInstalledOnApps = installedApps?.length && !installedApps?.find(item => item.id.includes('elemental-operator') && !item.id.includes('elemental-operator-crds'));
 
       // check if operator is installed
       if (!elementalSchema || isElementalOperatorNotInstalledOnApps) {

@@ -1,6 +1,7 @@
 <script>
 import { allHash } from '@shell/utils/promise';
 import { CAPI, CATALOG } from '@shell/config/types';
+import { _VIEW } from '@shell/config/query-params';
 import { NAME } from '@shell/config/table-headers';
 import ResourceTable from '@shell/components/ResourceTable';
 import PercentageBar from '@shell/components/PercentageBar';
@@ -10,6 +11,7 @@ import {
   ELEMENTAL_CLUSTER_PROVIDER,
   KIND
 } from '../config/elemental-types';
+import { ELEMENTAL_TYPES } from '../types';
 import { createElementalRoute } from '../utils/custom-routing';
 import { filterForElementalClusters } from '../utils/elemental-utils';
 import BuildMedia from './BuildMedia';
@@ -54,7 +56,7 @@ export default {
     // we need to check for the length of the response
     // due to some issue with a standard-user, which can list apps
     // but the list comes up empty []
-    const isElementalOperatorNotInstalledOnApps = allDispatches.installedApps && allDispatches.installedApps.length && !allDispatches.installedApps.find(item => item.id.includes('elemental-operator'));
+    const isElementalOperatorNotInstalledOnApps = allDispatches.installedApps && allDispatches.installedApps.length && !allDispatches.installedApps.find(item => item.id.includes('elemental-operator') && !item.id.includes('elemental-operator-crds'));
 
     // check if CRD is there but operator isn't
     if (allDispatches.elementalSchema && isElementalOperatorNotInstalledOnApps) {
@@ -65,6 +67,8 @@ export default {
     return {
       ELEMENTAL_CLUSTERS:                    'elementalClusters',
       isElementalOpNotInstalledAndHasSchema: false,
+      resource:                              ELEMENTAL_TYPES.DASHBOARD,
+      mode:                                  _VIEW,
       resourcesData:                         {
         [`${ ELEMENTAL_SCHEMA_IDS.MACHINE_REGISTRATIONS }`]: [],
         [`${ ELEMENTAL_SCHEMA_IDS.MACHINE_INVENTORIES }`]:   [],
@@ -283,6 +287,8 @@ export default {
     <div class="mt-20 mb-20">
       <BuildMedia
         :registration-endpoint-list="registrationEndpoints"
+        :resource="resource"
+        :mode="mode"
       />
     </div>
     <!-- Tables -->
