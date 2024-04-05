@@ -4,7 +4,7 @@ import { Banner } from '@components/Banner';
 import AsyncButton from '@shell/components/AsyncButton';
 import { randomStr, CHARSET } from '@shell/utils/string';
 import { ELEMENTAL_SCHEMA_IDS } from '../config/elemental-types';
-import { semverVersionCheck, getOperatorVersion, getGatedFeatures, BUILD_MEDIA_RAW_SUPPORT } from '../utils/feature-versioning';
+import { semverVersionCheck, getOperatorVersion, getGatedFeature, BUILD_MEDIA_RAW_SUPPORT } from '../utils/feature-versioning';
 
 const MEDIA_TYPES = {
   RAW: {
@@ -54,8 +54,8 @@ export default {
     this.managedOsVersions = await this.$store.dispatch('management/findAll', { type: ELEMENTAL_SCHEMA_IDS.MANAGED_OS_VERSIONS });
 
     this.operatorVersion = await getOperatorVersion(this.$store);
-    this.gatedFeatures = getGatedFeatures(this.resource, this.mode, BUILD_MEDIA_RAW_SUPPORT);
-    this.buildMediaGatingVersion = this.gatedFeatures?.[0]?.minOperatorVersion || '';
+    this.gatedFeature = getGatedFeature(this.resource, this.mode, BUILD_MEDIA_RAW_SUPPORT);
+    this.buildMediaGatingVersion = this.gatedFeature?.minOperatorVersion || '';
   },
   data() {
     return {
@@ -63,7 +63,7 @@ export default {
       managedOsVersions:            [],
       filteredManagedOsVersions:    [],
       operatorVersion:              '',
-      gatedFeatures:                [],
+      gatedFeature:                 {},
       buildMediaGatingVersion:      '',
       buildMediaOsVersions:         [],
       buildMediaTypes:              [

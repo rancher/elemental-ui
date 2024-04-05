@@ -1,7 +1,7 @@
 import semver from 'semver';
 
-import { _CREATE, _EDIT, _VIEW } from '@shell/config/query-params';
-import { CATALOG } from '@shell/config/types';
+import { _CREATE, _VIEW } from '@shell/config/query-params';
+import { WORKLOAD_TYPES } from '@shell/config/types';
 import { ELEMENTAL_SCHEMA_IDS } from '../config/elemental-types';
 import { ELEMENTAL_TYPES } from '../types';
 
@@ -19,19 +19,19 @@ const FEATURES_GATING:FeaturesGatingConfig[] = [
   {
     area:               ELEMENTAL_SCHEMA_IDS.MACHINE_REGISTRATIONS,
     mode:               [_CREATE],
-    minOperatorVersion: '103.0.0',
+    minOperatorVersion: '1.6.0',
     features:           [MACH_REG_CONFIG_DEFAULTS]
   },
   {
     area:               ELEMENTAL_TYPES.DASHBOARD,
     mode:               [_VIEW],
-    minOperatorVersion: '103.0.0',
+    minOperatorVersion: '1.6.0',
     features:           [BUILD_MEDIA_RAW_SUPPORT]
   },
   {
     area:               ELEMENTAL_SCHEMA_IDS.MACHINE_REGISTRATIONS,
     mode:               [_VIEW],
-    minOperatorVersion: '103.0.0',
+    minOperatorVersion: '1.6.0',
     features:           [BUILD_MEDIA_RAW_SUPPORT]
   }
 ];
@@ -42,37 +42,30 @@ const FEATURES_GATING:FeaturesGatingConfig[] = [
  * @param any alreadyInstalledApps
  * @returns Promise<string | void>
  */
-export async function getOperatorVersion(store: any, alreadyInstalledApps:any = null, isRoot:Boolean = false): Promise<string | void> {
-  if (alreadyInstalledApps) {
-    const operator = alreadyInstalledApps?.find((item: any) => item.id.includes('elemental-operator') && !item.id.includes('elemental-operator-crds'));
+export async function getOperatorVersion(store: any): Promise<string | void> {
+  // needed to check operator version installed (on the deployment)
+  if (store.getters['management/canList'](WORKLOAD_TYPES.DEPLOYMENT)) {
+    const elementalOperatorDeployment = await store.dispatch('management/find', { type: WORKLOAD_TYPES.DEPLOYMENT, id: 'cattle-elemental-system/elemental-operator' });
 
-    return operator?.versionDisplay;
+    return elementalOperatorDeployment?.metadata?.labels?.['app.kubernetes.io/version'] || '0.1.0';
   }
 
-  // needed to check if operator is installed
-  if (store.getters['management/canList'](CATALOG.APP)) {
-    const installedApps = await store.dispatch('management/findAll', { type: CATALOG.APP }, { root: isRoot });
-    const operator = installedApps?.find((item: any) => item.id.includes('elemental-operator') && !item.id.includes('elemental-operator-crds'));
-
-    return operator?.versionDisplay;
-  }
-
-  return '';
+  return '0.1.0';
 }
 
 /**
- * Get all of the gated features based on resource + mode + string
+ * Get the gated feature based on resource + mode + string
  * @param string
  * @param string
  * @param string
- * @returns FeaturesGatingConfig[] | [] | void
+ * @returns FeaturesGatingConfig | {} | void
  */
-export function getGatedFeatures(resource: string, mode: string, feature: string): FeaturesGatingConfig[] | [] | void {
+export function getGatedFeature(resource: string, mode: string, feature: string): FeaturesGatingConfig | {} | void {
   if (resource && mode) {
-    return FEATURES_GATING.filter(feat => feat.area === resource && feat.mode.includes(mode) && feat.features.includes(feature));
+    return FEATURES_GATING.find(feat => feat.area === resource && feat.mode.includes(mode) && feat.features.includes(feature));
   }
 
-  return [];
+  return {};
 }
 
 /**
@@ -81,6 +74,6 @@ export function getGatedFeatures(resource: string, mode: string, feature: string
  * @param string
  * @returns Boolean | void
  */
-export function semverVersionCheck(operatorVersion: string, limitVersion: string): Boolean | void {
-  return semver.gte(operatorVersion, limitVersion);
+export function semverVersionCheck(operatorVersion: string, operatorMinVersion: string): Boolean | void {
+  return semver.gte(operatorVersion, operatorMinVersion);
 }
