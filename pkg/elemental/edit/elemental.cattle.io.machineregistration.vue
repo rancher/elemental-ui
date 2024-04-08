@@ -16,7 +16,7 @@ import { exceptionToErrorsArray } from '@shell/utils/error';
 import Tabbed from '@shell/components/Tabbed/index.vue';
 import Tab from '@shell/components/Tabbed/Tab.vue';
 
-import { semverVersionCheck, getOperatorVersion, getGatedFeature, MACH_REG_CONFIG_DEFAULTS } from '../utils/feature-versioning';
+import { getOperatorVersion, checkGatedFeatureCompatibility, MACH_REG_CONFIG_DEFAULTS } from '../utils/feature-versioning';
 import { OLD_DEFAULT_CREATION_YAML, DEFAULT_CREATION_YAML } from '../models/elemental.cattle.io.machineregistration';
 
 export default {
@@ -51,10 +51,8 @@ export default {
     // in CREATE mode, since YAMLEditor doesn't live update, we need to force a re-render of the component for it to update
     if (this.mode === _CREATE) {
       const operatorVersion = await getOperatorVersion(this.$store);
-      const gatedFeature = getGatedFeature(this.resource, this.mode, MACH_REG_CONFIG_DEFAULTS);
-      const minOperatorVersion = gatedFeature?.minOperatorVersion || '';
 
-      this.newCloudConfigcompatibilityCheck = semverVersionCheck(operatorVersion, minOperatorVersion);
+      this.newCloudConfigcompatibilityCheck = checkGatedFeatureCompatibility(this.resource, this.mode, MACH_REG_CONFIG_DEFAULTS, operatorVersion);
 
       if (!this.value.spec) {
         this.value.spec = this.newCloudConfigcompatibilityCheck ? DEFAULT_CREATION_YAML : OLD_DEFAULT_CREATION_YAML;
@@ -70,8 +68,7 @@ export default {
       cloudConfig:                      typeof this.value.spec === 'string' ? this.value.spec : saferDump(this.value.spec),
       newCloudConfigcompatibilityCheck: false,
       yamlErrors:                       null,
-      isFormValid:                      true,
-      gatedFeature:                     {}
+      isFormValid:                      true
     };
   },
   watch: {

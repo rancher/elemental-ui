@@ -12,6 +12,7 @@ interface FeaturesGatingConfig {
   features: string[],
 }
 
+// features to be gated to specific operator versions
 export const MACH_REG_CONFIG_DEFAULTS:string = 'machine-reg-config-defaults';
 export const BUILD_MEDIA_RAW_SUPPORT:string = 'build-media-raw-support';
 
@@ -38,8 +39,7 @@ const FEATURES_GATING:FeaturesGatingConfig[] = [
 
 /**
  * Get the current elemental-operator version
- * @param any store
- * @param any alreadyInstalledApps
+ * @param any Vue store
  * @returns Promise<string | void>
  */
 export async function getOperatorVersion(store: any): Promise<string | void> {
@@ -54,26 +54,23 @@ export async function getOperatorVersion(store: any): Promise<string | void> {
 }
 
 /**
- * Get the gated feature based on resource + mode + string
- * @param string
- * @param string
- * @param string
- * @returns FeaturesGatingConfig | {} | void
+ * Check the gated feature compatibility with the current Elemental Operator version installed
+ * @param string resource type (ex: Deployment)
+ * @param string UI mode (ex: edit, create, view)
+ * @param string Elemental feature (ex: Build media, cloud config)
+ * @param string Elemental Operator version
+ * @returns Boolean
  */
-export function getGatedFeature(resource: string, mode: string, feature: string): FeaturesGatingConfig | {} | void {
-  if (resource && mode) {
-    return FEATURES_GATING.find(feat => feat.area === resource && feat.mode.includes(mode) && feat.features.includes(feature));
+export function checkGatedFeatureCompatibility(resource: string, mode: string, feature: string, operatorVersion: string): Boolean {
+  if (resource && mode && feature) {
+    const gatedFeature = FEATURES_GATING.find(feat => feat.area === resource && feat.mode.includes(mode) && feat.features.includes(feature));
+
+    if (!gatedFeature?.minOperatorVersion || !operatorVersion) {
+      return false;
+    }
+
+    return semver.gte(operatorVersion, gatedFeature?.minOperatorVersion);
   }
 
-  return {};
-}
-
-/**
- * Determines if a given feature is enabled by doing a semver version comparison
- * @param string
- * @param string
- * @returns Boolean | void
- */
-export function semverVersionCheck(operatorVersion: string, operatorMinVersion: string): Boolean | void {
-  return semver.gte(operatorVersion, operatorMinVersion);
+  return false;
 }

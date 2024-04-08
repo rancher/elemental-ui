@@ -4,7 +4,7 @@ import { Banner } from '@components/Banner';
 import AsyncButton from '@shell/components/AsyncButton';
 import { randomStr, CHARSET } from '@shell/utils/string';
 import { ELEMENTAL_SCHEMA_IDS } from '../config/elemental-types';
-import { semverVersionCheck, getOperatorVersion, getGatedFeature, BUILD_MEDIA_RAW_SUPPORT } from '../utils/feature-versioning';
+import { getOperatorVersion, checkGatedFeatureCompatibility, BUILD_MEDIA_RAW_SUPPORT } from '../utils/feature-versioning';
 
 const MEDIA_TYPES = {
   RAW: {
@@ -54,8 +54,6 @@ export default {
     this.managedOsVersions = await this.$store.dispatch('management/findAll', { type: ELEMENTAL_SCHEMA_IDS.MANAGED_OS_VERSIONS });
 
     this.operatorVersion = await getOperatorVersion(this.$store);
-    this.gatedFeature = getGatedFeature(this.resource, this.mode, BUILD_MEDIA_RAW_SUPPORT);
-    this.buildMediaGatingVersion = this.gatedFeature?.minOperatorVersion || '';
   },
   data() {
     return {
@@ -63,8 +61,6 @@ export default {
       managedOsVersions:            [],
       filteredManagedOsVersions:    [],
       operatorVersion:              '',
-      gatedFeature:                 {},
-      buildMediaGatingVersion:      '',
       buildMediaOsVersions:         [],
       buildMediaTypes:              [
         { label: MEDIA_TYPES.ISO.label, value: MEDIA_TYPES.ISO.type },
@@ -96,17 +92,13 @@ export default {
   },
   computed: {
     isRawDiskImageBuildSupported() {
-      if (this.operatorVersion && this.buildMediaGatingVersion) {
-        const check = semverVersionCheck(this.operatorVersion, this.buildMediaGatingVersion);
+      const check = checkGatedFeatureCompatibility(this.resource, this.mode, BUILD_MEDIA_RAW_SUPPORT, this.operatorVersion);
 
-        if (!check) {
-          this.buildMediaTypeSelected = MEDIA_TYPES.ISO.type; // eslint-disable-line vue/no-side-effects-in-computed-properties
-        }
-
-        return check;
+      if (!check) {
+        this.buildMediaTypeSelected = MEDIA_TYPES.ISO.type; // eslint-disable-line vue/no-side-effects-in-computed-properties
       }
 
-      return false;
+      return check;
     },
     registrationEndpointsOptions() {
       const activeRegEndpoints = this.registrationEndpointList.filter(item => item.state === 'active');
