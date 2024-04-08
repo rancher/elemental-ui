@@ -32,6 +32,10 @@ export default {
       type:     String,
       required: true
     },
+    resource: {
+      type:     String,
+      required: true
+    },
   },
   data() {
     return {
@@ -115,6 +119,8 @@ export default {
       <BuildMedia
         :display-reg-endpoints="false"
         :registration-endpoint="`${value.metadata.namespace}/${value.metadata.name}`"
+        :resource="resource"
+        :mode="mode"
       />
     </div>
     <div

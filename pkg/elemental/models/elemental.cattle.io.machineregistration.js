@@ -8,7 +8,17 @@ import { downloadFile } from '@shell/utils/download';
 import { ELEMENTAL_DEFAULT_NAMESPACE } from '../types';
 import ElementalResource from './elemental-resource';
 
-const DEFAULT_CREATION_YAML = `config:
+export const OLD_DEFAULT_CREATION_YAML = `config:
+  cloud-config:
+    users:
+    - name: root
+      passwd: root
+  elemental:
+    install:
+      poweroff: true
+      device: /dev/nvme0n1`;
+
+export const DEFAULT_CREATION_YAML = `config:
   cloud-config:
     users:
     - name: root
@@ -32,8 +42,8 @@ const DEFAULT_CREATION_YAML = `config:
 
 export default class MachineRegistration extends ElementalResource {
   applyDefaults(vm, mode) {
-    if ( !this.spec ) {
-      Vue.set(this, 'spec', DEFAULT_CREATION_YAML);
+    if ( !this.spec || mode === _CREATE ) {
+      Vue.set(this, 'spec', {});
     }
     if ( !this.metadata || mode === _CREATE ) {
       Vue.set(this, 'metadata', { namespace: ELEMENTAL_DEFAULT_NAMESPACE });
