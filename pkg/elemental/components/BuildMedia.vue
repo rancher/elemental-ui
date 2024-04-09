@@ -1,4 +1,5 @@
 <script>
+import Loading from '@shell/components/Loading';
 import LabeledSelect from '@shell/components/form/LabeledSelect';
 import { Banner } from '@components/Banner';
 import AsyncButton from '@shell/components/AsyncButton';
@@ -23,6 +24,7 @@ const MEDIA_TYPES = {
 export default {
   name:       'BuildMedia',
   components: {
+    Loading,
     LabeledSelect,
     Banner,
     AsyncButton
@@ -54,6 +56,9 @@ export default {
     this.managedOsVersions = await this.$store.dispatch('management/findAll', { type: ELEMENTAL_SCHEMA_IDS.MANAGED_OS_VERSIONS });
 
     this.operatorVersion = await getOperatorVersion(this.$store);
+
+    // default to ISO, which is always present, which will trigger the watcher
+    this.buildMediaTypeSelected = MEDIA_TYPES.ISO.type;
   },
   data() {
     return {
@@ -215,7 +220,8 @@ export default {
 </script>
 
 <template>
-  <div>
+  <Loading v-if="$fetchState.pending" />
+  <div v-else>
     <h3 class="build-iso-title">
       {{ t('elemental.machineRegistration.edit.buildMediaTitle') }}
     </h3>
