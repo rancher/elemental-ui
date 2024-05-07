@@ -1,7 +1,6 @@
 import semver from 'semver';
 
 import { _CREATE, _VIEW } from '@shell/config/query-params';
-import { WORKLOAD_TYPES } from '@shell/config/types';
 import { ELEMENTAL_SCHEMA_IDS } from '../config/elemental-types';
 import { ELEMENTAL_TYPES } from '../types';
 
@@ -20,19 +19,19 @@ const FEATURES_GATING:FeaturesGatingConfig[] = [
   {
     area:               ELEMENTAL_SCHEMA_IDS.MACHINE_REGISTRATIONS,
     mode:               [_CREATE],
-    minOperatorVersion: '1.6.0',
+    minOperatorVersion: '1.6.2',
     features:           [MACH_REG_CONFIG_DEFAULTS]
   },
   {
     area:               ELEMENTAL_TYPES.DASHBOARD,
     mode:               [_VIEW],
-    minOperatorVersion: '1.6.0',
+    minOperatorVersion: '1.6.2',
     features:           [BUILD_MEDIA_RAW_SUPPORT]
   },
   {
     area:               ELEMENTAL_SCHEMA_IDS.MACHINE_REGISTRATIONS,
     mode:               [_VIEW],
-    minOperatorVersion: '1.6.0',
+    minOperatorVersion: '1.6.2',
     features:           [BUILD_MEDIA_RAW_SUPPORT]
   }
 ];
@@ -43,11 +42,11 @@ const FEATURES_GATING:FeaturesGatingConfig[] = [
  * @returns Promise<string | void>
  */
 export async function getOperatorVersion(store: any): Promise<string | void> {
-  // needed to check operator version installed (on the deployment)
-  if (store.getters['management/canList'](WORKLOAD_TYPES.DEPLOYMENT)) {
-    const elementalOperatorDeployment = await store.dispatch('management/find', { type: WORKLOAD_TYPES.DEPLOYMENT, id: 'cattle-elemental-system/elemental-operator' });
+  // needed to check operator version installed (on a custom CRD called metadata, which is installed/created from elemental-operator)
+  if (store.getters['management/canList'](ELEMENTAL_SCHEMA_IDS.METADATA)) {
+    const elementalOperatorMetadata = await store.dispatch('management/find', { type: ELEMENTAL_SCHEMA_IDS.METADATA, id: 'cattle-elemental-system/elemental-operator' });
 
-    return elementalOperatorDeployment?.metadata?.labels?.['app.kubernetes.io/version'] || '0.1.0';
+    return elementalOperatorMetadata?.spec?.appVersion || '0.1.0';
   }
 
   return '0.1.0';
