@@ -10,6 +10,7 @@ export const ELEMENTAL_SCHEMA_IDS = {
   MACHINE_INV_SELECTOR:           'elemental.cattle.io.machineinventoryselector',
   MACHINE_INV_SELECTOR_TEMPLATES: 'elemental.cattle.io.machineinventoryselectortemplate',
   SEED_IMAGE:                     'elemental.cattle.io.seedimage',
+  METADATA:                       'elemental.cattle.io.metadata',
 };
 
 export const KIND = { MACHINE_INV_SELECTOR_TEMPLATES: 'MachineInventorySelectorTemplate' };

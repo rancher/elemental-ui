@@ -19,4 +19,5 @@ export const ELEMENTAL_SCHEMAS = {
   MANAGED_OS_VERSIONS:            'elemental.cattle.io.managedosversions',
   MACHINE_INV_SELECTOR:           'elemental.cattle.io.machineinventoryselectors',
   MACHINE_INV_SELECTOR_TEMPLATES: 'elemental.cattle.io.machineinventoryselectortemplates',
+  METADATA:                       'elemental.cattle.io.metadata',
 };
