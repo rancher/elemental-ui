@@ -23,6 +23,7 @@ tableHeaders:
   osVersionChannel: OS Version Channel
   channelImage: Channel Image
   targetClusters: Target Clusters
+  inSync: In Sync
 
 typeLabel:
   elemental:  |-
