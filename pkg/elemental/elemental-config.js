@@ -147,6 +147,12 @@ export function init($plugin, store) {
       getValue:      row => row.metadata?.ownerReferences?.[0]?.name || '---',
       sort:          ['metadata.ownerReferences.[0].name']
     },
+    {
+      name:          'OsVersionInSync',
+      labelKey:      'tableHeaders.inSync',
+      getValue:      row => row.inSync || '---',
+      sort:          ['inSync']
+    },
     AGE
   ]);
 
