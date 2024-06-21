@@ -153,7 +153,7 @@ elemental:
       machineInventoryLabelValueLength: One of the labels for Inventory of Machines has a value that exceeds the 63 characters limit. Please shorten the length of the label value.
     edit:
       imageSetup: Setting up an OS image
-      downloadMachineRegistrationFile: 'Download the Registration Endpoint Configuration file in order to manually prepare your ISO image. Instructions <a target="_blank" rel="noopener noreferrer nofollow" style="text-decoration: underline" href="https://elemental.docs.rancher.com/customizing">here</a>.'
+      downloadMachineRegistrationFile: 'Download the Registration Endpoint Configuration file in order to manually prepare your ISO image. Instructions <a target="_blank" rel="noopener noreferrer nofollow" style="text-decoration: underline" href="https://elemental.docs.rancher.com/custom-install">here</a>.'
       buildMediaTitle: Create OS image
       osVersion: OS Version
       osVersionPlaceholder: Select OS Version
