@@ -1,4 +1,5 @@
 annotations:
+  bananas: 'true'
   catalog.cattle.io/certified: rancher
   catalog.cattle.io/kube-version: '>= 1.16.0-0'
   catalog.cattle.io/namespace: cattle-ui-plugin-system
