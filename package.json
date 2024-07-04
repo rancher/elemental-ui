@@ -1,14 +1,14 @@
 {
   "name": "elemental-ui",
   "description": "Elemental UI extension",
-  "version": "1.3.1-rc7",
+  "version": "1.3.1-rc6",
   "private": false,
   "engines": {
     "node": ">=12"
   },
   "dependencies": {
     "@rancher/components": "0.2.1-alpha.0",
-    "@rancher/shell": "2.0.0",
+    "@rancher/shell": "0.5.2",
     "@types/lodash": "4.14.184",
     "core-js": "3.21.1",
     "css-loader": "4.3.0"
