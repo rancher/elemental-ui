@@ -24,7 +24,6 @@ export default {
 
       const elementalSchema = this.$store.getters['management/schemaFor'](ELEMENTAL_SCHEMA_IDS.MACHINE_INVENTORIES);
 
-      console.log('installedApps', installedApps);
       // we need to check for the length of the response
       // due to some issue with a standard-user, which can list apps
       // but the list comes up empty []
