@@ -301,25 +301,25 @@ export default {
           <h3 class="mb-20">
             {{ machineRegTitle }}
           </h3>
-          <nuxt-link
+          <router-link
             :to="machineRegListLocation"
             class="table-title-block-link"
             data-testid="manage-reg-btn"
           >
             {{ t('elemental.dashboard.manageReg') }}
-          </nuxt-link>
+          </router-link>
         </div>
         <div
           v-if="machineRegRows?.length === 0"
           class="empty-table-state"
         >
           <p>{{ t('elemental.dashboard.noMachineReg') }}</p>
-          <nuxt-link
+          <router-link
             :to="machineRegCreateLocation"
             data-testid="create-machine-reg-btn"
           >
             {{ t('elemental.dashboard.noMachineRegAction') }}
-          </nuxt-link>
+          </router-link>
         </div>
         <ResourceTable
           v-else
@@ -345,25 +345,25 @@ export default {
           <h3 class="mb-20">
             {{ managedOsTitle }}
           </h3>
-          <nuxt-link
+          <router-link
             :to="managedOsListLocation"
             class="table-title-block-link"
             data-testid="manage-update-group-btn"
           >
             {{ t('elemental.dashboard.manageOsImageUpgrade') }}
-          </nuxt-link>
+          </router-link>
         </div>
         <div
           v-if="managedOsRows?.length === 0"
           class="empty-table-state"
         >
           <p>{{ t('elemental.dashboard.noManageOs') }}</p>
-          <nuxt-link
+          <router-link
             :to="managedOsCreateLocation"
             data-testid="create-update-group-btn"
           >
             {{ t('elemental.dashboard.noManageOsAction') }}
-          </nuxt-link>
+          </router-link>
         </div>
         <ResourceTable
           v-else
@@ -414,19 +414,16 @@ export default {
 
       h1 {
         margin: 0 15px 0 0;
-        font-weight: bold;
       }
 
       p {
         font-size: 18px;
-        font-weight: bold;
       }
     }
 
     button {
       justify-content: center;
       width: fit-content;
-      font-weight: bold;
       margin-top: 12px;
     }
   }
