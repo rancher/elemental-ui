@@ -27,7 +27,7 @@ export default {
       // we need to check for the length of the response
       // due to some issue with a standard-user, which can list apps
       // but the list comes up empty []
-      const isElementalOperatorNotInstalledOnApps = installedApps?.length && !installedApps?.find(item => item.id.includes('elemental-operator') && !item.id.includes('elemental-operator-crds'));
+      const isElementalOperatorNotInstalledOnApps = installedApps?.length && !installedApps?.find(item => item.spec?.chart?.metadata?.annotations?.['catalog.cattle.io/release-name'] === 'elemental-operator');
 
       // check if operator is installed
       if (!elementalSchema || isElementalOperatorNotInstalledOnApps) {
