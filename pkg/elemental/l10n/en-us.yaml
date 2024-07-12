@@ -23,6 +23,8 @@ tableHeaders:
   osVersionChannel: OS Version Channel
   channelImage: Channel Image
   targetClusters: Target Clusters
+  flavor: Flavor
+  description: Description
 
 typeLabel:
   elemental:  |-
