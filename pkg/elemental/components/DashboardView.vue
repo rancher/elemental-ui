@@ -56,7 +56,7 @@ export default {
     // we need to check for the length of the response
     // due to some issue with a standard-user, which can list apps
     // but the list comes up empty []
-    const isElementalOperatorNotInstalledOnApps = allDispatches.installedApps && allDispatches.installedApps.length && !allDispatches.installedApps.find(item => item.id.includes('elemental-operator') && !item.id.includes('elemental-operator-crds'));
+    const isElementalOperatorNotInstalledOnApps = allDispatches.installedApps && allDispatches.installedApps?.length && !allDispatches.installedApps?.find(item => item.spec?.chart?.metadata?.annotations?.['catalog.cattle.io/release-name'] === 'elemental-operator');
 
     // check if CRD is there but operator isn't
     if (allDispatches.elementalSchema && isElementalOperatorNotInstalledOnApps) {
