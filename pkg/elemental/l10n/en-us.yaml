@@ -127,7 +127,7 @@ elemental:
         elementalClusters: Manage Elemental Clusters
   osimage:
     create:
-      userWarning: "<b>Note:</b> Elemental clusters that have been targeted by another OS Group won't unless that OS Group is deleted"
+      userWarning: "<b>Note:</b> Elemental clusters that have been targeted by another OS Group won't show up in the Target Cluster list unless that OS Group is deleted"
       configuration: Configuration
       spec: Spec
       name:
