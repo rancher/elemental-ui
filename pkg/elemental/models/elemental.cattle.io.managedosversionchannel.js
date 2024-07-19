@@ -12,4 +12,15 @@ export default class ManagedOsVersionChannel extends ElementalResource {
       Vue.set(this, 'metadata', { namespace: ELEMENTAL_DEFAULT_NAMESPACE });
     }
   }
+
+  get imagePath() {
+    return this.spec?.options?.image;
+  }
+
+  get toggleSwitchData() {
+    return {
+      nameDisplay:          this.nameDisplay,
+      toggleSwitchDisabled: true
+    };
+  }
 }
