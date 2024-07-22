@@ -171,7 +171,7 @@ export default {
         <h3>{{ t('elemental.osimage.create.spec') }}</h3>
         <LabeledSelect
           v-model="clusterTargets"
-          class="mb-20"
+          class="mb-10"
           data-testid="cluster-target"
           :label="t('elemental.osimage.create.targetCluster.label')"
           :placeholder="t('elemental.osimage.create.targetCluster.placeholder', null, true)"
@@ -180,6 +180,7 @@ export default {
           :multiple="true"
           @input="handleClusterTargetChange($event)"
         />
+        <p v-clean-html="t('elemental.osimage.create.userWarning',{}, true)" class="user-warn mb-20"></p>
         <RadioGroup
           v-model="useManagedOsImages"
           class="mb-20"
@@ -215,3 +216,10 @@ export default {
     </div>
   </CruResource>
 </template>
+
+<style lang="scss" scoped>
+.user-warn {
+  font-size: 13px;
+  color: var(--darker);
+}
+</style>
