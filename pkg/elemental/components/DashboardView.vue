@@ -301,7 +301,7 @@ export default {
           <h3 class="mb-20">
             {{ machineRegTitle }}
           </h3>
-          <router-link
+          <nuxt-link
             :to="machineRegListLocation"
             class="table-title-block-link"
             data-testid="manage-reg-btn"
@@ -314,7 +314,7 @@ export default {
           class="empty-table-state"
         >
           <p>{{ t('elemental.dashboard.noMachineReg') }}</p>
-          <router-link
+          <nuxt-link
             :to="machineRegCreateLocation"
             data-testid="create-machine-reg-btn"
           >
@@ -345,7 +345,7 @@ export default {
           <h3 class="mb-20">
             {{ managedOsTitle }}
           </h3>
-          <router-link
+          <nuxt-link
             :to="managedOsListLocation"
             class="table-title-block-link"
             data-testid="manage-update-group-btn"
@@ -358,7 +358,7 @@ export default {
           class="empty-table-state"
         >
           <p>{{ t('elemental.dashboard.noManageOs') }}</p>
-          <router-link
+          <nuxt-link
             :to="managedOsCreateLocation"
             data-testid="create-update-group-btn"
           >
@@ -414,16 +414,19 @@ export default {
 
       h1 {
         margin: 0 15px 0 0;
+        font-weight: bold;
       }
 
       p {
         font-size: 18px;
+        font-weight: bold;
       }
     }
 
     button {
       justify-content: center;
       width: fit-content;
+      font-weight: bold;
       margin-top: 12px;
     }
   }
