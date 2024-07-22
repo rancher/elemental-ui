@@ -7,7 +7,7 @@ import { randomStr, CHARSET } from '@shell/utils/string';
 import { ELEMENTAL_SCHEMA_IDS } from '../config/elemental-types';
 import { getOperatorVersion, checkGatedFeatureCompatibility, BUILD_MEDIA_RAW_SUPPORT } from '../utils/feature-versioning';
 
-const MEDIA_TYPES = {
+export const MEDIA_TYPES = {
   RAW: {
     filterType: 'container',
     type:       'raw',
@@ -283,6 +283,12 @@ export default {
         </a>
       </div>
     </div>
+    <div class="row mb-10">
+      <div class="col span-9">
+        <p v-clean-html="t('elemental.machineRegistration.edit.userWarning',{}, true)" class="user-warn">
+        </p>
+      </div>
+    </div>
     <Banner
       v-if="mediaBuildTriggerError || mediaBuildProcessError"
       color="error"
@@ -294,5 +300,8 @@ export default {
 </template>
 
 <style lang="scss" scoped>
-
+.user-warn {
+  font-size: 13px;
+  color: var(--darker);
+}
 </style>

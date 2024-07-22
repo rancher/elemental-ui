@@ -177,6 +177,19 @@ export function init($plugin, store) {
     customRoute: createElementalRoute('resource', { resource: ELEMENTAL_SCHEMA_IDS.SEED_IMAGE })
   });
 
+  headers(ELEMENTAL_SCHEMA_IDS.SEED_IMAGE, [
+    STATE,
+    NAME_COL,
+    NAMESPACE_COL,
+    {
+      name:      'downloadSeedImage',
+      labelKey:  'tableHeaders.download',
+      value:     'status',
+      formatter: 'SeedImageDownload'
+    },
+    AGE
+  ]);
+
   basicType([
     ELEMENTAL_TYPES.DASHBOARD,
     ELEMENTAL_SCHEMA_IDS.MACHINE_REGISTRATIONS,
