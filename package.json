@@ -28,7 +28,6 @@
     "publish-pkgs": "./node_modules/@rancher/shell/scripts/extension/publish"
   },
   "resolutions": {
-    "**/webpack": "4",
-    "glob": "7.2.3"
+    "**/webpack": "4"
   }
 }
