@@ -4,11 +4,16 @@ import CruResource from '@shell/components/CruResource.vue';
 import CreateEditView from '@shell/mixins/create-edit-view';
 import { LabeledInput } from '@components/Form/LabeledInput';
 import NameNsDescription from '@shell/components/form/NameNsDescription';
+import ManagedOSChannelsTable from '../components/ManagedOSChannelsTable';
 
 export default {
   name:       'ManagedOsVersionChannelEditView',
   components: {
-    Loading, LabeledInput, CruResource, NameNsDescription
+    Loading,
+    LabeledInput,
+    CruResource,
+    NameNsDescription,
+    ManagedOSChannelsTable
   },
   mixins:     [CreateEditView],
   props:      {
@@ -37,6 +42,9 @@ export default {
     @finish="save"
     @cancel="done"
   >
+    <div class="row mt-40 mb-20">
+      <ManagedOSChannelsTable />
+    </div>
     <div class="row mt-40 mb-20">
       <div class="col span-12 mb-20">
         <h3>{{ t('elemental.osversionchannels.create.configuration') }}</h3>
