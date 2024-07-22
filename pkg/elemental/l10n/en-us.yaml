@@ -152,7 +152,7 @@ elemental:
       machineInventoryLabelKeyNameLength: One of the labels for Inventory of Machines has a key name that exceeds the 63 characters limit. Please shorten the length of the label key name.
       machineInventoryLabelValueLength: One of the labels for Inventory of Machines has a value that exceeds the 63 characters limit. Please shorten the length of the label value.
     edit:
-      userWarning: '<b>Note:</b> Wait for the Build Media to be completed to download the desired Media item. If you navigate away from this page, you will not be able to download the Media file being built'
+      userWarning: '<b>Note:</b> Wait for the Build Media to be completed before downloading the desired Media item. If you navigate away from this page, you will not be able to download the Media file being built.'
       imageSetup: Setting up an OS image
       downloadMachineRegistrationFile: 'Download the Registration Endpoint Configuration file in order to manually prepare your ISO image. Instructions <a target="_blank" rel="noopener noreferrer nofollow" style="text-decoration: underline" href="https://elemental.docs.rancher.com/custom-install">here</a>.'
       buildMediaTitle: Create OS image
