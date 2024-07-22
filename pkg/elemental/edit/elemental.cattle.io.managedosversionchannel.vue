@@ -8,7 +8,10 @@ import NameNsDescription from '@shell/components/form/NameNsDescription';
 export default {
   name:       'ManagedOsVersionChannelEditView',
   components: {
-    Loading, LabeledInput, CruResource, NameNsDescription
+    Loading,
+    LabeledInput,
+    CruResource,
+    NameNsDescription
   },
   mixins:     [CreateEditView],
   props:      {
