@@ -150,7 +150,7 @@ export function init($plugin, store) {
     {
       name:          'OsVersionInSync',
       labelKey:      'tableHeaders.inSync',
-      value:         'inSyncFormatter',
+      value:         'inSyncFormatterText',
       formatter:     'InSync',
       sort:          ['inSync']
     },
