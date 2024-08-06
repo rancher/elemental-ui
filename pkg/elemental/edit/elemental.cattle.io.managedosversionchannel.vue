@@ -25,14 +25,7 @@ export default {
       type:     String,
       required: true
     }
-  },
-  computed: {
-    name() {
-      console.log('this.value', this.value);
-
-      return 'some-text';
-    }
-  },
+  }
 };
 </script>
 
@@ -58,7 +51,6 @@ export default {
     <div v-if="value.spec" class="row mb-20">
       <div class="col span-8 mb-20">
         <h3>{{ t('elemental.osversionchannels.create.spec') }}</h3>
-        {{ name }}
         <LabeledInput
           v-model.trim="value.spec.options.image"
           data-testid="os-version-channel-path"
