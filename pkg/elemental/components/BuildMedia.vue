@@ -88,7 +88,7 @@ export default {
         this.filteredManagedOsVersions = this.managedOsVersions.filter(v => v.spec?.type === selectedFilterType) || [];
         this.buildMediaOsVersions = this.filteredManagedOsVersions.map((f) => {
           return {
-            label: `${ f.spec?.metadata?.displayName } ${ f.spec?.version }`,
+            label: `${ f.spec?.metadata?.displayName } ${ f.spec?.version } ${ typeof f.inSync === 'boolean' && !f.inSync ? '(deprecated)' : '' }`,
             value: neu === MEDIA_TYPES.ISO.type ? f.spec?.metadata?.uri : f.spec?.metadata?.upgradeImage,
           };
         });
