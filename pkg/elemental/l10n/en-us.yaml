@@ -193,6 +193,10 @@ elemental:
     createCluster: Create Elemental Cluster
     import: YAML import
     updateForCreateClusterError: Error updating Inventory of Machines with label for creating a cluster
+  osVersions:
+    notApplicable: n/a
+    inSync: In sync
+    outOfSync: Out of sync
   osversionchannels:
     create:
       configuration: Configuration

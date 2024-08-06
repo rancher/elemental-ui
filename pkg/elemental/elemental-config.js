@@ -150,7 +150,8 @@ export function init($plugin, store) {
     {
       name:          'OsVersionInSync',
       labelKey:      'tableHeaders.inSync',
-      getValue:      row => row.inSync || '---',
+      value:         'inSyncFormatter',
+      formatter:     'InSync',
       sort:          ['inSync']
     },
     AGE
