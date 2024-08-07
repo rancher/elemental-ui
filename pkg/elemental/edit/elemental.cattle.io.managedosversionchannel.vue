@@ -5,6 +5,7 @@ import CreateEditView from '@shell/mixins/create-edit-view';
 import { LabeledInput } from '@components/Form/LabeledInput';
 import NameNsDescription from '@shell/components/form/NameNsDescription';
 import Checkbox from '@components/Form/Checkbox/Checkbox.vue';
+import { getOperatorVersion, checkGatedFeatureCompatibility, DELETE_NO_LONGER_IN_SYNC_CHANNELS } from '../utils/feature-versioning';
 
 export default {
   name:       'ManagedOsVersionChannelEditView',
@@ -24,8 +25,23 @@ export default {
     mode: {
       type:     String,
       required: true
+    },
+    resource: {
+      type:     String,
+      required: true
     }
-  }
+  },
+  async fetch() {
+    this.operatorVersion = await getOperatorVersion(this.$store);
+  },
+  data() {
+    return { operatorVersion: '' };
+  },
+  computed: {
+    supportsNoLongerInSyncChannelDeletion() {
+      return checkGatedFeatureCompatibility(this.resource, this.mode, DELETE_NO_LONGER_IN_SYNC_CHANNELS, this.operatorVersion);
+    }
+  },
 };
 </script>
 
@@ -59,6 +75,7 @@ export default {
           :mode="mode"
         />
         <Checkbox
+          v-if="supportsNoLongerInSyncChannelDeletion"
           v-model="value.spec.deleteNoLongerInSyncVersions"
           :mode="mode"
           :label="t('elemental.osversionchannels.create.automaticDelete')"
