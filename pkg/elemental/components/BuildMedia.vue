@@ -5,7 +5,14 @@ import { Banner } from '@components/Banner';
 import AsyncButton from '@shell/components/AsyncButton';
 import { randomStr, CHARSET } from '@shell/utils/string';
 import { ELEMENTAL_SCHEMA_IDS } from '../config/elemental-types';
-import { getOperatorVersion, checkGatedFeatureCompatibility, BUILD_MEDIA_RAW_SUPPORT } from '../utils/feature-versioning';
+import {
+  getOperatorVersion,
+  checkGatedFeatureCompatibility,
+  BUILD_MEDIA_RAW_SUPPORT,
+  CHANNEL_NO_LONGER_IN_SYNC,
+  ALL_AREAS,
+  ALL_MODES,
+} from '../utils/feature-versioning';
 
 export const MEDIA_TYPES = {
   RAW: {
@@ -88,7 +95,7 @@ export default {
         this.filteredManagedOsVersions = this.managedOsVersions.filter(v => v.spec?.type === selectedFilterType) || [];
         this.buildMediaOsVersions = this.filteredManagedOsVersions.map((f) => {
           return {
-            label: `${ f.spec?.metadata?.displayName } ${ f.spec?.version } ${ typeof f.inSync === 'boolean' && !f.inSync ? '(deprecated)' : '' }`,
+            label: `${ f.spec?.metadata?.displayName } ${ f.spec?.version } ${ this.supportChannelNoLongerInSync && typeof f.inSync === 'boolean' && !f.inSync ? '(deprecated)' : '' }`,
             value: neu === MEDIA_TYPES.ISO.type ? f.spec?.metadata?.uri : f.spec?.metadata?.upgradeImage,
           };
         });
@@ -96,6 +103,9 @@ export default {
     }
   },
   computed: {
+    supportChannelNoLongerInSync() {
+      return checkGatedFeatureCompatibility(ALL_AREAS, ALL_MODES, CHANNEL_NO_LONGER_IN_SYNC, this.operatorVersion);
+    },
     isRawDiskImageBuildSupported() {
       const check = checkGatedFeatureCompatibility(this.resource, this.mode, BUILD_MEDIA_RAW_SUPPORT, this.operatorVersion);
 
