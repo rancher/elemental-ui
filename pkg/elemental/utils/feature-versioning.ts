@@ -48,7 +48,7 @@ const FEATURES_GATING:FeaturesGatingConfig[] = [
   {
     area:               ALL_AREAS,
     mode:               [ALL_MODES],
-    minOperatorVersion: '1.6.4',
+    minOperatorVersion: '1.6.3',
     features:           [CHANNEL_NO_LONGER_IN_SYNC]
   }
 ];
