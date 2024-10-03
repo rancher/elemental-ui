@@ -6,8 +6,8 @@ import elementalStore from './store/elemental-store';
 // fix missing directives on dashboard v2.7.2
 // doesn't seem to have any side effect while runnning on v2.7-head
 // where the directive is already present
-import '@shell/plugins/clean-tooltip-directive';
-import '@shell/plugins/clean-html-directive';
+// import '@shell/plugins/clean-tooltip-directive';
+// import '@shell/plugins/clean-html-directive';
 
 // Init the package
 export default function($plugin: IPlugin) {

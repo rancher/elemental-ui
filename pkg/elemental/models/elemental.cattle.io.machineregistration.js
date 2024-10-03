@@ -1,4 +1,3 @@
-import Vue from 'vue';
 import { _CREATE } from '@shell/config/query-params';
 import { ANNOTATIONS_TO_IGNORE_REGEX, LABELS_TO_IGNORE_REGEX } from '@shell/config/labels-annotations';
 import pickBy from 'lodash/pickBy';
@@ -43,10 +42,10 @@ export const DEFAULT_CREATION_YAML = `config:
 export default class MachineRegistration extends ElementalResource {
   applyDefaults(vm, mode) {
     if ( !this.spec || mode === _CREATE ) {
-      Vue.set(this, 'spec', {});
+      this.spec = {};
     }
     if ( !this.metadata || mode === _CREATE ) {
-      Vue.set(this, 'metadata', { namespace: ELEMENTAL_DEFAULT_NAMESPACE });
+      this.metadata = { namespace: ELEMENTAL_DEFAULT_NAMESPACE };
     }
   }
 
@@ -68,9 +67,9 @@ export default class MachineRegistration extends ElementalResource {
     });
 
     if (isSpec) {
-      Vue.set(this.spec, prop, { ...wasIgnored, ...val });
+      this.spec[prop] = { ...wasIgnored, ...val };
     } else {
-      Vue.set(this.metadata, prop, { ...wasIgnored, ...val });
+      this.metadata[prop] = { ...wasIgnored, ...val };
     }
   }
 
@@ -92,9 +91,9 @@ export default class MachineRegistration extends ElementalResource {
     });
 
     if (isSpec) {
-      Vue.set(this.spec, prop, { ...wasIgnored, ...val });
+      this.spec[prop] = { ...wasIgnored, ...val };
     } else {
-      Vue.set(this.metadata, prop, { ...wasIgnored, ...val });
+      this.metadata[prop] = { ...wasIgnored, ...val };
     }
   }
 
@@ -116,28 +115,41 @@ export default class MachineRegistration extends ElementalResource {
 
   async getMachineRegistrationData() {
     const url = `/elemental/registration/${ this.status.registrationToken }`;
+    const inStore1 = this.$rootGetters['currentStore']();
+    const res1 = await this.$dispatch(`${ inStore1 }/request`, { url, responseType: 'blob' }, { root: true });
 
-    try {
-      const inStore = this.$rootGetters['currentStore']();
-      const res = await this.$dispatch(`${ inStore }/request`, { url, responseType: 'blob' }, { root: true });
-      const machineRegFileName = `${ this.metadata.name }_registrationURL.yaml`;
+    console.log('inStore1', inStore1);
+    console.log('res1', res1);
 
-      return {
-        data:     res.data,
-        fileName: machineRegFileName
-      };
-    } catch (e) {
-      return Promise.reject(e);
-    }
+    return res1;
+
+    // try {
+    //   const inStore = this.$rootGetters['currentStore']();
+    //   const res = await this.$dispatch(`${ inStore }/request`, { url, responseType: 'blob' }, { root: true });
+
+    //   const machineRegFileName = `${ this.metadata.name }_registrationURL.yaml`;
+
+    //   return {
+    //     data:     res.data,
+    //     fileName: machineRegFileName
+    //   };
+    // } catch (e) {
+    //   return Promise.reject(e);
+    // }
   }
 
   async downloadMachineRegistration() {
-    try {
-      const machineReg = await this.getMachineRegistrationData();
+    const machineReg1 = await this.getMachineRegistrationData();
 
-      return downloadFile(machineReg.fileName, machineReg.data, 'text/markdown; charset=UTF-8');
-    } catch (e) {
-      return Promise.reject(e);
-    }
+    console.log('machineReg1', machineReg1);
+
+    return machineReg1;
+    // try {
+    //   const machineReg = await this.getMachineRegistrationData();
+
+    //   return downloadFile(machineReg.fileName, machineReg.data, 'text/markdown; charset=UTF-8');
+    // } catch (e) {
+    //   return Promise.reject(e);
+    // }
   }
 }

@@ -64,6 +64,8 @@ export default {
 
     this.operatorVersion = await getOperatorVersion(this.$store);
 
+    console.log('this.operatorVersion', this.operatorVersion);
+
     // default to ISO, which is always present, which will trigger the watcher
     this.buildMediaTypeSelected = MEDIA_TYPES.ISO.type;
   },
@@ -108,6 +110,11 @@ export default {
     },
     isRawDiskImageBuildSupported() {
       const check = checkGatedFeatureCompatibility(this.resource, this.mode, BUILD_MEDIA_RAW_SUPPORT, this.operatorVersion);
+
+      console.log('this.resource', this.resource);
+      console.log('this.mode', this.mode);
+      console.log('BUILD_MEDIA_RAW_SUPPORT', BUILD_MEDIA_RAW_SUPPORT);
+      console.log('this.operatorVersion', this.operatorVersion);
 
       if (!check) {
         this.buildMediaTypeSelected = MEDIA_TYPES.ISO.type; // eslint-disable-line vue/no-side-effects-in-computed-properties
@@ -241,7 +248,7 @@ export default {
         class="col span-2"
       >
         <LabeledSelect
-          v-model="registrationEndpointSelected"
+          v-model:value="registrationEndpointSelected"
           class="mr-20"
           data-testid="select-registration-endpoint-build-media"
           :label="t('elemental.machineRegistration.create.machineReg')"
@@ -254,7 +261,7 @@ export default {
         class="col span-2"
       >
         <LabeledSelect
-          v-model="buildMediaTypeSelected"
+          v-model:value="buildMediaTypeSelected"
           class="mr-20"
           data-testid="select-media-type-build-media"
           :label="t('elemental.machineRegistration.edit.mediaType')"
@@ -265,7 +272,7 @@ export default {
       </div>
       <div class="col span-3">
         <LabeledSelect
-          v-model="buildMediaOsVersionSelected"
+          v-model:value="buildMediaOsVersionSelected"
           class="mr-20"
           data-testid="select-os-version-build-media"
           :label="t('elemental.machineRegistration.edit.osVersion')"

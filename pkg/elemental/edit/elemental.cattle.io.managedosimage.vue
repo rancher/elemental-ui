@@ -163,26 +163,27 @@ export default {
     <div class="row mt-40 mb-20">
       <div class="col span-12 mb-20">
         <h3>{{ t('elemental.osimage.create.configuration') }}</h3>
-        <NameNsDescription v-model="value" :mode="mode" :description-hidden="true" :namespaced="false" />
+        <NameNsDescription :value="value" :mode="mode" :description-hidden="true" :namespaced="false" />
       </div>
     </div>
     <div v-if="value.spec" class="row mb-20">
       <div class="col span-6 mb-20">
         <h3>{{ t('elemental.osimage.create.spec') }}</h3>
         <LabeledSelect
-          v-model="clusterTargets"
+          v-model:value="clusterTargets"
           class="mb-10"
           data-testid="cluster-target"
           :label="t('elemental.osimage.create.targetCluster.label')"
           :placeholder="t('elemental.osimage.create.targetCluster.placeholder', null, true)"
           :mode="mode"
           :options="clusterTargetOptions"
+          option-key="value"
           :multiple="true"
           @input="handleClusterTargetChange($event)"
         />
         <p v-clean-html="t('elemental.osimage.create.userWarning',{}, true)" class="user-warn mb-20"></p>
         <RadioGroup
-          v-model="useManagedOsImages"
+          v-model:value="useManagedOsImages"
           class="mb-20"
           data-testid="upgrade-choice-selector"
           name="os-image-mode"
@@ -193,7 +194,7 @@ export default {
         />
         <div v-if="useManagedOsImages">
           <LabeledSelect
-            v-model="osVersionSelected"
+            v-model:value="osVersionSelected"
             data-testid="os-version-box"
             :mode="mode"
             :options="managedOSVersionOptions"
@@ -205,7 +206,7 @@ export default {
         </div>
         <div v-else>
           <LabeledInput
-            v-model.trim="value.spec.osImage"
+            v-model:value.trim="value.spec.osImage"
             data-testid="os-image-box"
             :label="t('elemental.osimage.create.osImage.label')"
             :placeholder="t('elemental.osimage.create.osImage.placeholder', null, true)"

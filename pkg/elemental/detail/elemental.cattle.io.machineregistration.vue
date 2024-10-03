@@ -31,11 +31,7 @@ export default {
     mode: {
       type:     String,
       required: true
-    },
-    resource: {
-      type:     String,
-      required: true
-    },
+    }
   },
   data() {
     return {
@@ -46,6 +42,7 @@ export default {
   watch: {
     cloudConfig: {
       handler(neu) {
+        console.log('VALUE', this.value);
         try {
           const parsed = jsyaml.load(neu);
 
@@ -78,12 +75,17 @@ export default {
   },
   methods: {
     async download(btnCb) {
-      try {
-        await this.value.downloadMachineRegistration();
-        btnCb(true);
-      } catch (error) {
-        btnCb(false);
-      }
+      console.log('this.value', this.value);
+      console.log('this.value.downloadMachineRegistration', this.value.downloadMachineRegistration);
+      const res1 = await this.value.downloadMachineRegistration();
+
+      console.log('res1', res1);
+      // try {
+      //   await this.value.downloadMachineRegistration();
+      //   btnCb(true);
+      // } catch (error) {
+      //   btnCb(false);
+      // }
     }
   },
 };
@@ -119,7 +121,7 @@ export default {
       <BuildMedia
         :display-reg-endpoints="false"
         :registration-endpoint="`${value.metadata.namespace}/${value.metadata.name}`"
-        :resource="resource"
+        :resource="value.type"
         :mode="mode"
       />
     </div>
@@ -142,7 +144,7 @@ export default {
         <h3>{{ t('elemental.machineRegistration.create.cloudConfiguration') }}</h3>
         <YamlEditor
           ref="yamleditor"
-          v-model="cloudConfig"
+          v-model:value="cloudConfig"
           class="mb-20"
           :editor-mode="editorMode"
         />
