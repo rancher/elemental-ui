@@ -120,7 +120,7 @@ export default {
       :value="expressions"
       :show-remove="false"
       :keys-select-options="machineInventorySelectorKeyOptions"
-      @input="matchChanged($event)"
+      @update:value="matchChanged($event)"
     />
     <Banner v-if="matchingMachineInventories" :color="(matchingMachineInventories.isNone || matchingMachineInventories.isAll ? 'warning' : 'success')">
       <span v-if="matchingMachineInventories.isAll" v-clean-html="t('elemental.clusterGroup.selector.matchesAll', matchingMachineInventories)" />

@@ -1,4 +1,3 @@
-import Vue from 'vue';
 import { _CREATE } from '@shell/config/query-params';
 import { ANNOTATIONS_TO_IGNORE_REGEX, LABELS_TO_IGNORE_REGEX } from '@shell/config/labels-annotations';
 import pickBy from 'lodash/pickBy';
@@ -43,10 +42,10 @@ export const DEFAULT_CREATION_YAML = `config:
 export default class MachineRegistration extends ElementalResource {
   applyDefaults(vm, mode) {
     if ( !this.spec || mode === _CREATE ) {
-      Vue.set(this, 'spec', {});
+      this.spec = {};
     }
     if ( !this.metadata || mode === _CREATE ) {
-      Vue.set(this, 'metadata', { namespace: ELEMENTAL_DEFAULT_NAMESPACE });
+      this.metadata = { namespace: ELEMENTAL_DEFAULT_NAMESPACE };
     }
   }
 
@@ -68,9 +67,9 @@ export default class MachineRegistration extends ElementalResource {
     });
 
     if (isSpec) {
-      Vue.set(this.spec, prop, { ...wasIgnored, ...val });
+      this.spec[prop] = { ...wasIgnored, ...val };
     } else {
-      Vue.set(this.metadata, prop, { ...wasIgnored, ...val });
+      this.metadata[prop] = { ...wasIgnored, ...val };
     }
   }
 
@@ -92,9 +91,9 @@ export default class MachineRegistration extends ElementalResource {
     });
 
     if (isSpec) {
-      Vue.set(this.spec, prop, { ...wasIgnored, ...val });
+      this.spec[prop] = { ...wasIgnored, ...val };
     } else {
-      Vue.set(this.metadata, prop, { ...wasIgnored, ...val });
+      this.metadata[prop] = { ...wasIgnored, ...val };
     }
   }
 
@@ -115,11 +114,10 @@ export default class MachineRegistration extends ElementalResource {
   }
 
   async getMachineRegistrationData() {
-    const url = `/elemental/registration/${ this.status.registrationToken }`;
-
     try {
       const inStore = this.$rootGetters['currentStore']();
       const res = await this.$dispatch(`${ inStore }/request`, { url, responseType: 'blob' }, { root: true });
+
       const machineRegFileName = `${ this.metadata.name }_registrationURL.yaml`;
 
       return {

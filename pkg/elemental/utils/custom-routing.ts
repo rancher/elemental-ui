@@ -12,7 +12,7 @@ export const rootElementalRoute = () => ({
   },
 });
 
-export const createElementalRoute = (name: string, params: Object, meta: Object) => ({
+export const createElementalRoute = (name: string, params: Object) => ({
   name:   `${ rootElementalRoute().name }-${ name }`,
   params: {
     ...rootElementalRoute().params,
@@ -20,6 +20,6 @@ export const createElementalRoute = (name: string, params: Object, meta: Object)
   },
   meta: {
     ...rootElementalRoute().meta,
-    ...meta
+    ...params
   }
 });

@@ -25,10 +25,6 @@ export default {
     mode: {
       type:     String,
       required: true
-    },
-    resource: {
-      type:     String,
-      required: true
     }
   },
   async fetch() {
@@ -39,7 +35,7 @@ export default {
   },
   computed: {
     supportsNoLongerInSyncChannelDeletion() {
-      return checkGatedFeatureCompatibility(this.resource, this.mode, DELETE_NO_LONGER_IN_SYNC_CHANNELS, this.operatorVersion);
+      return checkGatedFeatureCompatibility(this.value.type, this.mode, DELETE_NO_LONGER_IN_SYNC_CHANNELS, this.operatorVersion);
     }
   },
 };
@@ -61,14 +57,14 @@ export default {
     <div class="row mt-40 mb-20">
       <div class="col span-12 mb-20">
         <h3>{{ t('elemental.osversionchannels.create.configuration') }}</h3>
-        <NameNsDescription v-model="value" :mode="mode" :description-hidden="true" :namespaced="false" />
+        <NameNsDescription :value="value" :mode="mode" :description-hidden="true" :namespaced="false" />
       </div>
     </div>
     <div v-if="value.spec" class="row mb-20">
       <div class="col span-8 mb-20">
         <h3>{{ t('elemental.osversionchannels.create.spec') }}</h3>
         <LabeledInput
-          v-model.trim="value.spec.options.image"
+          v-model:value.trim="value.spec.options.image"
           data-testid="os-version-channel-path"
           :label="t('elemental.osversionchannels.create.registryUri.label')"
           :placeholder="t('elemental.osversionchannels.create.registryUri.placeholder', null, true)"
@@ -76,7 +72,7 @@ export default {
         />
         <Checkbox
           v-if="supportsNoLongerInSyncChannelDeletion"
-          v-model="value.spec.deleteNoLongerInSyncVersions"
+          v-model:value="value.spec.deleteNoLongerInSyncVersions"
           :mode="mode"
           :label="t('elemental.osversionchannels.create.automaticDelete')"
           data-testid="os-version-channel-automatic-deletion"

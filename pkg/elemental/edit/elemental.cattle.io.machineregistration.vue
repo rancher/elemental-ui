@@ -20,8 +20,8 @@ import { getOperatorVersion, checkGatedFeatureCompatibility, MACH_REG_CONFIG_DEF
 import { OLD_DEFAULT_CREATION_YAML, DEFAULT_CREATION_YAML } from '../models/elemental.cattle.io.machineregistration';
 
 export default {
-  name:       'MachineRegistrationEditView',
-  components: {
+  name:         'MachineRegistrationEditView',
+  components:   {
     Loading,
     CruResource,
     YamlEditor,
@@ -41,18 +41,14 @@ export default {
     mode: {
       type:     String,
       required: true
-    },
-    resource: {
-      type:     String,
-      required: true
-    },
+    }
   },
   async fetch() {
     // in CREATE mode, since YAMLEditor doesn't live update, we need to force a re-render of the component for it to update
     if (this.mode === _CREATE) {
       const operatorVersion = await getOperatorVersion(this.$store);
 
-      this.newCloudConfigcompatibilityCheck = checkGatedFeatureCompatibility(this.resource, this.mode, MACH_REG_CONFIG_DEFAULTS, operatorVersion);
+      this.newCloudConfigcompatibilityCheck = checkGatedFeatureCompatibility(this.value.type, this.mode, MACH_REG_CONFIG_DEFAULTS, operatorVersion);
 
       if (!this.value.spec) {
         this.value.spec = this.newCloudConfigcompatibilityCheck ? DEFAULT_CREATION_YAML : OLD_DEFAULT_CREATION_YAML;
@@ -208,7 +204,7 @@ export default {
       <div class="col span-12">
         <h3>{{ t('elemental.machineRegistration.create.configuration') }}</h3>
         <NameNsDescription
-          v-model="value"
+          :value="value"
           :mode="mode"
           :description-hidden="true"
           :namespaced="false"
@@ -221,7 +217,7 @@ export default {
         <YamlEditor
           :key="rerender"
           ref="yamleditor"
-          v-model="cloudConfig"
+          v-model:value="cloudConfig"
           class="mb-20"
           :editor-mode="editorMode"
         />
@@ -273,7 +269,7 @@ export default {
                 :title="t('labels.labels.title')"
                 :read-allowed="false"
                 :value-can-be-empty="true"
-                @input="updateLabels($event)"
+                @update:value="updateLabels($event)"
               />
             </div>
             <div class="row mb-10">
@@ -286,7 +282,7 @@ export default {
                 :title="t('labels.annotations.title')"
                 :read-allowed="false"
                 :value-can-be-empty="true"
-                @input="value.setAnnotations($event, 'machineInventoryAnnotations', true)"
+                @update:value="value.setAnnotations($event, 'machineInventoryAnnotations', true)"
               />
             </div>
           </Tab>
@@ -313,7 +309,7 @@ export default {
                 :title="t('labels.labels.title')"
                 :read-allowed="false"
                 :value-can-be-empty="true"
-                @input="value.setLabels($event)"
+                @update:value="value.setLabels($event)"
               />
             </div>
             <div class="row mb-10">
@@ -326,7 +322,7 @@ export default {
                 :title="t('labels.annotations.title')"
                 :read-allowed="false"
                 :value-can-be-empty="true"
-                @input="value.setAnnotations($event)"
+                @update:value="value.setAnnotations($event)"
               />
             </div>
           </Tab>

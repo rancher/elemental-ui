@@ -241,7 +241,7 @@ export default {
         class="col span-2"
       >
         <LabeledSelect
-          v-model="registrationEndpointSelected"
+          v-model:value="registrationEndpointSelected"
           class="mr-20"
           data-testid="select-registration-endpoint-build-media"
           :label="t('elemental.machineRegistration.create.machineReg')"
@@ -254,7 +254,7 @@ export default {
         class="col span-2"
       >
         <LabeledSelect
-          v-model="buildMediaTypeSelected"
+          v-model:value="buildMediaTypeSelected"
           class="mr-20"
           data-testid="select-media-type-build-media"
           :label="t('elemental.machineRegistration.edit.mediaType')"
@@ -265,7 +265,7 @@ export default {
       </div>
       <div class="col span-3">
         <LabeledSelect
-          v-model="buildMediaOsVersionSelected"
+          v-model:value="buildMediaOsVersionSelected"
           class="mr-20"
           data-testid="select-os-version-build-media"
           :label="t('elemental.machineRegistration.edit.osVersion')"
@@ -280,11 +280,11 @@ export default {
           mode="buildMedia"
           class="mr-20"
           data-testid="build-media-btn"
-          :disabled="!isBuildMediaBtnEnabled || isMediaBuilt"
+          :disabled="(!isBuildMediaBtnEnabled || isMediaBuilt) ? 'disabled' : null"
           @click="buildMedia"
         />
         <a
-          :disabled="!isMediaBuilt"
+          :disabled="!isMediaBuilt ? 'disabled' : null"
           class="btn role-primary"
           data-testid="download-media-btn"
           @click="$event => downloadMedia($event)"

@@ -7,12 +7,13 @@ export function filterForElementalClusters(clusters) {
   cluster.spec?.rkeConfig?.machinePools[0].machineConfigRef.kind === KIND.MACHINE_INV_SELECTOR_TEMPLATES);
 }
 
-export function filterForUsedElementalClustersOnManagedOs(elementalClusters, osGroups) {
+export function filterForUsedElementalClustersOnManagedOs(elementalClusters, osGroups, id) {
   const out = [...elementalClusters];
 
+  // filter out clusters that are in use by other ManagedOsVersion's
   osGroups.forEach((group) => {
     group.spec?.clusterTargets?.forEach((target) => {
-      if (elementalClusters.find(c => c.name === target.clusterName)) {
+      if (elementalClusters.find(c => c.name === target.clusterName && group.id !== id)) {
         const index = out.findIndex(c => c.name === target.clusterName);
 
         out.splice(index, 1);

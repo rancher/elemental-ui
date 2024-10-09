@@ -155,7 +155,7 @@ export default {
             </div>
             <div class="col span-6">
               <LabeledSelect
-                v-model="defaultNamespace"
+                v-model:value="defaultNamespace"
                 class="pull-right"
                 :options="namespaceOptions"
                 label-key="import.defaultNamespace.label"
