@@ -64,8 +64,6 @@ export default {
 
     this.operatorVersion = await getOperatorVersion(this.$store);
 
-    console.log('this.operatorVersion', this.operatorVersion);
-
     // default to ISO, which is always present, which will trigger the watcher
     this.buildMediaTypeSelected = MEDIA_TYPES.ISO.type;
   },
@@ -110,11 +108,6 @@ export default {
     },
     isRawDiskImageBuildSupported() {
       const check = checkGatedFeatureCompatibility(this.resource, this.mode, BUILD_MEDIA_RAW_SUPPORT, this.operatorVersion);
-
-      console.log('this.resource', this.resource);
-      console.log('this.mode', this.mode);
-      console.log('BUILD_MEDIA_RAW_SUPPORT', BUILD_MEDIA_RAW_SUPPORT);
-      console.log('this.operatorVersion', this.operatorVersion);
 
       if (!check) {
         this.buildMediaTypeSelected = MEDIA_TYPES.ISO.type; // eslint-disable-line vue/no-side-effects-in-computed-properties
@@ -287,11 +280,11 @@ export default {
           mode="buildMedia"
           class="mr-20"
           data-testid="build-media-btn"
-          :disabled="!isBuildMediaBtnEnabled || isMediaBuilt"
+          :disabled="(!isBuildMediaBtnEnabled || isMediaBuilt) ? 'disabled' : null"
           @click="buildMedia"
         />
         <a
-          :disabled="!isMediaBuilt"
+          :disabled="!isMediaBuilt ? 'disabled' : null"
           class="btn role-primary"
           data-testid="download-media-btn"
           @click="$event => downloadMedia($event)"

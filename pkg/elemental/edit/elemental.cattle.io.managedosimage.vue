@@ -15,8 +15,6 @@ import {
   filterForUsedElementalClustersOnManagedOs
 } from '../utils/elemental-utils';
 
-const STRING_SEPARATOR = '_***_';
-
 export default {
   name:       'ManagedOsImagesEditView',
   components: {
@@ -68,29 +66,30 @@ export default {
         this.clusterTargets = targetsArray;
       }
     }
+
+    // populate targetable clusters based on the usage of elemental clusters in other managedosimage's (discard those as valid options)
+    const targetableClusters = filterForUsedElementalClustersOnManagedOs(this.elementalClusters, this.osGroups, this.value.id);
+
+    this.clusterTargetOptions = targetableClusters.map((cluster) => {
+      return {
+        label: cluster.name,
+        value: cluster.name
+      };
+    });
   },
   data() {
     return {
-      elementalClusters:  [],
-      osGroups:           [],
-      osVersions:         [],
-      osVersionChannels:  [],
-      clusterTargets:     [],
-      useManagedOsImages: true,
-      osVersionSelected:  ''
+      elementalClusters:    [],
+      osGroups:             [],
+      osVersions:           [],
+      osVersionChannels:    [],
+      clusterTargets:       [],
+      clusterTargetOptions: [],
+      useManagedOsImages:   true,
+      osVersionSelected:    ''
     };
   },
   computed: {
-    clusterTargetOptions() {
-      const targetableClusters = filterForUsedElementalClustersOnManagedOs(this.elementalClusters, this.osGroups);
-
-      return targetableClusters.map((cluster) => {
-        return {
-          label: cluster.name,
-          value: cluster.name
-        };
-      });
-    },
     managedOSVersionOptions() {
       const out = [];
 
@@ -112,7 +111,7 @@ export default {
           versions.forEach((v) => {
             out.push({
               label: v.name,
-              value: `${ channel.name }${ STRING_SEPARATOR }${ v.name }`
+              value: v.name
             });
           });
         }
@@ -129,9 +128,11 @@ export default {
       this.value.spec.clusterTargets = ev.map((val) => {
         return { clusterName: val };
       });
+      this.clusterTargets = ev;
     },
     handleManagedOSVersionNameChange(ev) {
-      this.value.spec.managedOSVersionName = ev.split(STRING_SEPARATOR)[1];
+      this.value.spec.managedOSVersionName = ev;
+      this.osVersionSelected = ev;
     },
     handleRadioBtnChange(val) {
       // if TRUE, this mean we are on option "use managed OS version"
@@ -142,6 +143,8 @@ export default {
         delete this.value?.spec?.managedOSVersionName;
         this.osVersionSelected = '';
       }
+
+      this.useManagedOsImages = val;
     }
   },
 };
@@ -170,7 +173,7 @@ export default {
       <div class="col span-6 mb-20">
         <h3>{{ t('elemental.osimage.create.spec') }}</h3>
         <LabeledSelect
-          v-model:value="clusterTargets"
+          :value="clusterTargets"
           class="mb-10"
           data-testid="cluster-target"
           :label="t('elemental.osimage.create.targetCluster.label')"
@@ -179,29 +182,29 @@ export default {
           :options="clusterTargetOptions"
           option-key="value"
           :multiple="true"
-          @input="handleClusterTargetChange($event)"
+          @update:value="handleClusterTargetChange($event)"
         />
         <p v-clean-html="t('elemental.osimage.create.userWarning',{}, true)" class="user-warn mb-20"></p>
         <RadioGroup
-          v-model:value="useManagedOsImages"
+          :value="useManagedOsImages"
           class="mb-20"
           data-testid="upgrade-choice-selector"
           name="os-image-mode"
           :options="[true, false]"
           :labels="[t('elemental.osimage.create.radioOptions.osImages'), t('elemental.osimage.create.radioOptions.registry')]"
           :mode="mode"
-          @input="handleRadioBtnChange($event)"
+          @update:value="handleRadioBtnChange($event)"
         />
         <div v-if="useManagedOsImages">
           <LabeledSelect
-            v-model:value="osVersionSelected"
+            :value="osVersionSelected"
             data-testid="os-version-box"
             :mode="mode"
             :options="managedOSVersionOptions"
             label-key="elemental.osimage.create.managedOsImage.label"
             :placeholder="t('elemental.osimage.create.managedOsImage.placeholder', null, true)"
             option-key="value"
-            @input="handleManagedOSVersionNameChange($event)"
+            @update:value="handleManagedOSVersionNameChange($event)"
           />
         </div>
         <div v-else>

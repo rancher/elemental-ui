@@ -42,7 +42,6 @@ export default {
   watch: {
     cloudConfig: {
       handler(neu) {
-        console.log('VALUE', this.value);
         try {
           const parsed = jsyaml.load(neu);
 
@@ -75,17 +74,12 @@ export default {
   },
   methods: {
     async download(btnCb) {
-      console.log('this.value', this.value);
-      console.log('this.value.downloadMachineRegistration', this.value.downloadMachineRegistration);
-      const res1 = await this.value.downloadMachineRegistration();
-
-      console.log('res1', res1);
-      // try {
-      //   await this.value.downloadMachineRegistration();
-      //   btnCb(true);
-      // } catch (error) {
-      //   btnCb(false);
-      // }
+      try {
+        await this.value.downloadMachineRegistration();
+        btnCb(true);
+      } catch (error) {
+        btnCb(false);
+      }
     }
   },
 };

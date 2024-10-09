@@ -114,42 +114,28 @@ export default class MachineRegistration extends ElementalResource {
   }
 
   async getMachineRegistrationData() {
-    const url = `/elemental/registration/${ this.status.registrationToken }`;
-    const inStore1 = this.$rootGetters['currentStore']();
-    const res1 = await this.$dispatch(`${ inStore1 }/request`, { url, responseType: 'blob' }, { root: true });
+    try {
+      const inStore = this.$rootGetters['currentStore']();
+      const res = await this.$dispatch(`${ inStore }/request`, { url, responseType: 'blob' }, { root: true });
 
-    console.log('inStore1', inStore1);
-    console.log('res1', res1);
+      const machineRegFileName = `${ this.metadata.name }_registrationURL.yaml`;
 
-    return res1;
-
-    // try {
-    //   const inStore = this.$rootGetters['currentStore']();
-    //   const res = await this.$dispatch(`${ inStore }/request`, { url, responseType: 'blob' }, { root: true });
-
-    //   const machineRegFileName = `${ this.metadata.name }_registrationURL.yaml`;
-
-    //   return {
-    //     data:     res.data,
-    //     fileName: machineRegFileName
-    //   };
-    // } catch (e) {
-    //   return Promise.reject(e);
-    // }
+      return {
+        data:     res.data,
+        fileName: machineRegFileName
+      };
+    } catch (e) {
+      return Promise.reject(e);
+    }
   }
 
   async downloadMachineRegistration() {
-    const machineReg1 = await this.getMachineRegistrationData();
+    try {
+      const machineReg = await this.getMachineRegistrationData();
 
-    console.log('machineReg1', machineReg1);
-
-    return machineReg1;
-    // try {
-    //   const machineReg = await this.getMachineRegistrationData();
-
-    //   return downloadFile(machineReg.fileName, machineReg.data, 'text/markdown; charset=UTF-8');
-    // } catch (e) {
-    //   return Promise.reject(e);
-    // }
+      return downloadFile(machineReg.fileName, machineReg.data, 'text/markdown; charset=UTF-8');
+    } catch (e) {
+      return Promise.reject(e);
+    }
   }
 }
