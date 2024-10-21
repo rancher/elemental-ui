@@ -7,11 +7,14 @@
     "node": ">=20"
   },
   "dependencies": {
-    "@rancher/shell": "^3.0.0-rc.3",
+    "@rancher/shell": "^3.0.0-rc.8",
     "cache-loader": "^4.1.0",
     "node-polyfill-webpack-plugin": "^3.0.0"
   },
   "devDependencies": {
+    "color": "4.2.3",
+    "ip": "2.0.1",
+    "@types/semver": "^7.5.8",
     "vue3-resize": "0.2.0"
   },
   "resolutions": {
