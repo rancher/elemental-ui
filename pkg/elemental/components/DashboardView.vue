@@ -277,7 +277,7 @@ export default {
           </div>
           <PercentageBar
             class="mt-10"
-            :value="percentageBarValue"
+            :model-value="percentageBarValue"
             :color-stops="colorStops"
           />
         </div>
@@ -486,19 +486,6 @@ export default {
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
-    }
-  }
-}
-
-::v-deep .main-tables-container {
- .download-machine-reg {
-    display: flex;
-    justify-content: center;
-    height: 59px;
-    min-width: 130px;
-
-    .icon.icon-lg {
-      display: none;
     }
   }
 }

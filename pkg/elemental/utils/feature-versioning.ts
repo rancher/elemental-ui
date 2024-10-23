@@ -1,6 +1,6 @@
 import semver from 'semver';
 
-import { _CREATE, _EDIT, _VIEW } from '@shell/config/query-params';
+import { _CREATE, _EDIT, _VIEW, _DETAIL } from '@shell/config/query-params';
 import { ELEMENTAL_SCHEMA_IDS } from '../config/elemental-types';
 import { ELEMENTAL_TYPES } from '../types';
 
@@ -41,7 +41,7 @@ const FEATURES_GATING:FeaturesGatingConfig[] = [
   },
   {
     area:               ELEMENTAL_SCHEMA_IDS.MANAGED_OS_VERSION_CHANNELS,
-    mode:               [_CREATE, _EDIT],
+    mode:               [_CREATE, _EDIT, _DETAIL, _VIEW],
     minOperatorVersion: '1.6.3',
     features:           [DELETE_NO_LONGER_IN_SYNC_CHANNELS]
   },
