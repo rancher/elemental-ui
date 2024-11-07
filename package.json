@@ -1,13 +1,13 @@
 {
   "name": "elemental-ui",
   "description": "Elemental UI extension",
-  "version": "3.0.0-rc.1",
+  "version": "3.0.0-rc.2",
   "private": false,
   "engines": {
     "node": ">=20"
   },
   "dependencies": {
-    "@rancher/shell": "^3.0.0-rc.9"
+    "@rancher/shell": "^3.0.0"
   },
   "resolutions": {
     "@types/node": "~20.10.0",
