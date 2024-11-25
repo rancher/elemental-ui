@@ -115,6 +115,7 @@ export default class MachineRegistration extends ElementalResource {
 
   async getMachineRegistrationData() {
     try {
+      const url = `/elemental/registration/${ this.status.registrationToken }`;
       const inStore = this.$rootGetters['currentStore']();
       const res = await this.$dispatch(`${ inStore }/request`, { url, responseType: 'blob' }, { root: true });
 
