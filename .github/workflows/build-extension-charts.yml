@@ -12,7 +12,7 @@ defaults:
 
 jobs:
   build-extension-charts:
-    uses: aalves08/dashboard/.github/workflows/build-extension-charts.yml@12824-wfs-scripts-upstream-1
+    uses: rancher/dashboard/.github/workflows/build-extension-charts.yml@master
     permissions:
       actions: write
       contents: write
