@@ -155,6 +155,9 @@ export default {
 
       return false;
     },
+    checksumUrl() {
+      return this.seedImageFound?.status?.checksumURL;
+    },
     mediaBuildProcessError() {
       if (this.seedImageFound && this.seedImageFound.status?.conditions) {
         let errorFound = '';
@@ -224,7 +227,7 @@ export default {
     <h3 class="build-iso-title">
       {{ t('elemental.machineRegistration.edit.buildMediaTitle') }}
     </h3>
-    <div class="row mb-10">
+    <div class="row mb-15">
       <div
         v-if="displayRegEndpoints"
         class="col span-2"
@@ -280,6 +283,24 @@ export default {
         >
           {{ t('elemental.machineRegistration.edit.downloadMedia') }}
         </a>
+        <div class="download-group">
+          <a
+            :disabled="!isMediaBuilt ? 'disabled' : null"
+            class="btn role-primary download-btn"
+            data-testid="download-media-btn"
+            @click="$event => downloadMedia($event)"
+          >
+            {{ t('elemental.machineRegistration.edit.downloadMedia') }}
+          </a>
+          <a 
+            v-if="checksumUrl"
+            data-testid="download-checksum-btn" 
+            class="checksum-btn"
+            target="_blank"
+            rel="noopener nofollow"
+            download="checksum.sh256"
+            :href="checksumUrl">{{ t('elemental.machineRegistration.edit.downloadChecksum') }}</a>
+        </div>
       </div>
     </div>
     <div class="row mb-10">
@@ -302,5 +323,20 @@ export default {
 .user-warn {
   font-size: 13px;
   color: var(--darker);
+}
+
+.download-group {
+  max-width: fit-content;
+  display: inline-flex;
+  flex-direction: column;
+  vertical-align: top;
+
+  .checksum-btn {
+    cursor: pointer;
+    margin-top: 4px;
+    font-size: 12px;
+    text-align: center;
+    text-decoration: underline;
+  }
 }
 </style>
