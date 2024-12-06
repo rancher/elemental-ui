@@ -17,6 +17,7 @@ export const ALL_MODES:string = 'all-modes';
 // features to be gated to specific operator versions
 export const MACH_REG_CONFIG_DEFAULTS:string = 'machine-reg-config-defaults';
 export const BUILD_MEDIA_RAW_SUPPORT:string = 'build-media-raw-support';
+export const BUILD_MEDIA_ARCH_SUPPORT:string = 'build-media-arch-support';
 export const DELETE_NO_LONGER_IN_SYNC_CHANNELS:string = 'delete-no-longer-in-sync-channels';
 export const CHANNEL_NO_LONGER_IN_SYNC:string = 'channel-no-longer-in-sync';
 
@@ -38,6 +39,18 @@ const FEATURES_GATING:FeaturesGatingConfig[] = [
     mode:               [_VIEW],
     minOperatorVersion: '1.6.2',
     features:           [BUILD_MEDIA_RAW_SUPPORT]
+  },
+  {
+    area:               ELEMENTAL_TYPES.DASHBOARD,
+    mode:               [_VIEW],
+    minOperatorVersion: '1.6.3',
+    features:           [BUILD_MEDIA_ARCH_SUPPORT]
+  },
+  {
+    area:               ELEMENTAL_SCHEMA_IDS.MACHINE_REGISTRATIONS,
+    mode:               [_VIEW],
+    minOperatorVersion: '1.6.3',
+    features:           [BUILD_MEDIA_ARCH_SUPPORT]
   },
   {
     area:               ELEMENTAL_SCHEMA_IDS.MANAGED_OS_VERSION_CHANNELS,
