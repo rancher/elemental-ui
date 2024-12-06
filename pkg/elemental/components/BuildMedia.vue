@@ -146,6 +146,9 @@ export default {
     downloadUrl() {
       return this.seedImageFound?.status?.downloadURL;
     },
+    checksumUrl() {
+      return this.seedImageFound?.status?.checksumURL;
+    },
     isMediaBuilt() {
       if (this.seedImageFound && this.seedImageFound.status?.downloadURL) {
         this.buildBtnCallback(true);
@@ -154,9 +157,6 @@ export default {
       }
 
       return false;
-    },
-    checksumUrl() {
-      return this.seedImageFound?.status?.checksumURL;
     },
     mediaBuildProcessError() {
       if (this.seedImageFound && this.seedImageFound.status?.conditions) {
@@ -275,23 +275,18 @@ export default {
           :disabled="(!isBuildMediaBtnEnabled || isMediaBuilt) ? 'disabled' : null"
           @click="buildMedia"
         />
-        <a
-          :disabled="!isMediaBuilt ? 'disabled' : null"
-          class="btn role-primary"
-          data-testid="download-media-btn"
-          :href="downloadUrl"
-        >
-          {{ t('elemental.machineRegistration.edit.downloadMedia') }}
-        </a>
+        
         <div class="download-group">
           <a
             :disabled="!isMediaBuilt ? 'disabled' : null"
-            class="btn role-primary download-btn"
+            class="btn role-primary"
             data-testid="download-media-btn"
-            @click="$event => downloadMedia($event)"
+            target="_blank"
+            rel="noopener nofollow"
+            :href="downloadUrl"
           >
             {{ t('elemental.machineRegistration.edit.downloadMedia') }}
-          </a>
+          </a>  
           <a 
             v-if="checksumUrl"
             data-testid="download-checksum-btn" 
