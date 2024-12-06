@@ -180,6 +180,7 @@ elemental:
       machineReg: Registration Endpoint
       machineInv: Inventory of Machines
   clusterGroup:
+    helper: The Machine Count total, even if divided by multiple Machines Pools, must match the total amount of Inventory of Machines, otherwise some Inventory of Machines might not report back if this condition isn't met
     selector:
       label: Inventory of Machines Selector Template
       matchesAll: Matches all {total, number} existing Inventory of Machines
