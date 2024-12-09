@@ -1,8 +1,8 @@
-name: Build and Release Extension Charts1111
+name: Test flow 1
 
 on:
   workflow_dispatch:
-  push:
+  pull_request:
     branches:
       - build-charts-scripts-tests
 
