@@ -62,7 +62,6 @@ jobs:
         run: yarn
 
       - name: Parse Extension Name
-        if: github.ref_type == 'tag' || inputs.is_test == 'true'
         id: parsed-name
         env:
           GH_TOKEN: ${{ github.token }}
