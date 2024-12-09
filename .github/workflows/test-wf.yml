@@ -19,9 +19,7 @@ jobs:
   build-extension-artifact:
     name: Build extension artifact
     runs-on: ubuntu-latest
-    permissions:
-      actions: write
-      contents: read
+    permissions: write-all
     outputs:
       build-status: ${{ job.status }}
     steps:
