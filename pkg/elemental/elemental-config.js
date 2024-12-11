@@ -190,7 +190,7 @@ export function init($plugin, store) {
     NAMESPACE_COL,
     {
       name:      'downloadSeedImage',
-      labelKey:  'tableHeaders.download',
+      labelKey:  'tableHeaders.downloadMedia',
       value:     'status',
       formatter: 'SeedImageDownload'
     },
