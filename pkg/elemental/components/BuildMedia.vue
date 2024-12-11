@@ -143,6 +143,9 @@ export default {
 
       return {};
     },
+    downloadUrl() {
+      return this.seedImageFound?.status?.downloadURL;
+    },
     isMediaBuilt() {
       if (this.seedImageFound && this.seedImageFound.status?.downloadURL) {
         this.buildBtnCallback(true);
@@ -210,20 +213,6 @@ export default {
         this.mediaBuildTriggerError = e;
         btnCb(false);
       }
-    },
-    downloadMedia(ev) {
-      ev.preventDefault();
-
-      if (this.isMediaBuilt) {
-        const downloadUrl = this.seedImageFound?.status?.downloadURL;
-        const link = document.createElement('a');
-
-        link.download = `elemental.${ this.buildMediaTypeSelected === MEDIA_TYPES.ISO.type ? MEDIA_TYPES.ISO.extension : MEDIA_TYPES.RAW.extension }`;
-        link.href = downloadUrl;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-      }
     }
   },
 };
@@ -287,7 +276,7 @@ export default {
           :disabled="!isMediaBuilt"
           class="btn role-primary"
           data-testid="download-media-btn"
-          @click="$event => downloadMedia($event)"
+          :href="downloadUrl"
         >
           {{ t('elemental.machineRegistration.edit.downloadMedia') }}
         </a>
