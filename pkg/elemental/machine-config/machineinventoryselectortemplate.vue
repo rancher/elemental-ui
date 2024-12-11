@@ -113,7 +113,8 @@ export default {
 
 <template>
   <div>
-    <h2 v-t="'elemental.clusterGroup.selector.label'" class="mt-20 mb-20" />
+    <h2 v-t="'elemental.clusterGroup.selector.label'" class="mt-20 mb-5" />
+    <p class="user-warn mb-20">{{ t('elemental.clusterGroup.helper', {}, true) }}</p>
     <MatchExpressions
       :mode="mode"
       :type="elementalType"
@@ -121,6 +122,7 @@ export default {
       :show-remove="false"
       :keys-select-options="machineInventorySelectorKeyOptions"
       @input="matchChanged($event)"
+      class="mb-40"
     />
     <Banner v-if="matchingMachineInventories" :color="(matchingMachineInventories.isNone || matchingMachineInventories.isAll ? 'warning' : 'success')">
       <span v-if="matchingMachineInventories.isAll" v-clean-html="t('elemental.clusterGroup.selector.matchesAll', matchingMachineInventories)" />
@@ -132,3 +134,10 @@ export default {
     </Banner>
   </div>
 </template>
+
+<style lang="scss" scoped>
+.user-warn {
+  font-size: 13px;
+  color: var(--darker);
+}
+</style>
