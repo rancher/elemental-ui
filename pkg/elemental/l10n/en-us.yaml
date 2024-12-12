@@ -17,6 +17,7 @@ tableHeaders:
   token: Token
   downloadTableDashboard: ''
   download: 'Download'
+  downloadMedia: 'Download Media'
   imagePath: Image Path
   osVersion: OS Version
   osVersionType: Type
@@ -157,6 +158,7 @@ elemental:
       userWarning: '<b>Note:</b> Wait for the Build Media to be completed before downloading the desired Media item. If you navigate away from this page, you will not be able to download the Media file being built.'
       imageSetup: Setting up an OS image
       downloadMachineRegistrationFile: 'Download the Registration Endpoint Configuration file in order to manually prepare your ISO image. Instructions <a target="_blank" rel="noopener noreferrer nofollow" style="text-decoration: underline" href="https://elemental.docs.rancher.com/custom-install">here</a>.'
+      downloadChecksum: Download checksum
       buildMediaTitle: Create OS image
       osVersion: OS Version
       osVersionPlaceholder: Select OS Version
@@ -180,6 +182,7 @@ elemental:
       machineReg: Registration Endpoint
       machineInv: Inventory of Machines
   clusterGroup:
+    helper: The Machine Count total, even if divided by multiple Machines Pools, must match the total amount of Inventory of Machines; otherwise, some Inventory of Machines might not report back if this condition isn't met.
     selector:
       label: Inventory of Machines Selector Template
       matchesAll: Matches all {total, number} existing Inventory of Machines

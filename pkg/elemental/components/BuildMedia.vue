@@ -306,7 +306,6 @@ export default {
           :disabled="!isBuildMediaBtnEnabled || isMediaBuilt"
           @click="buildMedia"
         />
-        
         <div class="download-group">
           <a
             :disabled="!isMediaBuilt"
