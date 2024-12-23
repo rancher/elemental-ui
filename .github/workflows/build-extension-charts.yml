@@ -71,24 +71,40 @@ jobs:
 
           ${BASE_DIR}/dashboard/shell/scripts/extension/parse-tag-name ${{ github.ref_name }} ${{ github.run_id }} "charts"
 
-      # - name: Run build script
-      #   shell: bash
-      #   id: build_script
-      #   run: |
-      #     publish="yarn publish-pkgs -s ${{ github.repository }} -b ${{ env.TARGET_BRANCH }}"
+      - name: Run build script
+        shell: bash
+        id: build_script
+        run: |
+          #!/usr/bin/env bash
 
-      #     if [[ -n "${{ github.ref_name }}" ]]; then
-      #       publish="$publish -t ${{ github.ref_name }}"
-      #     fi
+          set -eo pipefail
+
+          SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
+          BASE_DIR="$(
+            cd $SCRIPT_DIR && cd ../.. &
+            pwd
+          )"
+
+          git clone https://github.com/rancher/dashboard.git
+          pushd ${BASE_DIR}/dashboard
+
+          git checkout master
+          popd
+
+          publish="yarn publish-pkgs -s ${{ github.repository }} -b ${{ env.TARGET_BRANCH }}"
+
+          if [[ -n "${{ github.ref_name }}" ]]; then
+            publish="$publish -t ${{ github.ref_name }}"
+          fi
           
-      #     $publish
+          ${BASE_DIR}/dashboard/shell/scripts/extension/${publish}
 
-      # - name: Upload charts artifact
-      #   if: github.ref_type == 'tag' || (github.ref == 'refs/heads/main' && github.event_name != 'pull_request')
-      #   uses: actions/upload-artifact@v3
-      #   with:
-      #     name: charts
-      #     path: tmp
+      - name: Upload charts artifact
+        if: github.ref_type == 'tag' || (github.ref == 'refs/heads/main' && github.event_name != 'pull_request')
+        uses: actions/upload-artifact@v3
+        with:
+          name: charts
+          path: tmp
 
   # release:
   #   name: Release Build
