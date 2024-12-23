@@ -79,18 +79,6 @@ jobs:
 
           set -eo pipefail
 
-          SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
-          BASE_DIR="$(
-            cd $SCRIPT_DIR && cd ../.. &
-            pwd
-          )"
-
-          git clone https://github.com/rancher/dashboard.git dashboard-repo
-          pushd ${BASE_DIR}/dashboard-repo
-
-          git checkout master
-          popd
-
           publish="yarn publish-pkgs -s ${{ github.repository }} -b ${{ env.TARGET_BRANCH }}"
 
           if [[ -n "${{ github.ref_name }}" ]]; then
