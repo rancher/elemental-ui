@@ -107,43 +107,43 @@ jobs:
           name: charts
           path: tmp
 
-  # release:
-  #   name: Release Build
-  #   if: github.ref_type == 'tag' || (github.ref == 'refs/heads/main' && github.event_name != 'pull_request')
-  #   needs: build-extension-artifact
-  #   runs-on: ubuntu-latest
-  #   permissions:
-  #     actions: write
-  #     contents: write
-  #     deployments: write
-  #     pages: write
-  #   steps:
-  #     - name: Checkout
-  #       uses: actions/checkout@v3
-  #       with:
-  #         ref: "${{ env.TARGET_BRANCH }}"
+  release:
+    name: Release Build
+    if: github.ref_type == 'tag' || (github.ref == 'refs/heads/main' && github.event_name != 'pull_request')
+    needs: build-extension-artifact
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+      contents: write
+      deployments: write
+      pages: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: "${{ env.TARGET_BRANCH }}"
 
-  #     - name: Configure Git
-  #       run: |
-  #         git config user.name 'github-actions[bot]'
-  #         git config user.email 'github-actions[bot]@users.noreply.github.com'
+      - name: Configure Git
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
 
-  #     - name: Download build artifact
-  #       uses: actions/download-artifact@v3
-  #       with:
-  #         name: charts
+      - name: Download build artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: charts
 
-  #     - name: Commit build
-  #       run: |
-  #         git add ./{assets,charts,extensions,index.yaml}
-  #         git commit -a -m "${{ env.CI_COMMIT_MESSAGE }}"
-  #         git push
+      - name: Commit build
+        run: |
+          git add ./{assets,charts,extensions,index.yaml}
+          git commit -a -m "${{ env.CI_COMMIT_MESSAGE }}"
+          git push
 
-  #     - name: Run chart-releaser
-  #       uses: helm/chart-releaser-action@v1.4.1
-  #       with:
-  #         charts_dir: ./charts/*
-  #       env:
-  #         CR_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
-  #         CR_SKIP_EXISTING: true
+      - name: Run chart-releaser
+        uses: helm/chart-releaser-action@v1.4.1
+        with:
+          charts_dir: ./charts/*
+        env:
+          CR_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
+          CR_SKIP_EXISTING: true
 
