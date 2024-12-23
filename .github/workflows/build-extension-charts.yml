@@ -69,6 +69,8 @@ jobs:
           git checkout master
           popd
 
+          echo "${BASE_DIR}"
+
           ${BASE_DIR}/dashboard-repo/shell/scripts/extension/parse-tag-name ${{ github.ref_name }} ${{ github.run_id }} "charts"
 
       - name: Run build script
@@ -90,6 +92,8 @@ jobs:
           if [[ -n "${{ github.ref_name }}" ]]; then
             publish="$publish -t ${{ github.ref_name }}"
           fi
+
+          echo "${BASE_DIR}"
           
           ${BASE_DIR}/dashboard-repo/shell/scripts/extension/${publish}
 
