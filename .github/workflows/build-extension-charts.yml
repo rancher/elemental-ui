@@ -61,65 +61,79 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          chmod +x ./node_modules/@rancher/shell/scripts/extension/parse-tag-name
-          yarn parse-tag-name ${{ github.ref_name }} ${{ github.run_id }} "charts"
+          #!/usr/bin/env bash
 
-      - name: Run build script
-        shell: bash
-        id: build_script
-        run: |
-          publish="yarn publish-pkgs -s ${{ github.repository }} -b ${{ env.TARGET_BRANCH }}"
+          set -eo pipefail
 
-          if [[ -n "${{ github.ref_name }}" ]]; then
-            publish="$publish -t ${{ github.ref_name }}"
-          fi
+          SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
+          BASE_DIR="$(
+            cd $SCRIPT_DIR && cd ../.. &
+            pwd
+          )"
+
+          git clone https://github.com/rancher/dashboard.git
+          cd ${BASE_DIR}/dashboard
+
+          git checkout master
+
+          ./shell/scripts/extension/parse-tag-name ${{ github.ref_name }} ${{ github.run_id }} "charts"
+
+      # - name: Run build script
+      #   shell: bash
+      #   id: build_script
+      #   run: |
+      #     publish="yarn publish-pkgs -s ${{ github.repository }} -b ${{ env.TARGET_BRANCH }}"
+
+      #     if [[ -n "${{ github.ref_name }}" ]]; then
+      #       publish="$publish -t ${{ github.ref_name }}"
+      #     fi
           
-          $publish
+      #     $publish
 
-      - name: Upload charts artifact
-        if: github.ref_type == 'tag' || (github.ref == 'refs/heads/main' && github.event_name != 'pull_request')
-        uses: actions/upload-artifact@v3
-        with:
-          name: charts
-          path: tmp
+      # - name: Upload charts artifact
+      #   if: github.ref_type == 'tag' || (github.ref == 'refs/heads/main' && github.event_name != 'pull_request')
+      #   uses: actions/upload-artifact@v3
+      #   with:
+      #     name: charts
+      #     path: tmp
 
-  release:
-    name: Release Build
-    if: github.ref_type == 'tag' || (github.ref == 'refs/heads/main' && github.event_name != 'pull_request')
-    needs: build-extension-artifact
-    runs-on: ubuntu-latest
-    permissions:
-      actions: write
-      contents: write
-      deployments: write
-      pages: write
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-        with:
-          ref: "${{ env.TARGET_BRANCH }}"
+  # release:
+  #   name: Release Build
+  #   if: github.ref_type == 'tag' || (github.ref == 'refs/heads/main' && github.event_name != 'pull_request')
+  #   needs: build-extension-artifact
+  #   runs-on: ubuntu-latest
+  #   permissions:
+  #     actions: write
+  #     contents: write
+  #     deployments: write
+  #     pages: write
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v3
+  #       with:
+  #         ref: "${{ env.TARGET_BRANCH }}"
 
-      - name: Configure Git
-        run: |
-          git config user.name 'github-actions[bot]'
-          git config user.email 'github-actions[bot]@users.noreply.github.com'
+  #     - name: Configure Git
+  #       run: |
+  #         git config user.name 'github-actions[bot]'
+  #         git config user.email 'github-actions[bot]@users.noreply.github.com'
 
-      - name: Download build artifact
-        uses: actions/download-artifact@v3
-        with:
-          name: charts
+  #     - name: Download build artifact
+  #       uses: actions/download-artifact@v3
+  #       with:
+  #         name: charts
 
-      - name: Commit build
-        run: |
-          git add ./{assets,charts,extensions,index.yaml}
-          git commit -a -m "${{ env.CI_COMMIT_MESSAGE }}"
-          git push
+  #     - name: Commit build
+  #       run: |
+  #         git add ./{assets,charts,extensions,index.yaml}
+  #         git commit -a -m "${{ env.CI_COMMIT_MESSAGE }}"
+  #         git push
 
-      - name: Run chart-releaser
-        uses: helm/chart-releaser-action@v1.4.1
-        with:
-          charts_dir: ./charts/*
-        env:
-          CR_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
-          CR_SKIP_EXISTING: true
+  #     - name: Run chart-releaser
+  #       uses: helm/chart-releaser-action@v1.4.1
+  #       with:
+  #         charts_dir: ./charts/*
+  #       env:
+  #         CR_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
+  #         CR_SKIP_EXISTING: true
 
