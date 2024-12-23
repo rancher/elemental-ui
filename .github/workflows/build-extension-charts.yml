@@ -69,7 +69,7 @@ jobs:
           git checkout master
           popd
 
-          ./${BASE_DIR}/dashboard/shell/scripts/extension/parse-tag-name ${{ github.ref_name }} ${{ github.run_id }} "charts"
+          ${BASE_DIR}/dashboard/shell/scripts/extension/parse-tag-name ${{ github.ref_name }} ${{ github.run_id }} "charts"
 
       # - name: Run build script
       #   shell: bash
