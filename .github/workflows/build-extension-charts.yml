@@ -69,7 +69,8 @@ jobs:
           git checkout master
           popd
 
-          echo "${BASE_DIR}"
+          echo "script dir: ${SCRIPT_DIR}"
+          echo "base dir: ${BASE_DIR}"
 
           ${BASE_DIR}/dashboard-repo/shell/scripts/extension/parse-tag-name ${{ github.ref_name }} ${{ github.run_id }} "charts"
 
@@ -87,13 +88,15 @@ jobs:
             pwd
           )"
 
-          publish="yarn publish-pkgs -s ${{ github.repository }} -b ${{ env.TARGET_BRANCH }}"
+          # publish="yarn publish-pkgs -s ${{ github.repository }} -b ${{ env.TARGET_BRANCH }}"
+          publish="publish -s ${{ github.repository }} -b ${{ env.TARGET_BRANCH }}"
 
           if [[ -n "${{ github.ref_name }}" ]]; then
             publish="$publish -t ${{ github.ref_name }}"
           fi
 
-          echo "${BASE_DIR}"
+          echo "script dir: ${SCRIPT_DIR}"
+          echo "base dir: ${BASE_DIR}"
           
           ${BASE_DIR}/dashboard-repo/shell/scripts/extension/${publish}
 
