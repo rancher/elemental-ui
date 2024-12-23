@@ -63,13 +63,13 @@ jobs:
             pwd
           )"
 
-          git clone https://github.com/rancher/dashboard.git
-          pushd ${BASE_DIR}/dashboard
+          git clone https://github.com/rancher/dashboard.git dashboard-repo
+          pushd ${BASE_DIR}/dashboard-repo
 
           git checkout master
           popd
 
-          ${BASE_DIR}/dashboard/shell/scripts/extension/parse-tag-name ${{ github.ref_name }} ${{ github.run_id }} "charts"
+          ${BASE_DIR}/dashboard-repo/shell/scripts/extension/parse-tag-name ${{ github.ref_name }} ${{ github.run_id }} "charts"
 
       - name: Run build script
         shell: bash
@@ -85,8 +85,8 @@ jobs:
             pwd
           )"
 
-          git clone https://github.com/rancher/dashboard.git
-          pushd ${BASE_DIR}/dashboard
+          git clone https://github.com/rancher/dashboard.git dashboard-repo
+          pushd ${BASE_DIR}/dashboard-repo
 
           git checkout master
           popd
@@ -97,7 +97,7 @@ jobs:
             publish="$publish -t ${{ github.ref_name }}"
           fi
           
-          ${BASE_DIR}/dashboard/shell/scripts/extension/${publish}
+          ${BASE_DIR}/dashboard-repo/shell/scripts/extension/${publish}
 
       - name: Upload charts artifact
         if: github.ref_type == 'tag' || (github.ref == 'refs/heads/main' && github.event_name != 'pull_request')
