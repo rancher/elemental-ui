@@ -1,5 +1,6 @@
 name: Test extension build
 
+#
 on:
   pull_request:
 
