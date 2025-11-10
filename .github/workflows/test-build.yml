@@ -12,4 +12,4 @@ jobs:
   build-extension-charts:
     uses: rancher/dashboard/.github/workflows/extensions-build-test.yaml@reusab-workflow-test
     with:
-      disable_exts_build: elemental,elemental-v2
+      disable_exts_build: elemental
