@@ -11,5 +11,5 @@ defaults:
 jobs:
   build-extension-charts:
     uses: rancher/dashboard/.github/workflows/extensions-build-test.yaml@reusab-workflow-test
-    # with:
-    #   target_branch: gh-pages 
+    with:
+      disable_exts_build: elemental 
