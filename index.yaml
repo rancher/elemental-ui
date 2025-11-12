@@ -2,7 +2,7 @@ apiVersion: v1
 entries:
   elemental:
   - annotations:
-      catalog.cattle.io/prime-only: 'true'
+      catalog.cattle.io/prime-only: true
       catalog.cattle.io/certified: rancher
       catalog.cattle.io/kube-version: '>= 1.16.0-0'
       catalog.cattle.io/namespace: cattle-ui-plugin-system
