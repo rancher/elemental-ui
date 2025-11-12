@@ -1,5 +1,4 @@
 annotations:
-  catalog.cattle.io/prime-only: 'true'
   catalog.cattle.io/certified: rancher
   catalog.cattle.io/namespace: cattle-ui-plugin-system
   catalog.cattle.io/os: linux
