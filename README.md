@@ -6,7 +6,7 @@ Rancher Extension used in [rancher/dashboard](https://github.com/rancher/dashboa
 This is what you probably want to get started.
 ```bash
 # Install dependencies
-yarn install
+yarn install --frozen-lockfile
 
 # For development, serve with hot reload at https://localhost:8005
 # using the endpoint for your Rancher API
