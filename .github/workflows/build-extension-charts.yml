@@ -6,7 +6,7 @@ on:
       create_pr:
         description: 'Create a PR instead of pushing directly to gh-pages'
         required: false
-        default: 'false'
+        default: 'true'
         type: string
   release:
     types: [released]
