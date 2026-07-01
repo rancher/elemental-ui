@@ -19,9 +19,9 @@ jobs:
   build-extension-artifact:
     name: Build extension artifact
     runs-on: ubuntu-latest
-    permissions:
-      actions: write
-      contents: read
+    # permissions:
+    #   actions: write
+    #   contents: read
     outputs:
       build-status: ${{ job.status }}
     steps:
@@ -84,11 +84,11 @@ jobs:
     if: github.ref_type == 'tag' || (github.ref == 'refs/heads/main' && github.event_name != 'pull_request')
     needs: build-extension-artifact
     runs-on: ubuntu-latest
-    permissions:
-      actions: write
-      contents: write
-      deployments: write
-      pages: write
+    # permissions:
+    #   actions: write
+    #   contents: write
+    #   deployments: write
+    #   pages: write
     outputs:
       release-status: ${{ job.status }}
     steps:
