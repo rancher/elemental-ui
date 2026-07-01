@@ -13,6 +13,28 @@ entries:
       catalog.cattle.io/ui-extensions-version: '>= 3.0.0 < 4.0.0'
       catalog.cattle.io/ui-version: '>= 2.7.2'
     apiVersion: v2
+    appVersion: 3.0.2-rc.996
+    created: "2026-07-01T15:17:59.505427681Z"
+    description: OS Management extension
+    digest: a118c1d204b3193e888f286fed7bb3bf84be0240684a865ef1608ccb832f8cce
+    icon: https://raw.githubusercontent.com/rancher/elemental-ui/main/pkg/elemental/icon-v2.svg
+    name: elemental
+    type: application
+    urls:
+    - assets/elemental/elemental-3.0.2-rc.996.tgz
+    version: 3.0.2-rc.996
+  - annotations:
+      catalog.cattle.io/certified: rancher
+      catalog.cattle.io/kube-version: '>= 1.16.0-0'
+      catalog.cattle.io/namespace: cattle-ui-plugin-system
+      catalog.cattle.io/os: linux
+      catalog.cattle.io/permits-os: linux, windows
+      catalog.cattle.io/rancher-version: '>= 2.10.0-0'
+      catalog.cattle.io/scope: management
+      catalog.cattle.io/ui-component: plugins
+      catalog.cattle.io/ui-extensions-version: '>= 3.0.0 < 4.0.0'
+      catalog.cattle.io/ui-version: '>= 2.7.2'
+    apiVersion: v2
     appVersion: 3.0.2-rc.995
     created: "2026-07-01T15:06:09.497125622Z"
     description: OS Management extension
@@ -899,4 +921,4 @@ entries:
     urls:
     - assets/elemental/elemental-0.1.0.tgz
     version: 0.1.0
-generated: "2026-07-01T15:06:09.496711478Z"
+generated: "2026-07-01T15:17:59.505022997Z"
