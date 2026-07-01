@@ -111,20 +111,20 @@ jobs:
           name: charts
 
       # this is if we want to create a PR instead of push directly to a branch
-      - if: inputs.create_pr == 'true'
-        name: Generate branch name based on date and time
+      # - if: inputs.create_pr == 'true'
+      - name: Generate branch name based on date and time
         run: echo "NOW=$(date +'%Y-%m-%d-%H-%M-%S')" >> $GITHUB_ENV
 
-      - if: inputs.create_pr == 'true'
-        name: Commit Changes and push to a branch
+      # - if: inputs.create_pr == 'true'
+      - name: Commit Changes and push to a branch
         run: |
           git checkout -b sync-${{ env.NOW }}
           git add ./{assets,charts,extensions,index.yaml}
           git commit -a -m "Merging extension ${{ github.ref_name }} ${{ env.NOW }}"
           git push origin sync-${{ env.NOW }}
 
-      - if: inputs.create_pr == 'true'
-        name: Create Pull Request
+      # - if: inputs.create_pr == 'true'
+      - name: Create Pull Request
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
@@ -142,12 +142,12 @@ jobs:
           fi
       # end of PR creation
 
-      - if: inputs.create_pr != 'true'
-        name: Commit build
-        run: |
-          git add ./{assets,charts,extensions,index.yaml}
-          git commit -a -m "${{ env.CI_COMMIT_MESSAGE }}"
-          git push
+      # - if: inputs.create_pr != 'true'
+      #   name: Commit build
+      #   run: |
+      #     git add ./{assets,charts,extensions,index.yaml}
+      #     git commit -a -m "${{ env.CI_COMMIT_MESSAGE }}"
+      #     git push
 
       - name: Run chart-releaser
         uses: helm/chart-releaser-action@cae68fefc6b5f367a0275617c9f83181ba54714f # v1.7.0
