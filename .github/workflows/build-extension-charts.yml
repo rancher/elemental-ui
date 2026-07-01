@@ -2,6 +2,12 @@ name: Build and Release Extension Charts
 
 on:
   workflow_dispatch:
+    inputs:
+      create_pr:
+        description: 'Create a PR instead of pushing directly to gh-pages'
+        required: false
+        default: 'false'
+        type: string
   release:
     types: [released]
 
@@ -19,9 +25,8 @@ jobs:
   build-extension-artifact:
     name: Build extension artifact
     runs-on: ubuntu-latest
-    # permissions:
-    #   actions: write
-    #   contents: read
+    permissions:
+      contents: read
     outputs:
       build-status: ${{ job.status }}
     steps:
@@ -84,11 +89,9 @@ jobs:
     if: github.ref_type == 'tag' || (github.ref == 'refs/heads/main' && github.event_name != 'pull_request')
     needs: build-extension-artifact
     runs-on: ubuntu-latest
-    # permissions:
-    #   actions: write
-    #   contents: write
-    #   deployments: write
-    #   pages: write
+    permissions:
+      contents: write
+      pull-requests: write
     outputs:
       release-status: ${{ job.status }}
     steps:
@@ -107,7 +110,40 @@ jobs:
         with:
           name: charts
 
-      - name: Commit build
+      # this is if we want to create a PR instead of push directly to a branch
+      - if: inputs.create_pr == 'true'
+        name: Generate branch name based on date and time
+        run: echo "NOW=$(date +'%Y-%m-%d-%H-%M-%S')" >> $GITHUB_ENV
+
+      - if: inputs.create_pr == 'true'
+        name: Commit Changes and push to a branch
+        run: |
+          git checkout -b sync-${{ env.NOW }}
+          git add ./{assets,charts,extensions,index.yaml}
+          git commit -a -m "Merging extension ${{ github.ref_name }} ${{ env.NOW }}"
+          git push origin sync-${{ env.NOW }}
+
+      - if: inputs.create_pr == 'true'
+        name: Create Pull Request
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          pr_number=$(gh pr create \
+            --title "Create PR for extension ${{ github.ref_name }} merge: ${{ env.NOW }}" \
+            --body "This PR was automatically created by a GitHub Action." \
+            --base main \
+            --head sync-${{ env.NOW }} \
+            --fill \
+            --repo ${{ github.repository }} | awk '{print $NF}')
+
+          if [ -z "$pr_number" ]; then
+            echo "Failed to create PR."
+            exit 1
+          fi
+      # end of PR creation
+
+      - if: inputs.create_pr != 'true'
+        name: Commit build
         run: |
           git add ./{assets,charts,extensions,index.yaml}
           git commit -a -m "${{ env.CI_COMMIT_MESSAGE }}"
