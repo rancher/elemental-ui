@@ -12,7 +12,7 @@ defaults:
 
 jobs:
   build-extension-charts:
-    uses: rancher/dashboard/.github/workflows/build-extension-charts.yml@9bf23dff6650116673346447bcf0b088e0edb27f
+    uses: rancher/dashboard/.github/workflows/build-extension-charts.yml@9bf23dff6650116673346447bcf0b088e0edb27f # creators-pkg-3.0.12
     permissions:
       contents: write
       pull-requests: write
