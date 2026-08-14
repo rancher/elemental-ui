@@ -96,7 +96,7 @@ export default {
       this.osVersionChannels.forEach((channel) => {
         const versions = this.osVersions.filter((version) => {
           // use only the same namespace as the OS groups for now...
-          const channelExists = version.metadata?.ownerReferences.find(ref => ref.name === channel.name && this.value?.metadata?.namespace === channel.metadata?.namespace);
+          const channelExists = version.metadata?.ownerReferences?.find(ref => ref.name === channel.name && this.value?.metadata?.namespace === channel.metadata?.namespace);
 
           return channelExists && Object.keys(channelExists).length && this.value?.metadata?.namespace === version.metadata?.namespace && version.spec?.type === 'container';
         });
