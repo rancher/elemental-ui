@@ -1,0 +1,2 @@
+"use strict";(("undefined"!==typeof self?self:this)["webpackChunkelemental_3_0_2"]=("undefined"!==typeof self?self:this)["webpackChunkelemental_3_0_2"]||[]).push([[446],{36446:function(e,n,t){t.r(n),t.d(n,{default:function(){return f}});var s=t(9274);function o(e,n,t,o,r,u){const c=(0,s.resolveComponent)("ResourceList");return(0,s.openBlock)(),(0,s.createBlock)(c)}var r=t(72800),u={name:"ClusterResourcedList",components:{ResourceList:r.A}},c=t(47433);const l=(0,c.A)(u,[["render",o]]);var f=l}}]);
+//# sourceMappingURL=elemental-3.0.2.umd.min.446.js.map
