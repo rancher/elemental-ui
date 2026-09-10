@@ -1,9 +1,9 @@
 import { ELEMENTAL_PRODUCT_NAME } from '../config/elemental-types';
 import Dashboard from '../pages/index.vue';
-import ElementalCustomListView from '../pages/_resource/index.vue';
-import ShellResourceCreate from '@shell/pages/c/_cluster/_product/_resource/create.vue';
-import ShellResourceDetails from '@shell/pages/c/_cluster/_product/_resource/_id.vue';
-import ShellResourceDetailsNamespaced from '@shell/pages/c/_cluster/_product/_resource/_namespace/_id.vue';
+import ListElementalResource from '../pages/_resource/index.vue';
+import CreateElementalResource from '../pages/_resource/create.vue';
+import ElementalResourceDetails from '../pages/_resource/_id.vue';
+import ShellApiDemoPage from '../pages/shellApiDemo.vue';
 
 const BLANK_CLUSTER = '_';
 
@@ -18,10 +18,21 @@ const routes = [
       pkg:     ELEMENTAL_PRODUCT_NAME
     }
   },
+  // this covers the shell API demo page
+  {
+    name:      `${ ELEMENTAL_PRODUCT_NAME }-c-cluster-shell-api-demo`,
+    path:      `/${ ELEMENTAL_PRODUCT_NAME }/c/:cluster/shell-api-demo`,
+    component: ShellApiDemoPage,
+    meta:      {
+      product: ELEMENTAL_PRODUCT_NAME,
+      cluster: BLANK_CLUSTER,
+      pkg:     ELEMENTAL_PRODUCT_NAME
+    },
+  },
   {
     name:      `${ ELEMENTAL_PRODUCT_NAME }-c-cluster-resource`,
     path:      `/${ ELEMENTAL_PRODUCT_NAME }/c/:cluster/:resource`,
-    component: ElementalCustomListView,
+    component: ListElementalResource,
     meta:      {
       product: ELEMENTAL_PRODUCT_NAME,
       cluster: BLANK_CLUSTER,
@@ -31,7 +42,7 @@ const routes = [
   {
     name:      `${ ELEMENTAL_PRODUCT_NAME }-c-cluster-resource-create`,
     path:      `/${ ELEMENTAL_PRODUCT_NAME }/c/:cluster/:resource/create`,
-    component: ShellResourceCreate,
+    component: CreateElementalResource,
     meta:      {
       product: ELEMENTAL_PRODUCT_NAME,
       cluster: BLANK_CLUSTER,
@@ -41,7 +52,7 @@ const routes = [
   {
     name:      `${ ELEMENTAL_PRODUCT_NAME }-c-cluster-resource-id`,
     path:      `/${ ELEMENTAL_PRODUCT_NAME }/c/:cluster/:resource/:id`,
-    component: ShellResourceDetails,
+    component: ElementalResourceDetails,
     meta:      {
       product: ELEMENTAL_PRODUCT_NAME,
       cluster: BLANK_CLUSTER,
@@ -51,7 +62,7 @@ const routes = [
   {
     name:      `${ ELEMENTAL_PRODUCT_NAME }-c-cluster-resource-namespace-id`,
     path:      `/${ ELEMENTAL_PRODUCT_NAME }/c/:cluster/:resource/:namespace/:id`,
-    component: ShellResourceDetailsNamespaced,
+    component: ElementalResourceDetails,
     meta:      {
       product: ELEMENTAL_PRODUCT_NAME,
       cluster: BLANK_CLUSTER,

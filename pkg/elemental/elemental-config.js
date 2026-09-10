@@ -197,8 +197,16 @@ export function init($plugin, store) {
     AGE
   ]);
 
+  // shell API demo page
+  virtualType({
+    labelKey: 'some.translation.key',
+    name:     'shell-api-demo',
+    route:    createElementalRoute('shell-api-demo')
+  });
+
   basicType([
     ELEMENTAL_TYPES.DASHBOARD,
+    'shell-api-demo',
     ELEMENTAL_SCHEMA_IDS.MACHINE_REGISTRATIONS,
     ELEMENTAL_SCHEMA_IDS.MACHINE_INVENTORIES,
   ]);
