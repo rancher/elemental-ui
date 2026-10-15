@@ -1,0 +1,14 @@
+name: Test extensions build
+
+#
+on:
+  pull_request:
+
+defaults:
+  run:
+    shell: bash
+    working-directory: ./
+
+jobs:
+  build-extension-charts:
+    uses: rancher/dashboard/.github/workflows/build-extensions-test.yml@master
