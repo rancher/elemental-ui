@@ -5,10 +5,10 @@ updates:
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
-      interval: "weekly"
+      interval: "daily"
     cooldown:
       default-days: 7
-    open-pull-requests-limit: 5
+    open-pull-requests-limit: 15
 
   # Maintain npm dependencies
   - package-ecosystem: "npm"
@@ -16,7 +16,7 @@ updates:
       - "/"
       - "/pkg/*"
     schedule:
-      interval: "weekly"
+      interval: "daily"
     cooldown:
       default-days: 7
-    open-pull-requests-limit: 5
+    open-pull-requests-limit: 15
