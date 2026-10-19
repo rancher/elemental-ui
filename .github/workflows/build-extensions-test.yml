@@ -11,4 +11,4 @@ defaults:
 
 jobs:
   build-extension-charts:
-    uses: rancher/dashboard/.github/workflows/build-extensions-test.yml@master
+    uses: rancher/dashboard/.github/workflows/build-extensions-test.yml@9bf23dff6650116673346447bcf0b088e0edb27f # creators-pkg-v3.0.12
