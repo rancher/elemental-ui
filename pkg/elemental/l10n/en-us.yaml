@@ -8,6 +8,7 @@ plugin-examples:
   card-title-two: Demo card title 2
   card-title-three: Demo card title 3
   card-title-four: Demo card title 4
+  resources-api-demo: Resources API Demo
   table:
     col-example-1-basic: Extension Col - Example 1
     col-example-2-basic: Extension Col - Example 2 - local
