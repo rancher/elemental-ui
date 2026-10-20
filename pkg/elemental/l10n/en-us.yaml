@@ -12,6 +12,8 @@ plugin-examples:
     col-example-1-basic: Extension Col - Example 1
     col-example-2-basic: Extension Col - Example 2 - local
     col-example-2-pagination: Extension Col - Example 2 - server
+    col-model-extension: Extension Col - Model Extension
+    col-plugin-validator: Extension Col - Plugin Validator
 
 product:
   elemental: OS Management

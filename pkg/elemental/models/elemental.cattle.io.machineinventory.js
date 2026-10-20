@@ -115,4 +115,48 @@ export default class MachineInventory extends ElementalResource {
 
     return cannotBeDeletedByUi;
   }
+
+  /**
+   * Compatibility probe for rancher/dashboard#18633 - model extensions.
+   *
+   * `modelExtensions` (@shell/plugins/steve/steve-class) reads the extension manager off the Vuex
+   * root state with no guard. Rancher before 2.14 only ever sets `rootState.$plugin`, so unless the
+   * compatibility shim in @shell/pkg/auto-import has aliased both keys this throws. Surfaced as a
+   * table column so that simply rendering the list exercises it on every Rancher version.
+   */
+  get modelExtensionCheck() {
+    const match = (this.modelExtensions || []).find(ext => ext.useFor ? ext.useFor(this) : false);
+
+    return match ? match.label : 'MODEL EXTENSION MISSING';
+  }
+
+  /**
+   * Compatibility probe for rancher/dashboard#18633 - extension validators.
+   *
+   * `customValidationErrors` resolves an unknown validator name through
+   * `this.$rootState.$extension?.getValidator()`. That call is optional chained, so a host mismatch
+   * never throws - the validator just silently stops running. Asserting the message it pushes is
+   * what makes that silence visible.
+   */
+  get pluginValidatorCheck() {
+    const errors = this.customValidationErrors(this) || [];
+
+    return errors.length ? errors[0] : 'PLUGIN VALIDATOR MISSING';
+  }
+
+  /**
+   * Drives `pluginValidatorCheck`. `elementalDemoValidator` is deliberately not one of shell's
+   * built-in CustomValidators, which is what sends the lookup down the extension path.
+   *
+   * Inert elsewhere: `modelValidationRules` maps validator names through `formRules` and drops
+   * anything it cannot resolve, so this adds no form validation behaviour.
+   */
+  get customValidationRules() {
+    return [
+      {
+        path:       'metadata.name',
+        validators: ['elementalDemoValidator'],
+      }
+    ];
+  }
 }
