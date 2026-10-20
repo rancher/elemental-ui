@@ -1,5 +1,6 @@
 import { importTypes } from '@rancher/auto-import';
 import { IPlugin, ActionLocation, TabLocation, ActionOpts, PanelLocation, CardLocation, TableColumnLocation, TableLocation} from '@shell/core/types';
+import { STATE, NAME as NAME_COL, AGE } from '@shell/config/table-headers';
 import elementalRouting from './routing/elemental-routing';
 import elementalStore from './store/elemental-store';
 import { ELEMENTAL_SCHEMA_IDS } from './config/elemental-types';
@@ -339,4 +340,168 @@ export default function($plugin: IPlugin) {
       errors.push('PLUGIN VALIDATOR OK');
     }
   };
+
+  // PRODUCT REGISTRATION API -> compatibility probe for the Product Registration API (Rancher 2.15+).
+  //
+  // Registered as a SEPARATE product rather than by converting the existing Elemental product:
+  // addProduct is once-per-product-name, the Elemental product is still the legacy DSL in
+  // elemental-config.js, and the existing compatibility tests navigate by its exact nav labels.
+  // Keeping this additive means the new probes cannot regress Test Group 8.
+  //
+  // `$plugin` is cast to any on purpose. This extension is rebuilt against the shell of every
+  // Rancher version in the compatibility matrix, and on pre-2.15 shells these methods are absent
+  // from IPlugin - typing against them would fail the build rather than degrade.
+  const plugin = $plugin as any;
+
+  // extendProduct only exists from 2.15, so it doubles as the feature detect for the whole API.
+  if (typeof plugin.extendProduct === 'function') {
+    // ---------------------------------------------------------------------------------------
+    // 1. Full product: custom page, resource page, groups with and without an overview, a group
+    //    with an explicit default child, and enable-gated pages.
+    // ---------------------------------------------------------------------------------------
+    plugin.addProduct(
+      {
+        name:      'elemental-compat',
+        label:     'Elemental Compat',
+        sideBar:   { icon: { name: 'gear' }, weight: 1 },
+        appHeader: { showClusterInfo: false },
+        resources: { hideSystemResources: true }
+      },
+      [
+        // --- plain custom page (landing route: first item after weight ordering) ---
+        {
+          name:      'compat-overview',
+          label:     'Compat Overview',
+          component: () => import('./pages/prodRegOverview.vue'),
+          sideMenu:  { weight: 100 }
+        },
+
+        // --- resource page: generated list/detail/edit + list config ---
+        // provisioning.cattle.io.cluster always has at least the `local` row on the test host,
+        // so the generated list is never empty.
+        {
+          type:       'provisioning.cattle.io.cluster',
+          label:      'Compat Clusters',
+          can:        {
+            create: false, edit: false, remove: false, yaml: true
+          },
+          display:    { showState: true, showAge: true },
+          views:      { list: { showListMasthead: false } },
+          listConfig: {
+            hideBulkActions: true,
+            localHeaders:    [
+              STATE,
+              NAME_COL,
+              {
+                name:     'prodRegProbe',
+                label:    'ProdReg Probe',
+                getValue: () => 'PRODREG COLUMN OK'
+              },
+              AGE
+            ]
+          },
+          sideMenu: { weight: 90 }
+        },
+
+        // --- group WITHOUT a component: a plain collapsible folder, no overview route ---
+        {
+          name:     'compat-group-plain',
+          label:    'Compat Group Plain',
+          sideMenu: {
+            weight:   80,
+            children: [
+              {
+                name: 'compat-child-a', label: 'Compat Child A', component: () => import('./pages/prodRegChildA.vue')
+              },
+              {
+                name: 'compat-child-b', label: 'Compat Child B', component: () => import('./pages/prodRegChildB.vue')
+              }
+            ]
+          }
+        },
+
+        // --- group WITH a component + enableOverviewPage: the header itself is a route ---
+        {
+          name:               'compat-group-overview',
+          label:              'Compat Group Overview',
+          component:          () => import('./pages/prodRegGroupOverview.vue'),
+          enableOverviewPage: { ifHaveType: 'provisioning.cattle.io.cluster' },
+          sideMenu:           {
+            weight:   70,
+            children: [{ type: 'management.cattle.io.cluster', label: 'Compat Mgmt Clusters' }]
+          }
+        },
+
+        // --- group with an explicit default child: clicking the header opens the 2nd child ---
+        {
+          name:     'compat-group-default',
+          label:    'Compat Group Default',
+          sideMenu: {
+            weight:   60,
+            default:  'compat-default-target',
+            children: [
+              {
+                name: 'compat-default-sibling', label: 'Compat Default Sibling', component: () => import('./pages/prodRegGroupDefaultSibling.vue')
+              },
+              {
+                name: 'compat-default-target', label: 'Compat Default Target', component: () => import('./pages/prodRegGroupDefault.vue')
+              }
+            ]
+          }
+        },
+
+        // --- enable gating: this one's condition holds, so the entry renders ---
+        {
+          name:      'compat-gated-visible',
+          label:     'Compat Gated Visible',
+          component: () => import('./pages/prodRegGatedVisible.vue'),
+          enable:    { ifHaveType: 'provisioning.cattle.io.cluster' },
+          sideMenu:  { weight: 50 }
+        },
+
+        // --- enable gating: condition cannot hold, so the entry must NEVER render ---
+        {
+          name:      'compat-gated-hidden',
+          label:     'Compat Gated Hidden',
+          component: () => import('./pages/prodRegGatedHidden.vue'),
+          enable:    { ifHaveType: 'elemental.compat.does.not.exist' },
+          sideMenu:  { weight: 40 }
+        }
+      ]
+    );
+
+    // ---------------------------------------------------------------------------------------
+    // 2. Single-page product: one component, no side menu.
+    // ---------------------------------------------------------------------------------------
+    plugin.addProduct({
+      name:      'elemental-compat-single',
+      label:     'Elemental Compat Single',
+      sideBar:   { icon: { name: 'globe' }, weight: 2 },
+      component: () => import('./pages/prodRegSinglePage.vue')
+    });
+
+    // ---------------------------------------------------------------------------------------
+    // 3. Name-only convenience overload: registers a product with a default empty page.
+    // ---------------------------------------------------------------------------------------
+    plugin.addProduct('elemental-compat-minimal');
+
+    // ---------------------------------------------------------------------------------------
+    // 4. Extending two different built-in products.
+    // ---------------------------------------------------------------------------------------
+    plugin.extendProduct('explorer', [
+      {
+        name:      'elemental-compat-explorer',
+        label:     'Elemental Compat Explorer Page',
+        component: () => import('./pages/prodRegExtendExplorer.vue')
+      }
+    ]);
+
+    plugin.extendProduct('manager', [
+      {
+        name:      'elemental-compat-manager',
+        label:     'Elemental Compat Manager Page',
+        component: () => import('./pages/prodRegExtendManager.vue')
+      }
+    ]);
+  }
 }

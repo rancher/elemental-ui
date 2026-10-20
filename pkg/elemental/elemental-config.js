@@ -219,9 +219,19 @@ export function init($plugin, store) {
     route:    createElementalRoute('shell-api-demo')
   });
 
+  // Resources API demo page -> compatibility probe for the Resources API (Rancher 2.15+).
+  // Registered unconditionally: the page itself reports availability, so the older matrix legs
+  // assert graceful degradation instead of the entry being absent.
+  virtualType({
+    labelKey: 'plugin-examples.resources-api-demo',
+    name:     'resources-api-demo',
+    route:    createElementalRoute('resources-api-demo')
+  });
+
   basicType([
     ELEMENTAL_TYPES.DASHBOARD,
     'shell-api-demo',
+    'resources-api-demo',
     ELEMENTAL_SCHEMA_IDS.MACHINE_REGISTRATIONS,
     ELEMENTAL_SCHEMA_IDS.MACHINE_INVENTORIES,
   ]);
