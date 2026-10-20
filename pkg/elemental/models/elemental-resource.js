@@ -30,4 +30,17 @@ export default class ElementalResource extends SteveModel {
   get doneRoute() {
     return this.listLocation.name;
   }
+
+  /**
+   * The shell's `cleanForDownload` store action changed payload shape in @rancher/shell 3.0.14:
+   * the model dispatches `{ yaml, opt }` instead of the yaml string. Newer shells accept both,
+   * but older Rancher hosts (2.15.0-alpha9 and earlier) only understand the string and end up
+   * running `jsyaml.load({ yaml, opt })`, which renders as `- object Object` in the YAML view.
+   *
+   * The extension bundles its own (newer) copy of the shell while the action runs in the host,
+   * so we always dispatch the legacy string shape, which every shell version understands.
+   */
+  async cleanForDownload(yaml) {
+    return this.$dispatch('cleanForDownload', yaml);
+  }
 }
