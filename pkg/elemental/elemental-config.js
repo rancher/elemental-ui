@@ -68,6 +68,21 @@ export function init($plugin, store) {
       sort:          ['clusterName']
     },
     NAMESPACE_COL,
+    // Compatibility probes - see the matching getters on the machineinventory model and
+    // rancher/dashboard#18633. Columns rather than a form flow, so that a plain list render covers
+    // them on every Rancher version in the compatibility matrix.
+    {
+      name:     'ExtensionModelExtension',
+      labelKey: 'plugin-examples.table.col-model-extension',
+      value:    'modelExtensionCheck',
+      getValue: row => row.modelExtensionCheck
+    },
+    {
+      name:     'ExtensionPluginValidator',
+      labelKey: 'plugin-examples.table.col-plugin-validator',
+      value:    'pluginValidatorCheck',
+      getValue: row => row.pluginValidatorCheck
+    },
     AGE
   ]);
 

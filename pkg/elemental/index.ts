@@ -2,6 +2,7 @@ import { importTypes } from '@rancher/auto-import';
 import { IPlugin, ActionLocation, TabLocation, ActionOpts, PanelLocation, CardLocation, TableColumnLocation, TableLocation} from '@shell/core/types';
 import elementalRouting from './routing/elemental-routing';
 import elementalStore from './store/elemental-store';
+import { ELEMENTAL_SCHEMA_IDS } from './config/elemental-types';
 
 // Init the package
 export default function($plugin: IPlugin) {
@@ -227,6 +228,15 @@ export default function($plugin: IPlugin) {
     { resource: ['catalog.cattle.io.clusterrepo'] },
     { component: () => import('./components/apis-components/BannerComponent.vue') }); // component to be rendered
 
+  // SECOND PANEL ABOVE LIST VIEW -> compatibility probe for rancher/dashboard#18635.
+  // ExtensionPanel renders every matching panel, so this stacks under the banner above without
+  // disturbing it. It puts an extension-bundled component that calls useRoute() on a host page,
+  // which is the path that broke on Rancher versions without window.__vueRouter.
+  $plugin.addPanel(
+    PanelLocation.RESOURCE_LIST,
+    { resource: ['catalog.cattle.io.clusterrepo'] },
+    { component: () => import('./components/apis-components/UseRouteProbeComponent.vue') }); // component to be rendered
+
   // PANEL in ABOUT PAGE
   $plugin.addPanel(
     PanelLocation.ABOUT_TOP,
@@ -296,4 +306,37 @@ export default function($plugin: IPlugin) {
       }
     }
   );
+
+  // MODEL EXTENSION -> compatibility probe for rancher/dashboard#18633.
+  // Exercises steve-class.js -> modelExtensions -> $extension.getDynamic(...), one of the unguarded
+  // root state reads. Read back through the modelExtensionCheck getter on the machineinventory
+  // model, which is surfaced as a column on the Inventory of Machines list.
+  $plugin.addModelExtension(
+    ELEMENTAL_SCHEMA_IDS.MACHINE_INVENTORIES,
+    class ElementalDemoModelExtension {
+      context: any;
+
+      constructor(context: any) {
+        this.context = context;
+      }
+
+      useFor(resource: any) {
+        return !!resource;
+      }
+
+      get label() {
+        return 'MODEL EXTENSION OK';
+      }
+    }
+  );
+
+  // PLUGIN VALIDATOR -> compatibility probe for rancher/dashboard#18633.
+  // Exercises resource-class.js -> this.$rootState.$extension?.getValidator(). That read is
+  // optional chained, so a host mismatch fails silently rather than throwing. Read back through the
+  // pluginValidatorCheck getter on the machineinventory model.
+  $plugin.validators = {
+    elementalDemoValidator(value: any, getters: any, errors: string[]) {
+      errors.push('PLUGIN VALIDATOR OK');
+    }
+  };
 }
