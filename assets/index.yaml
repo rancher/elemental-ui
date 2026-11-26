@@ -3,6 +3,29 @@ entries:
   elemental:
   - annotations:
       catalog.cattle.io/certified: rancher
+      catalog.cattle.io/display-name: SUSE OS Management
+      catalog.cattle.io/kube-version: '>= 1.16.0-0'
+      catalog.cattle.io/namespace: cattle-ui-plugin-system
+      catalog.cattle.io/os: linux
+      catalog.cattle.io/permits-os: linux, windows
+      catalog.cattle.io/rancher-version: '>= 2.10.0-0'
+      catalog.cattle.io/scope: management
+      catalog.cattle.io/ui-component: plugins
+      catalog.cattle.io/ui-extensions-version: '>= 3.0.0 < 4.0.0'
+      catalog.cattle.io/ui-version: '>= 2.7.2'
+    apiVersion: v2
+    appVersion: 3.0.6
+    created: "2026-11-26T10:43:03.02578018Z"
+    description: OS Management extension
+    digest: 577c687a71f9180112a950912213fb7731ba2e6aa069e8a96ffa2b5022069076
+    icon: https://raw.githubusercontent.com/rancher/elemental-ui/main/pkg/elemental/icon-v2.svg
+    name: elemental
+    type: application
+    urls:
+    - assets/elemental/elemental-3.0.6.tgz
+    version: 3.0.6
+  - annotations:
+      catalog.cattle.io/certified: rancher
       catalog.cattle.io/kube-version: '>= 1.16.0-0'
       catalog.cattle.io/namespace: cattle-ui-plugin-system
       catalog.cattle.io/os: linux
@@ -1053,4 +1076,4 @@ entries:
     urls:
     - assets/elemental/elemental-0.1.0.tgz
     version: 0.1.0
-generated: "2026-10-20T14:57:15.595896624Z"
+generated: "2026-11-26T10:43:03.025432164Z"
