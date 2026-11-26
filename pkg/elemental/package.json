@@ -8,7 +8,8 @@
       "catalog.cattle.io/kube-version": ">= 1.16.0-0",
       "catalog.cattle.io/rancher-version": ">= 2.10.0-0",
       "catalog.cattle.io/ui-extensions-version": ">= 3.0.0 < 4.0.0",
-      "catalog.cattle.io/ui-version": ">= 2.7.2"
+      "catalog.cattle.io/ui-version": ">= 2.7.2",
+      "catalog.cattle.io/display-name": "SUSE OS Management"
     }
   },
   "icon": "https://raw.githubusercontent.com/rancher/elemental-ui/main/pkg/elemental/icon-v2.svg",
